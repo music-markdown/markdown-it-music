@@ -1,0 +1,17 @@
+{
+  "name": "markdown-it-music",
+  "version": "0.0.1",
+  "description": "Renderer for Music Markdown.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "markdown-it-plugin"
+  ],
+  "author": "Shad Sharma <shadanan@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "abcjs": "^5.3.5"
+  }
+}
