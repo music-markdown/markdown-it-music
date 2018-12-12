@@ -1,18 +1,22 @@
 'use strict';
-var abc = require('abcjs');
+var abc = require('./abc_renderer.js');
+var chords = require('./chords_renderer.js');
+
 
 function MarkdownMusic(md) {
-  console.log(md);
+  md.highlightRegistry = {};
 
   md.set({
     highlight: function(str, lang) {
-      if (lang === 'abc') {
-        var div = document.createElement("div");
-        abc.renderAbc(div, str);
-        return div.outerHTML;
+      if (md.highlightRegistry.hasOwnProperty(lang)) {
+        return md.highlightRegistry[lang](str);
       }
     }
   });
+
+  md.highlightRegistry[abc.lang] = abc.callback;
+  md.highlightRegistry[chords.lang] = chords.callback;
 };
+
 
 module.exports = MarkdownMusic;
