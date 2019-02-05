@@ -24,7 +24,7 @@ const chords = new RegExp([
   '(?:(/)([CDEFGAB])(#|##|b|bb)?)?'
 ].join(''));
 
-function renderChords(str) {
+function renderChords(str, opts) {
   return `<b>${str}</b>`;
 }
 

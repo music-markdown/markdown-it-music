@@ -2,7 +2,7 @@
 var abc = require('abcjs');
 
 
-function renderAbc(str) {
+function renderAbc(str, opts) {
   var div = document.createElement("div");
   abc.renderAbc(div, str);
   return div.outerHTML;
