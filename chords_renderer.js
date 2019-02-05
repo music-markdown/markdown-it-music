@@ -25,7 +25,6 @@ const chords = new RegExp([
 ].join(''));
 
 function renderChords(str, opts) {
-  console.log(opts);
   return `<b>${str}</b>`;
 }
 
