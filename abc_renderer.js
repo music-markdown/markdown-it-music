@@ -4,7 +4,9 @@ var abc = require('abcjs');
 
 function renderAbc(str, opts) {
   var div = document.createElement("div");
-  abc.renderAbc(div, str);
+  abc.renderAbc(div, str, {
+    visualTranspose: opts.transpose
+  });
   return div.outerHTML;
 }
 
