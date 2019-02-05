@@ -1,7 +1,6 @@
 'use strict';
-var abc = require('./abc_renderer.js');
-var chords = require('./chords_renderer.js');
-
+const abc = require('./abc_renderer.js');
+const chords = require('./chords_renderer.js');
 
 function MarkdownMusic(md) {
   md.highlightRegistry = {};
