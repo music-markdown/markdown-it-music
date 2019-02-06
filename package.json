@@ -12,7 +12,7 @@
   "author": "Shad Sharma <shadanan@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "abcjs": "^5.3.5"
+    "abcjs": "^5.6.4"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
