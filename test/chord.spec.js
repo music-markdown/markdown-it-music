@@ -1,20 +1,20 @@
 'use strict';
-const chordjs = require('../chord');
+const Chord = require('../chord');
 
 describe('chord', () => {
   test.each([
-    ['C', new chordjs.Chord('C')],
-    ['Cm', new chordjs.Chord('C', 'm')],
-    ['C#maj7/D#', new chordjs.Chord('C#', 'maj7', 'D#')],
-    ['Abm/A', new chordjs.Chord('Ab', 'm', 'A')],
-    ['Bm/B', new chordjs.Chord('B', 'm', 'B')],
-    ['C#m/C', new chordjs.Chord('C#', 'm', 'C')],
-    ['Dbm/D', new chordjs.Chord('Db', 'm', 'D')],
-    ['Em/E', new chordjs.Chord('E', 'm', 'E')],
-    ['F#m/F', new chordjs.Chord('F#', 'm', 'F')],
-    ['Gm/G', new chordjs.Chord('G', 'm', 'G')],
+    ['C', new Chord('C')],
+    ['Cm', new Chord('C', 'm')],
+    ['C#maj7/D#', new Chord('C#', 'maj7', 'D#')],
+    ['Abm/A', new Chord('Ab', 'm', 'A')],
+    ['Bm/B', new Chord('B', 'm', 'B')],
+    ['C#m/C', new Chord('C#', 'm', 'C')],
+    ['Dbm/D', new Chord('Db', 'm', 'D')],
+    ['Em/E', new Chord('E', 'm', 'E')],
+    ['F#m/F', new Chord('F#', 'm', 'F')],
+    ['Gm/G', new Chord('G', 'm', 'G')],
   ])('parses a %s chord as %s', (name, expected) => {
-    const actual = chordjs.parse(name);
+    const actual = Chord.parse(name);
     expect(actual).toEqual(expected);
   });
 
@@ -36,9 +36,9 @@ describe('chord', () => {
     ['F#', 3, 'A'],
     ['Ab', 3, 'B'],
   ])('transposes %s by %i to %s', (start, amount, end) => {
-    const chord = chordjs.parse(start);
+    const chord = Chord.parse(start);
     const actual = chord.transpose(amount);
-    const expected = chordjs.parse(end);
+    const expected = Chord.parse(end);
     expect(actual).toEqual(expected);
   });
 
@@ -54,7 +54,7 @@ describe('chord', () => {
     [false, 'C/H'],
     [false, 'H/C'],
   ])('isChord returns %s for %s', (expected, chord) => {
-    const actual = chordjs.isChord(chord);
+    const actual = Chord.isChord(chord);
     expect(actual).toEqual(expected);
   });
 });

@@ -1,6 +1,7 @@
 'use strict';
 
-const pattern = [
+const chordPattern = new RegExp([
+  '^',
   '([CDEFGAB](?:#|b)?)',
   '(',
   'maj|maj7|maj9|maj11|maj13|maj9#11|maj13#11|add9|maj7b5|maj7#5|',
@@ -20,10 +21,9 @@ const pattern = [
   'sus|sus4|sus2|sus2sus4|',
   '-5',
   ')?',
-  '(?:/([CDEFGAB](?:#|b)?))?'
-].join('');
-
-const chordPattern = new RegExp('^' + pattern + '$');
+  '(?:/([CDEFGAB](?:#|b)?))?',
+  '$'
+].join(''));
 
 const chordSequenceSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const chordSequenceFlat = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
@@ -58,7 +58,7 @@ class Chord {
 
   toString() {
     let result = this.root + this.quality;
-    if (this.bass != '') {
+    if (this.bass) {
       result += '/' + this.bass;
     }
     return result;
@@ -67,20 +67,15 @@ class Chord {
   transpose(amount) {
     return new Chord(transpose(this.root, amount), this.quality, transpose(this.bass, amount));
   }
+
+  static isChord(str) {
+    return str.match(chordPattern) ? true : false;
+  }
+
+  static parse(str) {
+    const tokens = str.match(chordPattern);
+    return new Chord(tokens[1], tokens[2], tokens[3]);
+  }
 }
 
-function isChord(str) {
-  return str.match(chordPattern) ? true : false;
-}
-
-function parse(str) {
-  const tokens = str.match(chordPattern);
-  return new Chord(tokens[1], tokens[2], tokens[3]);
-}
-
-module.exports = {
-  'pattern': pattern,
-  'Chord': Chord,
-  'isChord': isChord,
-  'parse': parse,
-};
+module.exports = Chord;
