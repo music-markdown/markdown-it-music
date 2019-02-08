@@ -4,7 +4,9 @@
   "description": "Renderer for Music Markdown.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "pretest": "eslint .",
+    "fix-lint": "eslint . --fix"
   },
   "keywords": [
     "markdown-it-plugin"
