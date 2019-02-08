@@ -1,9 +1,8 @@
 'use strict';
-var abc = require('abcjs');
-
+const abc = require('abcjs');
 
 function renderAbc(str, opts) {
-  var div = document.createElement("div");
+  const div = document.createElement('div');
   abc.renderAbc(div, str, {
     visualTranspose: opts.transpose
   });
@@ -14,4 +13,4 @@ function renderAbc(str, opts) {
 module.exports = {
   'lang': 'abc',
   'callback': renderAbc
-}
+};

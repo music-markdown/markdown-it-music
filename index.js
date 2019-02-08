@@ -21,7 +21,7 @@ function MarkdownMusic(md, musicOpts) {
   // Renderer configuration functions
   md.setTranspose = function(transpose) {
     md.musicOpts.transpose = transpose;
-  }
+  };
 };
 
 module.exports = MarkdownMusic;
