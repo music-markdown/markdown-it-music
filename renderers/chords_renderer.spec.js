@@ -1,6 +1,6 @@
 'use strict';
 
-const Chord = require('../instruments/chord');
+const Chord = require('../music_components/chord');
 const ChordsRenderer = require('./chords_renderer')['ChordsRenderer'];
 
 describe('JSON to HTML converter', () => {
@@ -64,11 +64,37 @@ describe('JSON to HTML converter', () => {
     const chordChartRenderer = new ChordsRenderer(chordChartJson);
 
     const expectedChordChartHtmlList = [
-      '<div class="c1"><div>    </div><div>G</div><div>       </div><div>F</div><div>       </div><div>Am</div><div>       </div><div>G</div><div>          </div><div>F</div><div>      </div><div>C</div></div>',
-      '<div class="c2"><div>    </div><div>C</div><div>       </div><div>D</div><div>       </div><div>Cm</div><div>       </div><div>F</div><div>          </div><div>G</div><div>      </div><div>B</div></div>',
-      '<div class="l1"><div>The</div><div> </div><div>longest</div><div> </div><div>word</div><div> </div><div>is</div><div> </div><div>supercalifragilisticexpialidocious</div></div>',
-      '<div class="l2"><div>                                        </div><div>supercalifragilisticexpialidocious</div></div>',
-      '<div class="a1"><div>    </div><div>crash!</div></div>'
+      '<div class="c1">' +
+        '<div>    </div><div>G</div>' +
+        '<div>       </div><div>F</div>' +
+        '<div>       </div><div>Am</div>' +
+        '<div>       </div><div>G</div>' +
+        '<div>          </div><div>F</div>' +
+        '<div>      </div><div>C</div>' +
+      '</div>',
+
+      '<div class="c2">' +
+        '<div>    </div><div>C</div>' +
+        '<div>       </div><div>D</div>' +
+        '<div>       </div><div>Cm</div>' +
+        '<div>       </div><div>F</div>' +
+        '<div>          </div><div>G</div>' +
+        '<div>      </div><div>B</div>' +
+      '</div>',
+
+      '<div class="l1">' +
+        '<div>The</div>' +
+        '<div> </div><div>longest</div>' +
+        '<div> </div><div>word</div>' +
+        '<div> </div><div>is</div>' +
+        '<div> </div><div>supercalifragilisticexpialidocious</div>' +
+      '</div>',
+
+      '<div class="l2">' +
+        '<div>                                        </div><div>supercalifragilisticexpialidocious</div></div>',
+      '<div class="a1">' +
+        '<div>    </div><div>crash!</div>' +
+      '</div>'
     ];
 
     const actualHtmlList = chordChartRenderer.createListOfWrappedVoices()
@@ -79,25 +105,15 @@ describe('JSON to HTML converter', () => {
     expect(actualHtmlList).toEqual(expectedChordChartHtmlList);
   });
 
-  // test('should wrap a chord chart in chord chart class div', () => {
-  //   const shortChart = [
-  //     { index: 0, voice: 'l1', content: 'short' }
-  //   ];
+  test('should wrap a chord chart in chord chart class div', () => {
+    const shortChart = [
+      { index: 0, voice: 'l1', content: 'short' }
+    ];
 
-  //   const chordChartRenderer = new ChordsRenderer(shortChart);
+    const chordChartRenderer = new ChordsRenderer(shortChart);
 
-  //   const expectedChordChartHtml = document.createElement('div');
-  //   expectedChordChartHtml.className = 'chart';
+    const expectedChordChartHtml = '<div class="chart"><div class="l1"><div>short</div></div></div>';
 
-  //   const voiceDiv = document.createElement('div');
-  //   voiceDiv.innerHTML = 'short';
-
-  //   const eventDiv = document.createElement('div');
-  //   eventDiv.className = 'l1';
-  //   eventDiv.appendChild(voiceDiv);
-
-  //   expectedChordChartHtml.appendChild(eventDiv);
-
-  //   expect(chordChartRenderer.createHtmlChordChart()).toEqual(expectedChordChartHtml);
-  // });
+    expect(chordChartRenderer.createHtmlChordChart().outerHTML).toEqual(expectedChordChartHtml);
+  });
 });

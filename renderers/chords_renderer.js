@@ -1,6 +1,6 @@
 'use strict';
 
-const Chord = require('../instruments/chord');
+const Chord = require('../music_components/chord');
 
 class ChordsRenderer {
   constructor(chordChartJson) {
