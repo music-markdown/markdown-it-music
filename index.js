@@ -1,5 +1,5 @@
 'use strict';
-const abc = require('./abc_renderer.js');
+const abc = require('./renderers/abc_renderer.js');
 const chords = require('./renderers/chords_renderer.js');
 
 function MarkdownMusic(md, musicOpts) {
