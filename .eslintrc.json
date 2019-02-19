@@ -12,6 +12,7 @@
         }],
         "indent": ["error", 2, {
             "MemberExpression": 1
-        }]
+        }],
+        "object-curly-spacing": ["error", "always"]
     }
 }
