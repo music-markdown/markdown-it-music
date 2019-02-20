@@ -62,14 +62,14 @@ describe('Verse', () => {
     const actual = parsePhrase(phrase);
     expect(actual).toEqual([
       {index: 0, voice: 'c1', content: new Chord('G')},
+      {index: 9, voice: 'c1', content: new Chord('E', 'm')},
+      {index: 33, voice: 'c1', content: new Chord('B', 'm')},
       {index: 0, voice: 'l1', content: 'I'},
       {index: 2, voice: 'l1', content: 'didn\'t'},
-      {index: 9, voice: 'c1', content: new Chord('E', 'm')},
       {index: 9, voice: 'l1', content: 'ask,'},
       {index: 14, voice: 'l1', content: 'you'},
       {index: 18, voice: 'l1', content: 'shouldn\'t'},
       {index: 28, voice: 'l1', content: 'have'},
-      {index: 33, voice: 'c1', content: new Chord('B', 'm')},
       {index: 33, voice: 'l1', content: 'told'},
       {index: 38, voice: 'l1', content: 'me'},
     ]);
@@ -86,24 +86,24 @@ describe('Verse', () => {
     const actual = parseVerse(verse);
     expect(actual).toEqual([
       [
+        {index: 19, voice: 'c1', content: new Chord('A', 'm')},
         {index: 0, voice: 'l1', content: 'All'},
         {index: 4, voice: 'l1', content: 'the'},
         {index: 8, voice: 'l1', content: 'leaves'},
         {index: 15, voice: 'l1', content: 'are'},
-        {index: 19, voice: 'c1', content: new Chord('A', 'm')},
         {index: 19, voice: 'l1', content: 'brown'},
       ],
       [
         {index: 0, voice: 'c1', content: new Chord('G')},
         {index: 3, voice: 'c1', content: new Chord('F')},
+        {index: 14, voice: 'c1', content: new Chord('G')},
+        {index: 21, voice: 'c1', content: new Chord('E', 'sus2')},
+        {index: 27, voice: 'c1', content: new Chord('E')},
         {index: 6, voice: 'l1', content: 'and'},
         {index: 10, voice: 'l1', content: 'the'},
-        {index: 14, voice: 'c1', content: new Chord('G')},
         {index: 14, voice: 'l1', content: 'sky'},
         {index: 18, voice: 'l1', content: 'is'},
-        {index: 21, voice: 'c1', content: new Chord('E', 'sus2')},
         {index: 21, voice: 'l1', content: 'gray.'},
-        {index: 27, voice: 'c1', content: new Chord('E')},
       ],
     ]);
   });

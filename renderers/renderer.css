@@ -10,12 +10,12 @@
   font-family: monospace;
 }
 
-.l1 {
+.v1 {
   display: flex;
   color: purple;
 }
 
-.l2 {
+.v2 {
   display: flex;
   color: black;
 }

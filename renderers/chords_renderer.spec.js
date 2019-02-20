@@ -1,31 +1,9 @@
 'use strict';
 
-const Chord = require('../music_components/chord');
+const Chord = require('../chord');
 const ChordsRenderer = require('./chords_renderer')['ChordsRenderer'];
 
 describe('JSON to HTML converter', () => {
-  const chordChartJson = [
-    { index: 4, voice: 'c1', content: new Chord('G') },
-    { index: 12, voice: 'c1', content: new Chord('F') },
-    { index: 20, voice: 'c1', content: new Chord('Am') },
-    { index: 29, voice: 'c1', content: new Chord('G') },
-    { index: 40, voice: 'c1', content: new Chord('F') },
-    { index: 47, voice: 'c1', content: new Chord('C') },
-    { index: 4, voice: 'c2', content: new Chord('C') },
-    { index: 12, voice: 'c2', content: new Chord('D') },
-    { index: 20, voice: 'c2', content: new Chord('Cm') },
-    { index: 29, voice: 'c2', content: new Chord('F') },
-    { index: 40, voice: 'c2', content: new Chord('G') },
-    { index: 47, voice: 'c2', content: new Chord('B') },
-    { index: 0, voice: 'l1', content: 'The' },
-    { index: 4, voice: 'l1', content: 'longest' },
-    { index: 12, voice: 'l1', content: 'word' },
-    { index: 17, voice: 'l1', content: 'is' },
-    { index: 20, voice: 'l1', content: 'supercalifragilisticexpialidocious' },
-    { index: 40, voice: 'l2', content: 'supercalifragilisticexpialidocious' },
-    { index: 4, voice: 'a1', content: 'crash!' },
-  ];
-
   test('should wrap voice in div', () => {
     const chordChartRenderer = new ChordsRenderer();
 
@@ -61,7 +39,29 @@ describe('JSON to HTML converter', () => {
   });
 
   test('should convert a list of voice events (a chord chard) to wrapped divs', () => {
-    const chordChartRenderer = new ChordsRenderer(chordChartJson);
+    const chordChartJson = [
+      { index: 4, voice: 'c1', content: new Chord('G') },
+      { index: 12, voice: 'c1', content: new Chord('F') },
+      { index: 20, voice: 'c1', content: new Chord('Am') },
+      { index: 29, voice: 'c1', content: new Chord('G') },
+      { index: 40, voice: 'c1', content: new Chord('F') },
+      { index: 47, voice: 'c1', content: new Chord('C') },
+      { index: 4, voice: 'c2', content: new Chord('C') },
+      { index: 12, voice: 'c2', content: new Chord('D') },
+      { index: 20, voice: 'c2', content: new Chord('Cm') },
+      { index: 29, voice: 'c2', content: new Chord('F') },
+      { index: 40, voice: 'c2', content: new Chord('G') },
+      { index: 47, voice: 'c2', content: new Chord('B') },
+      { index: 0, voice: 'l1', content: 'The' },
+      { index: 4, voice: 'l1', content: 'longest' },
+      { index: 12, voice: 'l1', content: 'word' },
+      { index: 17, voice: 'l1', content: 'is' },
+      { index: 20, voice: 'l1', content: 'supercalifragilisticexpialidocious' },
+      { index: 40, voice: 'l2', content: 'supercalifragilisticexpialidocious' },
+      { index: 4, voice: 'a1', content: 'crash!' },
+    ];
+  
+    const chordChartRenderer = new ChordsRenderer();
 
     const expectedChordChartHtmlList = [
       '<div class="c1">' +
@@ -97,7 +97,7 @@ describe('JSON to HTML converter', () => {
       '</div>'
     ];
 
-    const actualHtmlList = chordChartRenderer.createListOfWrappedVoices()
+    const actualHtmlList = chordChartRenderer.createListOfWrappedVoices(chordChartJson)
       .map((html) => {
         return html.outerHTML;
       });
@@ -106,14 +106,53 @@ describe('JSON to HTML converter', () => {
   });
 
   test('should wrap a chord chart in chord chart class div', () => {
-    const shortChart = [
+    const shortChart = [[
       { index: 0, voice: 'l1', content: 'short' }
-    ];
+    ]];
 
     const chordChartRenderer = new ChordsRenderer(shortChart);
 
-    const expectedChordChartHtml = '<div class="chart"><div class="l1"><div>short</div></div></div>';
+    const expectedChordChartHtml = '<div class="chart"><div class="verse"><div class="l1"><div>short</div></div></div></div>';
 
     expect(chordChartRenderer.createHtmlChordChart().outerHTML).toEqual(expectedChordChartHtml);
+  });
+
+  test('should separate each verse into their own wrapped div', () => {
+    const verse = [
+      [
+        { index: 0, voice: 'c1', content: new Chord('C') },
+        { index: 4, voice: 'c1', content: new Chord('G') },
+        { index: 0, voice: 'l1', content: 'Test' }
+      ],
+      [
+        { index: 0, voice: 'c1', content: new Chord('A') },
+        { index: 0, voice: 'l1', content: 'Song' }
+      ]
+    ];
+
+    const chordChartRenderer = new ChordsRenderer(verse);
+
+    const expectedDiv =
+      '<div class="chart">' +
+        '<div class="verse">' +
+          '<div class="c1">' +
+            '<div>C</div>' +
+            '<div>   </div><div>G</div>' +
+          '</div>' +
+          '<div class="l1">' +
+            '<div>Test</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="verse">' +
+          '<div class="c1">' +
+            '<div>A</div>' +
+          '</div>' +
+          '<div class="l1">' +
+            '<div>Song</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    expect(chordChartRenderer.createHtmlChordChart().outerHTML).toEqual(expectedDiv);
   });
 });

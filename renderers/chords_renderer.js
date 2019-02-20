@@ -1,6 +1,6 @@
 'use strict';
 
-const Chord = require('../music_components/chord');
+const parseVerse = require('../verse.js')['parseVerse'];
 
 class ChordsRenderer {
   constructor(chordChartJson) {
@@ -11,19 +11,26 @@ class ChordsRenderer {
     const chordChartHtml = document.createElement('div');
     chordChartHtml.className = 'chart';
 
-    this.createListOfWrappedVoices()
-      .forEach((event) => {
-        chordChartHtml.appendChild(event);
-      });
+    this.chordChartJson.forEach((verse) => {
+      const verseDiv = document.createElement('div');
+      verseDiv.className = 'verse';
+
+      this.createListOfWrappedVoices(verse)
+        .forEach((event) => {
+          verseDiv.appendChild(event);
+        });
+
+      chordChartHtml.appendChild(verseDiv);
+    });
 
     return chordChartHtml;
   }
 
-  createListOfWrappedVoices() {
+  createListOfWrappedVoices(verse) {
     // Assumes voices are sorted by index and grouped by voice.
     const voiceElements = new Map();
 
-    this.chordChartJson.forEach((event) => {
+    verse.forEach((event) => {
       if (!voiceElements.has(event.voice)) {
         voiceElements.set(event.voice, new Map([['index', 0], ['parentElement', document.createElement('div')]]));
 
@@ -50,7 +57,6 @@ class ChordsRenderer {
   appendVoiceContentDiv(parentVoice, text, whitespace) {
     if (whitespace) {
       const whitespaceDiv = document.createElement('div');
-      debugger;
       whitespaceDiv.innerHTML = ' '.repeat(whitespace);
       parentVoice.appendChild(whitespaceDiv);
     }
@@ -63,28 +69,7 @@ class ChordsRenderer {
 }
 
 function renderChords(str, opts) {
-  const chordChartJson = [
-    { index: 4, voice: 'c1', content: new Chord('G') },
-    { index: 12, voice: 'c1', content: new Chord('F') },
-    { index: 20, voice: 'c1', content: new Chord('Am') },
-    { index: 29, voice: 'c1', content: new Chord('G') },
-    { index: 40, voice: 'c1', content: new Chord('F') },
-    { index: 47, voice: 'c1', content: new Chord('C') },
-    { index: 4, voice: 'c2', content: new Chord('C') },
-    { index: 12, voice: 'c2', content: new Chord('D') },
-    { index: 20, voice: 'c2', content: new Chord('Cm') },
-    { index: 29, voice: 'c2', content: new Chord('F') },
-    { index: 40, voice: 'c2', content: new Chord('G') },
-    { index: 47, voice: 'c2', content: new Chord('B') },
-    { index: 0, voice: 'l1', content: 'The' },
-    { index: 4, voice: 'l1', content: 'longest' },
-    { index: 12, voice: 'l1', content: 'word' },
-    { index: 17, voice: 'l1', content: 'is' },
-    { index: 20, voice: 'l1', content: 'supercalifragilisticexpialidocious' },
-    { index: 40, voice: 'l2', content: 'supercalifragilisticexpialidocious' },
-    { index: 4, voice: 'a1', content: 'crash!' },
-  ];
-
+  const chordChartJson = parseVerse(str);
   const renderer = new ChordsRenderer(chordChartJson);
 
   const htmlChart = renderer.createHtmlChordChart();

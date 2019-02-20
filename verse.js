@@ -20,6 +20,10 @@ function tokenize(instrument, voice, data) {
 }
 
 function parseVoice(voice) {
+  if (!voice) {
+    return;
+  }
+
   const match = voice.match(voicePattern);
   if (!match) {
     throw new Error(`Voice doesn't match ${voicePattern}: ${voice}`);
@@ -35,7 +39,7 @@ function parseVoice(voice) {
 function parsePhrase(phrase) {
   return phrase.split(/\n/)
     .flatMap((voice) => parseVoice(voice))
-    .sort((e1, e2) => e1.index - e2.index);
+    .filter((voice) => !!voice);
 }
 
 function parseVerse(verse) {
