@@ -1,6 +1,6 @@
 'use strict';
 
-const Chord = require('../chord');
+const Chord = require('../parsers/chord.js');
 const ChordsRenderer = require('./chords_renderer')['ChordsRenderer'];
 
 describe('JSON to HTML converter', () => {
@@ -60,7 +60,7 @@ describe('JSON to HTML converter', () => {
       { index: 40, voice: 'l2', content: 'supercalifragilisticexpialidocious' },
       { index: 4, voice: 'a1', content: 'crash!' },
     ];
-  
+
     const chordChartRenderer = new ChordsRenderer();
 
     const expectedChordChartHtmlList = [
@@ -112,7 +112,11 @@ describe('JSON to HTML converter', () => {
 
     const chordChartRenderer = new ChordsRenderer(shortChart);
 
-    const expectedChordChartHtml = '<div class="chart"><div class="verse"><div class="l1"><div>short</div></div></div></div>';
+    const expectedChordChartHtml = '<div class="chart">' +
+      '<div class="verse">' +
+        '<div class="l1">' +
+        '<div>short</div>' +
+      '</div></div></div>';
 
     expect(chordChartRenderer.createHtmlChordChart().outerHTML).toEqual(expectedChordChartHtml);
   });

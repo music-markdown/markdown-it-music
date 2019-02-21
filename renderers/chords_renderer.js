@@ -1,6 +1,6 @@
 'use strict';
 
-const parseVerse = require('../verse.js')['parseVerse'];
+const parseVerse = require('../parsers/verse.js')['parseVerse'];
 
 class ChordsRenderer {
   constructor(chordChartJson) {
