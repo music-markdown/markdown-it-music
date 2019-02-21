@@ -39,10 +39,10 @@ function createListOfWrappedVoices(phrase) {
     voice.set('index', event.index + event.content.toString().length);
   });
 
-  // Voices should have an order. The chords should be first, followed by all other voices.
-  // All voices should also be grouped, so that l1 and l2 appear together.
   const voiceElementsList = [];
 
+  // voiceElements map is ordered by key insertion, which is provided by parsed+ordered json.
+  // This means converting the map to a flat list will be the order we want to append all voice divs.
   voiceElements.forEach((voice) => {
     voiceElementsList.push(voice.get('parentElement'));
   });
