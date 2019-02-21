@@ -1,0 +1,36 @@
+.parent {
+  display: flex;
+}
+
+.space {
+  white-space: pre;
+}
+
+.chart {
+  font-family: monospace;
+}
+
+.v1 {
+  display: flex;
+  color: purple;
+}
+
+.v2 {
+  display: flex;
+  color: black;
+}
+
+.c1 {
+  display: flex;
+  color: green;
+}
+
+.c2 {
+  display: flex;
+  color: blue;
+}
+
+.a1 {
+  display: flex;
+  color: red;
+}
