@@ -1,5 +1,5 @@
 'use strict';
-const Chord = require('../chord');
+const Chord = require('./chord');
 
 describe('chord', () => {
   test.each([
