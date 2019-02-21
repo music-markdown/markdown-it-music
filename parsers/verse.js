@@ -37,6 +37,7 @@ function parseVoice(voice) {
 }
 
 function parsePhrase(phrase) {
+  // TODO: update structure of phrase to be explicit about voice grouping.
   return phrase.split(/\n/)
     .flatMap((voice) => parseVoice(voice))
     .filter((voice) => !!voice);

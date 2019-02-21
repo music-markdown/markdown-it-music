@@ -1,14 +1,19 @@
 'use strict';
 
 const Chord = require('../parsers/chord.js');
-const ChordsRenderer = require('./chords_renderer')['ChordsRenderer'];
+
+const rewire = require('rewire');
+const chordsrendererjs = rewire('./chords_renderer.js');
+chordsrendererjs.__set__('document', document);
+
+const createHtmlChordChart = chordsrendererjs.__get__('createHtmlChordChart');
+const createListOfWrappedVoices = chordsrendererjs.__get__('createListOfWrappedVoices');
+const appendVoiceContentDiv = chordsrendererjs.__get__('appendVoiceContentDiv');
 
 describe('JSON to HTML converter', () => {
   test('should wrap voice in div', () => {
-    const chordChartRenderer = new ChordsRenderer();
-
     const parentDiv = document.createElement('div');
-    chordChartRenderer.appendVoiceContentDiv(parentDiv, 'The', 1);
+    appendVoiceContentDiv(parentDiv, 'The', 1);
 
     const expectedDiv = '<div><div> </div><div>The</div></div>';
 
@@ -16,10 +21,8 @@ describe('JSON to HTML converter', () => {
   });
 
   test('should not include spaces div if there is no expected whitespace', () => {
-    const chordChartRenderer = new ChordsRenderer();
-
     const parentDiv = document.createElement('div');
-    chordChartRenderer.appendVoiceContentDiv(parentDiv, new Chord('C'), 0);
+    appendVoiceContentDiv(parentDiv, new Chord('C'), 0);
 
     const expectedDiv = '<div><div>C</div></div>';
 
@@ -27,11 +30,9 @@ describe('JSON to HTML converter', () => {
   });
 
   test('should append several chords to same parent div', () => {
-    const chordChartRenderer = new ChordsRenderer();
-
     const parentDiv = document.createElement('div');
-    chordChartRenderer.appendVoiceContentDiv(parentDiv, new Chord('C'), 0);
-    chordChartRenderer.appendVoiceContentDiv(parentDiv, new Chord('G'), 5);
+    appendVoiceContentDiv(parentDiv, new Chord('C'), 0);
+    appendVoiceContentDiv(parentDiv, new Chord('G'), 5);
 
     const expectedDiv = '<div><div>C</div><div>     </div><div>G</div></div>';
 
@@ -60,8 +61,6 @@ describe('JSON to HTML converter', () => {
       { index: 40, voice: 'l2', content: 'supercalifragilisticexpialidocious' },
       { index: 4, voice: 'a1', content: 'crash!' },
     ];
-
-    const chordChartRenderer = new ChordsRenderer();
 
     const expectedChordChartHtmlList = [
       '<div class="c1">' +
@@ -97,7 +96,7 @@ describe('JSON to HTML converter', () => {
       '</div>'
     ];
 
-    const actualHtmlList = chordChartRenderer.createListOfWrappedVoices(chordChartJson)
+    const actualHtmlList = createListOfWrappedVoices(chordChartJson)
       .map((html) => {
         return html.outerHTML;
       });
@@ -110,15 +109,13 @@ describe('JSON to HTML converter', () => {
       { index: 0, voice: 'l1', content: 'short' }
     ]];
 
-    const chordChartRenderer = new ChordsRenderer(shortChart);
-
     const expectedChordChartHtml = '<div class="chart">' +
       '<div class="verse">' +
         '<div class="l1">' +
         '<div>short</div>' +
       '</div></div></div>';
 
-    expect(chordChartRenderer.createHtmlChordChart().outerHTML).toEqual(expectedChordChartHtml);
+    expect(createHtmlChordChart(shortChart).outerHTML).toEqual(expectedChordChartHtml);
   });
 
   test('should separate each verse into their own wrapped div', () => {
@@ -133,8 +130,6 @@ describe('JSON to HTML converter', () => {
         { index: 0, voice: 'l1', content: 'Song' }
       ]
     ];
-
-    const chordChartRenderer = new ChordsRenderer(verse);
 
     const expectedDiv =
       '<div class="chart">' +
@@ -157,6 +152,6 @@ describe('JSON to HTML converter', () => {
         '</div>' +
       '</div>';
 
-    expect(chordChartRenderer.createHtmlChordChart().outerHTML).toEqual(expectedDiv);
+    expect(createHtmlChordChart(verse).outerHTML).toEqual(expectedDiv);
   });
 });

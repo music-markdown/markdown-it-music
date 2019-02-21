@@ -2,83 +2,76 @@
 
 const parseVerse = require('../parsers/verse.js')['parseVerse'];
 
-class ChordsRenderer {
-  constructor(chordChartJson) {
-    this.chordChartJson = chordChartJson;
-  }
+function createHtmlChordChart(verse) {
+  const chordChartHtml = document.createElement('div');
+  chordChartHtml.className = 'chart';
 
-  createHtmlChordChart() {
-    const chordChartHtml = document.createElement('div');
-    chordChartHtml.className = 'chart';
+  verse.forEach((phrase) => {
+    const verseDiv = document.createElement('div');
+    verseDiv.className = 'verse';
 
-    this.chordChartJson.forEach((verse) => {
-      const verseDiv = document.createElement('div');
-      verseDiv.className = 'verse';
+    createListOfWrappedVoices(phrase)
+      .forEach((event) => {
+        verseDiv.appendChild(event);
+      });
 
-      this.createListOfWrappedVoices(verse)
-        .forEach((event) => {
-          verseDiv.appendChild(event);
-        });
+    chordChartHtml.appendChild(verseDiv);
+  });
 
-      chordChartHtml.appendChild(verseDiv);
-    });
+  return chordChartHtml;
+}
 
-    return chordChartHtml;
-  }
+function createListOfWrappedVoices(phrase) {
+  // Assumes voices are sorted by index and grouped by voice.
+  // TODO: update structure of phrase to be explicit about voice grouping.
+  const voiceElements = new Map();
 
-  createListOfWrappedVoices(verse) {
-    // Assumes voices are sorted by index and grouped by voice.
-    const voiceElements = new Map();
+  phrase.forEach((event) => {
+    if (!voiceElements.has(event.voice)) {
+      voiceElements.set(event.voice, new Map([['index', 0], ['parentElement', document.createElement('div')]]));
 
-    verse.forEach((event) => {
-      if (!voiceElements.has(event.voice)) {
-        voiceElements.set(event.voice, new Map([['index', 0], ['parentElement', document.createElement('div')]]));
-
-        voiceElements.get(event.voice).get('parentElement').className = event.voice;
-      }
-
-      const voice = voiceElements.get(event.voice);
-      this.appendVoiceContentDiv(voice.get('parentElement'), event.content, event.index - voice.get('index'));
-
-      voice.set('index', event.index + event.content.toString().length);
-    });
-
-    // Voices should have an order. The chords should be first, followed by all other voices.
-    // All voices should also be grouped, so that l1 and l2 appear together.
-    const voiceElementsList = [];
-
-    voiceElements.forEach((voice) => {
-      voiceElementsList.push(voice.get('parentElement'));
-    });
-
-    return voiceElementsList;
-  }
-
-  appendVoiceContentDiv(parentVoice, text, whitespace) {
-    if (whitespace) {
-      const whitespaceDiv = document.createElement('div');
-      whitespaceDiv.innerHTML = ' '.repeat(whitespace);
-      parentVoice.appendChild(whitespaceDiv);
+      voiceElements.get(event.voice).get('parentElement').className = event.voice;
     }
 
-    const textDiv = document.createElement('div');
-    textDiv.innerHTML = text.toString();
+    const voice = voiceElements.get(event.voice);
+    appendVoiceContentDiv(voice.get('parentElement'), event.content, event.index - voice.get('index'));
 
-    parentVoice.appendChild(textDiv);
+    voice.set('index', event.index + event.content.toString().length);
+  });
+
+  // Voices should have an order. The chords should be first, followed by all other voices.
+  // All voices should also be grouped, so that l1 and l2 appear together.
+  const voiceElementsList = [];
+
+  voiceElements.forEach((voice) => {
+    voiceElementsList.push(voice.get('parentElement'));
+  });
+
+  return voiceElementsList;
+}
+
+function appendVoiceContentDiv(parentVoice, text, whitespace) {
+  if (whitespace) {
+    const whitespaceDiv = document.createElement('div');
+    whitespaceDiv.innerHTML = ' '.repeat(whitespace);
+    parentVoice.appendChild(whitespaceDiv);
   }
+
+  const textDiv = document.createElement('div');
+  textDiv.innerHTML = text.toString();
+
+  parentVoice.appendChild(textDiv);
 }
 
 function renderChords(str, opts) {
-  const chordChartJson = parseVerse(str);
-  const renderer = new ChordsRenderer(chordChartJson);
+  const verse = parseVerse(str);
 
-  const htmlChart = renderer.createHtmlChordChart();
+  const htmlChart = createHtmlChordChart(verse);
 
   return htmlChart.outerHTML;
 }
 
 module.exports = {
-  ChordsRenderer,
   'lang': 'chords',
   'callback': renderChords
 };
