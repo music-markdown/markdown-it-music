@@ -3,7 +3,7 @@
 const Chord = require('./chord');
 const voicePattern = /^([a-zA-Z-_]+)([0-9]*):\s(.*)/;
 
-function tokenize(instrument, voice, data) {
+function tokenize(instrument, data) {
   const re = /[^\s]+/g;
   const events = [];
 
@@ -11,7 +11,6 @@ function tokenize(instrument, voice, data) {
   while (match = re.exec(data)) {
     events.push({
       index: match.index,
-      voice: voice,
       content: instrument == 'c' ? Chord.parse(match[0]) : match[0]
     });
   }
@@ -29,18 +28,22 @@ function parseVoice(voice) {
     throw new Error(`Voice doesn't match ${voicePattern}: ${voice}`);
   }
 
-  const voiceId = `${match[1]}${match[2] || '1'}`;
   const instrument = match[1];
   const data = match[3];
 
-  return tokenize(instrument, voiceId, data);
+  return tokenize(instrument, data);
 }
 
 function parsePhrase(phrase) {
-  // TODO: update structure of phrase to be explicit about voice grouping.
   return phrase.split(/\n/)
-    .flatMap((voice) => parseVoice(voice))
-    .filter((voice) => !!voice);
+    .reduce((phrase, voice) => {
+      if (voice) {
+        const match = voice.match(voicePattern);
+        const voiceName = `${match[1]}${match[2] || '1'}`;
+        phrase.set(voiceName, parseVoice(voice));
+      }
+      return phrase;
+    }, new Map());
 }
 
 function parseVerse(verse) {

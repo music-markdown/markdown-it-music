@@ -23,20 +23,21 @@ function createHtmlChordChart(verse) {
 
 function createListOfWrappedVoices(phrase) {
   // Assumes voices are sorted by index and grouped by voice.
-  // TODO: update structure of phrase to be explicit about voice grouping.
   const voiceElements = new Map();
 
-  phrase.forEach((event) => {
-    if (!voiceElements.has(event.voice)) {
-      voiceElements.set(event.voice, new Map([['index', 0], ['parentElement', document.createElement('div')]]));
+  phrase.forEach((events, voiceName) => {
+    events.forEach((event) => {
+      if (!voiceElements.has(voiceName)) {
+        voiceElements.set(voiceName, new Map([['index', 0], ['parentElement', document.createElement('div')]]));
 
-      voiceElements.get(event.voice).get('parentElement').className = event.voice;
-    }
+        voiceElements.get(voiceName).get('parentElement').className = voiceName;
+      }
 
-    const voice = voiceElements.get(event.voice);
-    appendVoiceContentDiv(voice.get('parentElement'), event.content, event.index - voice.get('index'));
+      const voice = voiceElements.get(voiceName);
+      appendVoiceContentDiv(voice.get('parentElement'), event.content, event.index - voice.get('index'));
 
-    voice.set('index', event.index + event.content.toString().length);
+      voice.set('index', event.index + event.content.toString().length);
+    });
   });
 
   const voiceElementsList = [];
