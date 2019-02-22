@@ -40,27 +40,37 @@ describe('JSON to HTML converter', () => {
   });
 
   test('should convert a list of voice events (a chord chard) to wrapped divs', () => {
-    const chordChartJson = [
-      { index: 4, voice: 'c1', content: new Chord('G') },
-      { index: 12, voice: 'c1', content: new Chord('F') },
-      { index: 20, voice: 'c1', content: new Chord('Am') },
-      { index: 29, voice: 'c1', content: new Chord('G') },
-      { index: 40, voice: 'c1', content: new Chord('F') },
-      { index: 47, voice: 'c1', content: new Chord('C') },
-      { index: 4, voice: 'c2', content: new Chord('C') },
-      { index: 12, voice: 'c2', content: new Chord('D') },
-      { index: 20, voice: 'c2', content: new Chord('Cm') },
-      { index: 29, voice: 'c2', content: new Chord('F') },
-      { index: 40, voice: 'c2', content: new Chord('G') },
-      { index: 47, voice: 'c2', content: new Chord('B') },
-      { index: 0, voice: 'l1', content: 'The' },
-      { index: 4, voice: 'l1', content: 'longest' },
-      { index: 12, voice: 'l1', content: 'word' },
-      { index: 17, voice: 'l1', content: 'is' },
-      { index: 20, voice: 'l1', content: 'supercalifragilisticexpialidocious' },
-      { index: 40, voice: 'l2', content: 'supercalifragilisticexpialidocious' },
-      { index: 4, voice: 'a1', content: 'crash!' },
-    ];
+    const chordChartJson = new Map([
+      ['c1', [
+        { index: 4, content: new Chord('G') },
+        { index: 12, content: new Chord('F') },
+        { index: 20, content: new Chord('Am') },
+        { index: 29, content: new Chord('G') },
+        { index: 40, content: new Chord('F') },
+        { index: 47, content: new Chord('C') },
+      ]],
+      ['c2', [
+        { index: 4, content: new Chord('C') },
+        { index: 12, content: new Chord('D') },
+        { index: 20, content: new Chord('Cm') },
+        { index: 29, content: new Chord('F') },
+        { index: 40, content: new Chord('G') },
+        { index: 47, content: new Chord('B') },
+      ]],
+      ['l1', [
+        { index: 0, content: 'The' },
+        { index: 4, content: 'longest' },
+        { index: 12, content: 'word' },
+        { index: 17, content: 'is' },
+        { index: 20, content: 'supercalifragilisticexpialidocious' },
+      ]],
+      ['l2', [
+        { index: 40, content: 'supercalifragilisticexpialidocious' },
+      ]],
+      ['a1', [
+        { index: 4, content: 'crash!' },
+      ]]
+    ]);
 
     const expectedChordChartHtmlList = [
       '<div class="c1">' +
@@ -105,9 +115,9 @@ describe('JSON to HTML converter', () => {
   });
 
   test('should wrap a chord chart in chord chart class div', () => {
-    const shortChart = [[
-      { index: 0, voice: 'l1', content: 'short' }
-    ]];
+    const shortChart = [
+      new Map([['l1', [{ index: 0, content: 'short' }]]])
+    ];
 
     const expectedChordChartHtml = '<div class="chart">' +
       '<div class="verse">' +
@@ -120,15 +130,23 @@ describe('JSON to HTML converter', () => {
 
   test('should separate each verse into their own wrapped div', () => {
     const verse = [
-      [
-        { index: 0, voice: 'c1', content: new Chord('C') },
-        { index: 4, voice: 'c1', content: new Chord('G') },
-        { index: 0, voice: 'l1', content: 'Test' }
-      ],
-      [
-        { index: 0, voice: 'c1', content: new Chord('A') },
-        { index: 0, voice: 'l1', content: 'Song' }
-      ]
+      new Map([
+        ['c1', [
+          { index: 0, content: new Chord('C') },
+          { index: 4, content: new Chord('G') },
+        ]],
+        ['l1', [
+          { index: 0, content: 'Test' }
+        ]]
+      ]),
+      new Map([
+        ['c1', [
+          { index: 0, content: new Chord('A') },
+        ]],
+        ['l1', [
+          { index: 0, content: 'Song' }
+        ]]
+      ])
     ];
 
     const expectedDiv =
@@ -152,6 +170,7 @@ describe('JSON to HTML converter', () => {
         '</div>' +
       '</div>';
 
+    debugger;
     expect(createHtmlChordChart(verse).outerHTML).toEqual(expectedDiv);
   });
 });

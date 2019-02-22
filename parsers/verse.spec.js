@@ -14,8 +14,8 @@ describe('Verse', () => {
     const voice = 'c1:     Am    Bm    ';
     const actual = parseVoice(voice);
     expect(actual).toEqual([
-      { index: 4, voice: 'c1', content: new Chord('A', 'm') },
-      { index: 10, voice: 'c1', content: new Chord('B', 'm') },
+      { index: 4, content: new Chord('A', 'm') },
+      { index: 10, content: new Chord('B', 'm') },
     ]);
   });
 
@@ -23,8 +23,8 @@ describe('Verse', () => {
     const voice = 'c2:     Am    Bm    ';
     const actual = parseVoice(voice);
     expect(actual).toEqual([
-      { index: 4, voice: 'c2', content: new Chord('A', 'm') },
-      { index: 10, voice: 'c2', content: new Chord('B', 'm') },
+      { index: 4, content: new Chord('A', 'm') },
+      { index: 10, content: new Chord('B', 'm') },
     ]);
   });
 
@@ -32,8 +32,8 @@ describe('Verse', () => {
     const voice = 'c:     Am    Bm    ';
     const actual = parseVoice(voice);
     expect(actual).toEqual([
-      { index: 4, voice: 'c1', content: new Chord('A', 'm') },
-      { index: 10, voice: 'c1', content: new Chord('B', 'm') },
+      { index: 4, content: new Chord('A', 'm') },
+      { index: 10, content: new Chord('B', 'm') },
     ]);
   });
 
@@ -41,11 +41,11 @@ describe('Verse', () => {
     const voice = 'l1: All the leaves are brown';
     const actual = parseVoice(voice);
     expect(actual).toEqual([
-      { index: 0, voice: 'l1', content: 'All' },
-      { index: 4, voice: 'l1', content: 'the' },
-      { index: 8, voice: 'l1', content: 'leaves' },
-      { index: 15, voice: 'l1', content: 'are' },
-      { index: 19, voice: 'l1', content: 'brown' },
+      { index: 0, content: 'All' },
+      { index: 4, content: 'the' },
+      { index: 8, content: 'leaves' },
+      { index: 15, content: 'are' },
+      { index: 19, content: 'brown' },
     ]);
   });
 
@@ -60,19 +60,23 @@ describe('Verse', () => {
       'l1: I didn\'t ask, you shouldn\'t have told me'
     ].join('\n');
     const actual = parsePhrase(phrase);
-    expect(actual).toEqual([
-      { index: 0, voice: 'c1', content: new Chord('G') },
-      { index: 9, voice: 'c1', content: new Chord('E', 'm') },
-      { index: 33, voice: 'c1', content: new Chord('B', 'm') },
-      { index: 0, voice: 'l1', content: 'I' },
-      { index: 2, voice: 'l1', content: 'didn\'t' },
-      { index: 9, voice: 'l1', content: 'ask,' },
-      { index: 14, voice: 'l1', content: 'you' },
-      { index: 18, voice: 'l1', content: 'shouldn\'t' },
-      { index: 28, voice: 'l1', content: 'have' },
-      { index: 33, voice: 'l1', content: 'told' },
-      { index: 38, voice: 'l1', content: 'me' },
-    ]);
+    expect(actual).toEqual({
+      'c1': [
+        { index: 0, content: new Chord('G') },
+        { index: 9, content: new Chord('E', 'm') },
+        { index: 33, content: new Chord('B', 'm') },
+      ],
+      'l1': [
+        { index: 0, content: 'I' },
+        { index: 2, content: 'didn\'t' },
+        { index: 9, content: 'ask,' },
+        { index: 14, content: 'you' },
+        { index: 18, content: 'shouldn\'t' },
+        { index: 28, content: 'have' },
+        { index: 33, content: 'told' },
+        { index: 38, content: 'me' },
+      ]
+    });
   });
 
   test('parses verse with two phrases', () => {
@@ -85,26 +89,34 @@ describe('Verse', () => {
     ].join('\n');
     const actual = parseVerse(verse);
     expect(actual).toEqual([
-      [
-        { index: 19, voice: 'c1', content: new Chord('A', 'm') },
-        { index: 0, voice: 'l1', content: 'All' },
-        { index: 4, voice: 'l1', content: 'the' },
-        { index: 8, voice: 'l1', content: 'leaves' },
-        { index: 15, voice: 'l1', content: 'are' },
-        { index: 19, voice: 'l1', content: 'brown' },
-      ],
-      [
-        { index: 0, voice: 'c1', content: new Chord('G') },
-        { index: 3, voice: 'c1', content: new Chord('F') },
-        { index: 14, voice: 'c1', content: new Chord('G') },
-        { index: 21, voice: 'c1', content: new Chord('E', 'sus2') },
-        { index: 27, voice: 'c1', content: new Chord('E') },
-        { index: 6, voice: 'l1', content: 'and' },
-        { index: 10, voice: 'l1', content: 'the' },
-        { index: 14, voice: 'l1', content: 'sky' },
-        { index: 18, voice: 'l1', content: 'is' },
-        { index: 21, voice: 'l1', content: 'gray.' },
-      ],
+      {
+        'c1': [
+          { index: 19, content: new Chord('A', 'm') },
+        ],
+        'l1': [
+          { index: 0, content: 'All' },
+          { index: 4, content: 'the' },
+          { index: 8, content: 'leaves' },
+          { index: 15, content: 'are' },
+          { index: 19, content: 'brown' },
+        ]
+      },
+      {
+        'c1': [
+          { index: 0, content: new Chord('G') },
+          { index: 3, content: new Chord('F') },
+          { index: 14, content: new Chord('G') },
+          { index: 21, content: new Chord('E', 'sus2') },
+          { index: 27, content: new Chord('E') },
+        ],
+        'l1': [
+          { index: 6, content: 'and' },
+          { index: 10, content: 'the' },
+          { index: 14, content: 'sky' },
+          { index: 18, content: 'is' },
+          { index: 21, content: 'gray.' },
+        ]
+      },
     ]);
   });
 });
