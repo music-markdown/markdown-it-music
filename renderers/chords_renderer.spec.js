@@ -170,7 +170,6 @@ describe('JSON to HTML converter', () => {
         '</div>' +
       '</div>';
 
-    debugger;
     expect(createHtmlChordChart(verse).outerHTML).toEqual(expectedDiv);
   });
 });

@@ -92,8 +92,6 @@ describe('Verse', () => {
       'l1:       and the sky is gray.',
     ].join('\n');
     const actual = parseVerse(verse);
-    debugger;
-    expect(new Map()).toEqual(new Map());
     expect(actual).toEqual(expect.objectContaining([
       new Map([
         [
