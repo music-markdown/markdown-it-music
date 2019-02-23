@@ -2,7 +2,7 @@
 
 const parseVerse = require('../parsers/verse.js')['parseVerse'];
 
-function createHtmlChordChart(verse) {
+function createHtmlChordChart(verse, opts) {
   const chordChartHtml = document.createElement('div');
   chordChartHtml.className = 'chart';
 
@@ -10,7 +10,7 @@ function createHtmlChordChart(verse) {
     const verseDiv = document.createElement('div');
     verseDiv.className = 'verse';
 
-    createListOfWrappedVoices(phrase)
+    createListOfWrappedVoices(phrase, opts ? opts.transpose : undefined)
       .forEach((event) => {
         verseDiv.appendChild(event);
       });
@@ -21,7 +21,7 @@ function createHtmlChordChart(verse) {
   return chordChartHtml;
 }
 
-function createListOfWrappedVoices(phrase) {
+function createListOfWrappedVoices(phrase, transposeAmount) {
   // Assumes voices are sorted by index and grouped by voice.
   const voiceElements = new Map();
 
@@ -31,6 +31,10 @@ function createListOfWrappedVoices(phrase) {
         voiceElements.set(voiceName, new Map([['index', 0], ['parentElement', document.createElement('div')]]));
 
         voiceElements.get(voiceName).get('parentElement').className = voiceName;
+      }
+
+      if (transposeAmount && voiceName.startsWith('c') && typeof event.content.transpose === 'function') {
+        event.content = event.content.transpose(transposeAmount);
       }
 
       const voice = voiceElements.get(voiceName);
@@ -67,7 +71,7 @@ function appendVoiceContentDiv(parentVoice, text, whitespace) {
 function renderChords(str, opts) {
   const verse = parseVerse(str);
 
-  const htmlChart = createHtmlChordChart(verse);
+  const htmlChart = createHtmlChordChart(verse, opts);
 
   return htmlChart.outerHTML;
 }

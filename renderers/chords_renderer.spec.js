@@ -107,9 +107,7 @@ describe('JSON to HTML converter', () => {
     ];
 
     const actualHtmlList = createListOfWrappedVoices(chordChartJson)
-      .map((html) => {
-        return html.outerHTML;
-      });
+      .map((html) => html.outerHTML);
 
     expect(actualHtmlList).toEqual(expectedChordChartHtmlList);
   });
@@ -171,5 +169,39 @@ describe('JSON to HTML converter', () => {
       '</div>';
 
     expect(createHtmlChordChart(verse).outerHTML).toEqual(expectedDiv);
+  });
+
+  test('should transpose a chord if transpose is provided', () => {
+    const phrase = new Map([
+      ['c1', [{ index: 0, content: new Chord('C') }]]
+    ]);
+
+    const expectedPhraseHtml = [
+      '<div class="c1">' +
+        '<div>C#</div>' +
+      '</div>'
+    ];
+
+    const wrappedVoices = createListOfWrappedVoices(phrase, 1)
+      .map((html) => html.outerHTML);
+
+    expect(wrappedVoices).toEqual(expectedPhraseHtml);
+  });
+
+  test('should not try to transpose anything that is not a chord', () => {
+    const phrase = new Map([
+      ['l1', [{ index: 0, content: 'test' }]]
+    ]);
+
+    const expectedPhraseHtml = [
+      '<div class="l1">' +
+        '<div>test</div>' +
+      '</div>'
+    ];
+
+    const wrappedVoices = createListOfWrappedVoices(phrase, 1)
+      .map((html) => html.outerHTML);
+
+    expect(wrappedVoices).toEqual(expectedPhraseHtml);
   });
 });
