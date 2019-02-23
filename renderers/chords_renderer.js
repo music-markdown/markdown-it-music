@@ -2,15 +2,38 @@
 
 const parseVerse = require('../parsers/verse.js')['parseVerse'];
 
+const randomColor = require('randomcolor');
+
+class VoiceColors {
+  constructor() {
+    this.colors = ['blue', 'black', 'red', 'green', 'purple', 'teal'];
+    this.voiceColorMap = {};
+  }
+
+  getUnusedColor() {
+    return this.colors.length > 0 ? this.colors.shift() : randomColor({ seed: 42 });
+  }
+
+  getVoiceColor(voice) {
+    if (!(voice in this.voiceColorMap)) {
+      this.voiceColorMap[voice] = this.getUnusedColor();
+    }
+
+    return this.voiceColorMap[voice];
+  }
+}
+
 function createHtmlChordChart(verse, opts) {
   const chordChartHtml = document.createElement('div');
   chordChartHtml.className = 'chart';
+
+  const voiceColors = new VoiceColors();
 
   verse.forEach((phrase) => {
     const verseDiv = document.createElement('div');
     verseDiv.className = 'verse';
 
-    createListOfWrappedVoices(phrase, opts ? opts.transpose : undefined)
+    createListOfWrappedVoices(phrase, opts ? opts.transpose : undefined, voiceColors)
       .forEach((event) => {
         verseDiv.appendChild(event);
       });
@@ -21,24 +44,26 @@ function createHtmlChordChart(verse, opts) {
   return chordChartHtml;
 }
 
-function createListOfWrappedVoices(phrase, transposeAmount) {
+function createListOfWrappedVoices(phrase, transposeAmount, voiceColors) {
   // Assumes voices are sorted by index and grouped by voice.
   const voiceElements = new Map();
 
   phrase.forEach((events, voiceName) => {
+    if (!voiceElements.has(voiceName)) {
+      voiceElements.set(voiceName, new Map([['index', 0], ['parentElement', document.createElement('div')]]));
+    }
+
+    const color = voiceColors.getVoiceColor(voiceName);
+
     events.forEach((event) => {
-      if (!voiceElements.has(voiceName)) {
-        voiceElements.set(voiceName, new Map([['index', 0], ['parentElement', document.createElement('div')]]));
-
-        voiceElements.get(voiceName).get('parentElement').className = voiceName;
-      }
-
       if (transposeAmount && voiceName.startsWith('c') && typeof event.content.transpose === 'function') {
         event.content = event.content.transpose(transposeAmount);
       }
 
       const voice = voiceElements.get(voiceName);
-      appendVoiceContentDiv(voice.get('parentElement'), event.content, event.index - voice.get('index'));
+      voice.get('parentElement').className = 'voice';
+      voice.get('parentElement').style.color = color;
+      appendVoiceContentDiv(voice.get('parentElement'), event.content, event.index - voice.get('index'), voiceName);
 
       voice.set('index', event.index + event.content.toString().length);
     });
@@ -55,7 +80,7 @@ function createListOfWrappedVoices(phrase, transposeAmount) {
   return voiceElementsList;
 }
 
-function appendVoiceContentDiv(parentVoice, text, whitespace) {
+function appendVoiceContentDiv(parentVoice, text, whitespace, className) {
   if (whitespace) {
     const whitespaceDiv = document.createElement('div');
     whitespaceDiv.innerHTML = ' '.repeat(whitespace);
@@ -64,6 +89,7 @@ function appendVoiceContentDiv(parentVoice, text, whitespace) {
 
   const textDiv = document.createElement('div');
   textDiv.innerHTML = text.toString();
+  textDiv.className = className;
 
   parentVoice.appendChild(textDiv);
 }
