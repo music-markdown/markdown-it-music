@@ -19,15 +19,15 @@ class ChordBox {
     this.right = this.width - this.stringSpacing * 1.5;
   }
 
-  getStringX(i) {
+  string(i) {
     return this.left + i * this.stringSpacing;
   }
 
-  getBeamY(i) {
+  beam(i) {
     return this.header + i * this.fretSpacing;
   }
 
-  getFretY(i) {
+  fret(i) {
     return this.header + this.fretSpacing / 2 + (i - 1) * this.fretSpacing;
   }
 }
@@ -38,13 +38,13 @@ function drawDiagram(draw, box, tuning) {
 
   // Draw Frets
   for (let i = 1; i <= box.frets; i++) {
-    const y = box.getBeamY(i);
+    const y = box.beam(i);
     draw.line(box.left, y, box.right, y).stroke({ color: '#999' });
   }
 
   // Draw Strings and Tuning
   for (let i = 0; i < box.strings; i++) {
-    const x = box.getStringX(i);
+    const x = box.string(i);
     draw.line(x, box.header, x, box.footer).stroke({ color: '#000' });
     draw.text(tuning[i]).font({ size: box.radius * 2, family: 'Arial' })
       .center(x, (box.footer + box.height) / 2);
@@ -53,13 +53,13 @@ function drawDiagram(draw, box, tuning) {
 
 function drawNote(draw, box, string, fret) {
   draw.circle(box.radius * 2)
-    .center(box.getStringX(string - 1), box.getFretY(fret))
+    .center(box.string(string - 1), box.fret(fret))
     .fill({ color: '#000' });
 }
 
 function drawMute(draw, box, string) {
-  const x = box.getStringX(string - 1);
-  const y = box.getFretY(0);
+  const x = box.string(string - 1);
+  const y = box.fret(0);
   const r = box.radius * 0.7;
   draw.line(x-r, y-r, x+r, y+r).stroke({ color: '#000' });
   draw.line(x-r, y+r, x+r, y-r).stroke({ color: '#000' });
@@ -67,17 +67,17 @@ function drawMute(draw, box, string) {
 
 function drawBarre(draw, box, first, last, fret) {
   const r = box.radius * 0.7;
-  const x = (box.getStringX(last - 1) + box.getStringX(first - 1)) / 2;
-  const w = box.getStringX(last - 1) - box.getStringX(first - 1) + 2 * r;
+  const x = (box.string(last - 1) + box.string(first - 1)) / 2;
+  const w = box.string(last - 1) - box.string(first - 1) + 2 * r;
   draw.rect(w, 2 * r)
-    .center(x, box.getFretY(fret)).radius(r)
+    .center(x, box.fret(fret)).radius(r)
     .fill({ color: '#000' });
 }
 
 function drawFretOffset(draw, box, offset) {
   draw.text(`${offset}fr`)
     .font({ size: box.radius * 2, family: 'Arial' })
-    .center((box.right + box.width) / 2, box.getFretY(1));
+    .center((box.right + box.width) / 2, box.fret(1));
 }
 
 function drawChordDiagram(fingering, width=100, height=100,
