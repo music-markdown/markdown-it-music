@@ -2,22 +2,21 @@
 const SVG = require('svg.js');
 
 class ChordBox {
-  constructor(x, y, w, h, frets, strings) {
-    console.log(w);
+  constructor(x, y, width, height, frets, strings) {
     this.x = x;
     this.y = y;
-    this.w = w;
-    this.h = h;
+    this.width = width;
+    this.height = height;
     this.frets = frets;
     this.strings = strings;
 
-    this.stringSpacing = this.w / (this.strings - 1 + 3);
-    this.fretSpacing = this.h / (this.frets + 2);
-    this.r = Math.min(this.stringSpacing, this.fretSpacing) * 0.35;
+    this.stringSpacing = this.width / (this.strings - 1 + 3);
+    this.fretSpacing = this.height / (this.frets + 2);
+    this.radius = Math.min(this.stringSpacing, this.fretSpacing) * 0.35;
     this.header = this.fretSpacing * 1;
-    this.footer = this.h - this.fretSpacing * 1;
+    this.footer = this.height - this.fretSpacing * 1;
     this.left = this.x + this.stringSpacing * 1.5;
-    this.right = this.w - this.stringSpacing * 1.5;
+    this.right = this.width - this.stringSpacing * 1.5;
   }
 
   getStringX(i) {
@@ -47,13 +46,13 @@ function drawDiagram(draw, box, tuning) {
   for (let i = 0; i < box.strings; i++) {
     const x = box.getStringX(i);
     draw.line(x, box.header, x, box.footer).stroke({ color: '#000' });
-    draw.text(tuning[i]).font({ size: box.r * 2, family: 'Arial' })
-      .center(x, (box.footer + box.h) / 2);
+    draw.text(tuning[i]).font({ size: box.radius * 2, family: 'Arial' })
+      .center(x, (box.footer + box.height) / 2);
   }
 }
 
 function drawNote(draw, box, string, fret) {
-  draw.circle(box.r * 2)
+  draw.circle(box.radius * 2)
     .center(box.getStringX(string - 1), box.getFretY(fret))
     .fill({ color: '#000' });
 }
@@ -61,13 +60,13 @@ function drawNote(draw, box, string, fret) {
 function drawMute(draw, box, string) {
   const x = box.getStringX(string - 1);
   const y = box.getFretY(0);
-  const r = box.r * 0.7;
+  const r = box.radius * 0.7;
   draw.line(x-r, y-r, x+r, y+r).stroke({ color: '#000' });
   draw.line(x-r, y+r, x+r, y-r).stroke({ color: '#000' });
 }
 
 function drawBarre(draw, box, first, last, fret) {
-  const r = box.r * 0.7;
+  const r = box.radius * 0.7;
   const x = (box.getStringX(last - 1) + box.getStringX(first - 1)) / 2;
   const w = box.getStringX(last - 1) - box.getStringX(first - 1) + 2 * r;
   draw.rect(w, 2 * r)
@@ -77,8 +76,8 @@ function drawBarre(draw, box, first, last, fret) {
 
 function drawFretOffset(draw, box, offset) {
   draw.text(`${offset}fr`)
-    .font({ size: box.r * 2, family: 'Arial' })
-    .center((box.right + box.w) / 2, box.getFretY(1));
+    .font({ size: box.radius * 2, family: 'Arial' })
+    .center((box.right + box.width) / 2, box.getFretY(1));
 }
 
 function drawChordDiagram(fingering, width=100, height=100,
