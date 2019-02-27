@@ -15,7 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "abcjs": "^5.6.4",
-    "randomcolor": "^0.5.4"
+    "randomcolor": "^0.5.4",
+    "svg.js": "^2.7.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
