@@ -1,7 +1,7 @@
 'use strict';
 
 const parseVerse = require('../parsers/verse.js')['parseVerse'];
-
+const chordDiagram = require('./chord_diagram.js');
 const randomColor = require('randomcolor');
 
 class VoiceColors {
@@ -88,8 +88,34 @@ function appendVoiceContentDiv(parentVoice, text, whitespace, className) {
   }
 
   const textDiv = document.createElement('div');
-  textDiv.innerHTML = text.toString();
   textDiv.className = className;
+
+  if (className.startsWith('c')) {
+    const chordDiagramDiv = document.createElement('div');
+    chordDiagramDiv.className = 'diagram';
+
+    // TODO: Get fingering (or list of fingerings) from chord JSON.
+    const tempSVG = {
+      fretOffset: 2,
+      mutes: [
+        { string: 1 },
+        { string: 2 }
+      ],
+      notes: [
+        { string: 3, fret: 3 },
+        { string: 4, fret: 5 }
+      ],
+      barres: [
+        { first: 5, last: 6, fret: 6 }
+      ]
+    };
+    chordDiagramDiv.innerHTML = chordDiagram.renderChordDiagram(tempSVG);
+
+    textDiv.className += ' chord';
+    textDiv.appendChild(chordDiagramDiv);
+  }
+
+  textDiv.innerHTML += text.toString();
 
   parentVoice.appendChild(textDiv);
 }
