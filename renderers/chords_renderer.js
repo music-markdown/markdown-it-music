@@ -91,14 +91,20 @@ function appendVoiceContentDiv(parentVoice, text, whitespace, className) {
   const textDiv = document.createElement('div');
   textDiv.className = className;
 
-  if (className.startsWith('c') && guitarChordLibrary.has(text.toString())) {
-    const chordDiagramDiv = document.createElement('div');
-    chordDiagramDiv.className = 'diagram';
-    const chordShorthands = guitarChordLibrary.get(text.toString());
-    // TODO: Provide a way to scroll through several chord diagrams.
-    chordDiagramDiv.innerHTML = chordDiagram.renderChordDiagram(chordShorthands[0]);
+  if (className.startsWith('c')) {
     textDiv.className += ' chord';
-    textDiv.appendChild(chordDiagramDiv);
+
+    if (guitarChordLibrary.has(text.toString())) {
+      const chordDiagramDiv = document.createElement('div');
+      chordDiagramDiv.className = 'diagram';
+
+      const shorthands = guitarChordLibrary.get(text.toString());
+      const svgs = shorthands.map(
+        (shorthand) => chordDiagram.renderChordDiagram(shorthand));
+      // TODO: Provide a way to scroll through several chord diagrams.
+      chordDiagramDiv.innerHTML = svgs[0];
+      textDiv.appendChild(chordDiagramDiv);
+    }
   }
 
   textDiv.innerHTML += text.toString();

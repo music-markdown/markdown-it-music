@@ -23,7 +23,7 @@ describe('JSON to HTML converter', () => {
     const parentDiv = document.createElement('div');
     appendVoiceContentDiv(parentDiv, 'The', 1, 'c1');
 
-    const expectedDiv = `<div><div> </div><div class="c1 chord">${svgDiagramDiv}The</div></div>`;
+    const expectedDiv = `<div><div> </div><div class="c1 chord">The</div></div>`;
 
     expect(parentDiv.outerHTML).toEqual(expectedDiv);
   });
