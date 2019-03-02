@@ -2,6 +2,7 @@
 
 const parseVerse = require('../parsers/verse.js')['parseVerse'];
 const chordDiagram = require('./chord_diagram.js');
+const { guitarChordLibrary } = require('./chord_library.js');
 const randomColor = require('randomcolor');
 
 class VoiceColors {
@@ -91,28 +92,19 @@ function appendVoiceContentDiv(parentVoice, text, whitespace, className) {
   textDiv.className = className;
 
   if (className.startsWith('c')) {
-    const chordDiagramDiv = document.createElement('div');
-    chordDiagramDiv.className = 'diagram';
-
-    // TODO: Get fingering (or list of fingerings) from chord JSON.
-    const tempSVG = {
-      fretOffset: 2,
-      mutes: [
-        { string: 1 },
-        { string: 2 }
-      ],
-      notes: [
-        { string: 3, fret: 3 },
-        { string: 4, fret: 5 }
-      ],
-      barres: [
-        { first: 5, last: 6, fret: 6 }
-      ]
-    };
-    chordDiagramDiv.innerHTML = chordDiagram.renderChordDiagram(tempSVG);
-
     textDiv.className += ' chord';
-    textDiv.appendChild(chordDiagramDiv);
+
+    if (guitarChordLibrary.has(text.toString())) {
+      const chordDiagramDiv = document.createElement('div');
+      chordDiagramDiv.className = 'diagram';
+
+      const shorthands = guitarChordLibrary.get(text.toString());
+      const svgs = shorthands.map(
+        (shorthand) => chordDiagram.renderChordDiagram(shorthand));
+      // TODO: Provide a way to scroll through several chord diagrams.
+      chordDiagramDiv.innerHTML = svgs[0];
+      textDiv.appendChild(chordDiagramDiv);
+    }
   }
 
   textDiv.innerHTML += text.toString();
