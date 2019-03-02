@@ -1,11 +1,46 @@
 .voice {
   display: flex;
-}
-
-.space {
   white-space: pre;
 }
 
 .chart {
   font-family: monospace;
+}
+
+.chord {
+  cursor: help;
+}
+
+.diagram {
+  border: 1px solid #e3e3e3;
+  background: white;
+  width: auto;
+  max-width: 275px;
+  height: auto;
+  z-index: 500;
+  position: absolute;
+  transform: translate(-40%, -100%);
+  cursor: default;
+  display: inline-block;
+}
+
+.chord .diagram {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.4s, opacity 0.4s linear;
+}
+
+.chord:hover .diagram {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0.1s;
+  -webkit-transition: opacity 0.1s ease-in;
+  -moz-transition: opacity 0.1s ease-in;
+  -ms-transition: opacity 0.1s ease-in;
+  -o-transition: opacity 0.1s ease-in;
+  transition: opacity 0.1s ease-in;
+}
+
+.empty {
+  height: 200px;
 }
