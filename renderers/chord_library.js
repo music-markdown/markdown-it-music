@@ -42,6 +42,10 @@ for (const [note, os] of [
     `o${1+os} b1,6,${1+os} n2,${3+os} n4,${2+os} n5,${4+os}`);
   addGuitarChord(`${note}m7`,
     `o${1+os} b1,6,${1+os} n3,${3+os}`);
+  addGuitarChord(`${note}sus4`,
+    `o${1+os} b1,6,${1+os} n2,${3+os} n3,${3+os} n4,${3+os}`);
+  addGuitarChord(`${note}7sus4`,
+    `o${1+os} b1,6,${1+os} n2,${3+os} n4,${3+os}`);
 }
 
 for (const [note, os] of [
@@ -60,8 +64,10 @@ for (const [note, os] of [
     `o${1+os} m1 b2,6,${1+os} n3,${3+os} n4,${2+os} n5,${3+os}`);
   addGuitarChord(`${note}sus2`,
     `o${1+os} m1 b2,6,${1+os} n3,${3+os} n4,${3+os}`);
-  addGuitarChord(`${note}sus2`,
+  addGuitarChord(`${note}sus4`,
     `o${1+os} m1 b2,6,${1+os} n3,${3+os} n4,${3+os} n5,${4+os}`);
+  addGuitarChord(`${note}7sus4`,
+    `o${1+os} m1 b2,6,${1+os} n3,${3+os} n5,${4+os}`);
 }
 
 module.exports = {
