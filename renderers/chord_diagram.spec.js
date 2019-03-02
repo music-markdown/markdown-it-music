@@ -5,7 +5,7 @@ const chordDiagramJs = rewire('./chord_diagram.js');
 
 const parseShorthand = chordDiagramJs.__get__('parseShorthand');
 
-describe('Chord Diagram Rrenderer', () => {
+describe('Chord Diagram Renderer', () => {
   test('parses shorthand offset', () => {
     const actual = parseShorthand('o2');
     const expected = { offset: 2, mutes: [], notes: [], barres: [] };
