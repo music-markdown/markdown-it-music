@@ -12,7 +12,7 @@ function MarkdownMusic(md, musicOpts) {
         try {
           return md.highlightRegistry[lang](str, md.musicOpts);
         } catch (error) {
-          return `<div class="error">${error}</div>`;
+          return `<pre>${str}</pre><div class="error">${error}</div>`;
         }
       }
     }
