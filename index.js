@@ -9,7 +9,11 @@ function MarkdownMusic(md, musicOpts) {
   md.set({
     highlight: function(str, lang) {
       if (md.highlightRegistry.hasOwnProperty(lang)) {
-        return md.highlightRegistry[lang](str, md.musicOpts);
+        try {
+          return md.highlightRegistry[lang](str, md.musicOpts);
+        } catch (error) {
+          return `<pre>${str}</pre><div class="error">${error}</div>`;
+        }
       }
     }
   });
