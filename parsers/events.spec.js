@@ -4,8 +4,8 @@ const rewire = require('rewire');
 const Chord = require('./chord.js');
 const eventsjs = rewire('./events.js');
 
-const createEventFromVerse = eventsjs.__get__('createEventFromVerse');
-const convertVersesToEvents = eventsjs.__get__('convertVersesToEvents');
+const convertVerseToEvents = eventsjs.__get__('convertVerseToEvents');
+const EventList = eventsjs.__get__('EventList');
 
 describe('Event', () => {
   test('should add voices', () => {
@@ -31,7 +31,8 @@ describe('Event', () => {
       ]]
     ]);
 
-    const actualEvent = createEventFromVerse(nextVoices, ['c1', 'c2', 'l1', 'a1']);
+    const eventList = new EventList();
+    const actualEvent = eventList.createEventListFromPhrase(nextVoices, ['c1', 'c2', 'l1', 'a1']);
 
     expect(actualEvent).toEqual(expectedEvent);
   });
@@ -57,7 +58,8 @@ describe('Event', () => {
       { index: 0, voice: 'l2', content: 'Test' }
     ];
 
-    const actualEvent = createEventFromVerse(nextVoices, ['c1', 'c2', 'l1', 'l2']);
+    const eventList = new EventList();
+    const actualEvent = eventList.createEventListFromPhrase(nextVoices, ['c1', 'c2', 'l1', 'l2']);
 
     expect(actualEvent).toEqual(expectedEvent);
   });
@@ -83,7 +85,8 @@ describe('Event', () => {
       { index: 0, voice: 'l1', content: 'The' }
     ];
 
-    const actualEvent = createEventFromVerse(nextVoices, ['c1', 'c2', 'l1', 'l2']);
+    const eventList = new EventList();
+    const actualEvent = eventList.createEventListFromPhrase(nextVoices, ['c1', 'c2', 'l1', 'l2']);
 
     expect(actualEvent).toEqual(expectedEvent);
   });
@@ -149,12 +152,12 @@ describe('Event', () => {
       ]
     ];
 
-    const actualEventList = convertVersesToEvents(verse);
+    const actualEventList = convertVerseToEvents(verse);
     expect(actualEventList).toEqual(expectedEvents);
   });
 
   test('should split a previous event if there is overlap', () => {
-    const verses = [
+    const verse = [
       new Map([[
         'c1', [
           { index: 0, content: new Chord('A') },
@@ -194,7 +197,45 @@ describe('Event', () => {
       ]
     ];
 
-    const actualEventList = convertVersesToEvents(verses);
+    const actualEventList = convertVerseToEvents(verse);
+
+    expect(actualEventList).toEqual(expectedEventList);
+  });
+
+  test('should split all previous events when long events exist in different phrases', () => {
+    const verse = [
+      new Map([[
+        'c1', [
+          { index: 0, content: new Chord('Am') },
+          { index: 6, content: new Chord('C') },
+        ]], [
+        'l1', [
+          { index: 0, content: 'Wonderful' }
+        ]]
+      ]),
+      new Map([[
+        'c1', [
+          { index: 0, content: new Chord('Am') },
+          { index: 4, content: new Chord('C') },
+        ]], [
+        'l1', [
+          { index: 0, content: 'Testing' }
+        ]]
+      ]),
+    ];
+
+    const expectedEventList = [
+      [
+        [{ index: 0, voice: 'c1', content: new Chord('Am') }, { index: 0, voice: 'l1', content: 'Wonder' }],
+        [{ index: 6, voice: 'c1', content: new Chord('C') }, { index: 6, voice: 'l1', content: '-ful' }]
+      ],
+      [
+        [{ index: 0, voice: 'c1', content: new Chord('Am') }, { index: 0, voice: 'l1', content: 'Test' }],
+        [{ index: 4, voice: 'c1', content: new Chord('C') }, { index: 4, voice: 'l1', content: '-ing' }]
+      ]
+    ];
+
+    const actualEventList = convertVerseToEvents(verse);
 
     expect(actualEventList).toEqual(expectedEventList);
   });
