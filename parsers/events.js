@@ -32,7 +32,6 @@ class EventList {
     this.previousEventList.forEach((voice) => {
       if (voicesAddedToEvent.indexOf(voice.voice) === -1 &&
           eventIndex < voice.index + voice.content.toString().length) {
-
         // Split voice from previous event, add remainder to this event.
         const splitIndex = eventIndex - voice.index + this.addedCharacters;
         const event = {
