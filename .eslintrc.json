@@ -13,6 +13,7 @@
         "indent": ["error", 2, {
             "MemberExpression": 1
         }],
-        "object-curly-spacing": ["error", "always"]
+        "object-curly-spacing": ["error", "always"],
+        "no-debugger": 2
     }
 }

@@ -32,7 +32,7 @@ class EventList {
     this.previousEventList.forEach((voice) => {
       if (voicesAddedToEvent.indexOf(voice.voice) === -1 &&
           eventIndex < voice.index + voice.content.toString().length) {
-        debugger;
+
         // Split voice from previous event, add remainder to this event.
         const splitIndex = eventIndex - voice.index + this.addedCharacters;
         const event = {
@@ -135,7 +135,8 @@ class EventList {
  */
 function convertVerseToEvents(verse) {
   return verse.map((phrase) => {
-    // Deep copy the phrase so that we don't remove everything from the original.
+    // TODO: This is meant to deep copy the phrase map so we don't remove from the array.
+    // This is a shallow copy, and does not actually deep copy the array values.
     const phraseCopy = new Map(phrase);
     const voiceOrder = Array.from(phraseCopy.keys());
     const events = [];
