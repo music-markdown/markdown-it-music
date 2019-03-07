@@ -17,6 +17,11 @@
   cursor: help;
 }
 
+.highlight {
+  color: red;
+  font-weight: bold;
+}
+
 .diagram {
   border: 1px solid #e3e3e3;
   background: white;

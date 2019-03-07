@@ -78,7 +78,7 @@ describe('Chords Renderer from Events', () => {
       `</div>` +
     '</div>';
 
-    const chordsRenderer = new ChordsEventRenderer(['c1', 'l1'], voiceColors,);
+    const chordsRenderer = new ChordsEventRenderer(['c1', 'l1'], voiceColors);
     const actualEventDiv = chordsRenderer.createEventDiv(line);
 
     expect(actualEventDiv.outerHTML).toEqual(expectedEventDiv);

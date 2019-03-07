@@ -89,6 +89,8 @@ function render(str, opts) {
   // Get voice order from first phrase
   const voiceOrder = Array.from(verse[0].keys());
 
+  const colorOrder = ['black', 'blue', 'red', 'green', 'purple', 'teal'];
+
   const chordsRenderer = new ChordsEventRenderer(voiceOrder, colorOrder, opts);
   const lines = convertVerseToEvents(verse);
 

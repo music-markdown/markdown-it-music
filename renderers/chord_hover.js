@@ -16,6 +16,8 @@ function addChordToDiv(voiceDiv, chord) {
     // TODO: Provide a way to scroll through several chord diagrams.
     chordDiagramDiv.innerHTML = svgs[0];
     voiceDiv.appendChild(chordDiagramDiv);
+  } else {
+    voiceDiv.className += ' highlight';
   }
 }
 
