@@ -1,29 +1,31 @@
 'use strict';
 
-// jest.mock('./chord_diagram.js');
-
 const Chord = require('../parsers/chord.js');
 
 const rewire = require('rewire');
 const chordsrendererjs = rewire('./chords_renderer.js');
 chordsrendererjs.__set__('document', document);
-chordsrendererjs.__get__('chordDiagram').renderChordDiagram = jest.fn(() => 'svg_here');
+
+const mockAddChordToDivFn = jest.fn(() => 'svg_here');
+chordsrendererjs.__get__('chordHover').addChordToDiv = mockAddChordToDivFn;
 
 const createHtmlChordChart = chordsrendererjs.__get__('createHtmlChordChart');
 const createListOfWrappedVoices = chordsrendererjs.__get__('createListOfWrappedVoices');
 const appendVoiceContentDiv = chordsrendererjs.__get__('appendVoiceContentDiv');
 const VoiceColors = chordsrendererjs.__get__('VoiceColors');
 
-const svgDiagramDiv = '<div class="diagram">svg_here</div>';
-
 describe('JSON to HTML converter', () => {
   const defaultColors = ['blue', 'black', 'red', 'green', 'purple', 'teal'];
+
+  beforeEach(() => {
+    mockAddChordToDivFn.mockClear();
+  });
 
   test('should wrap voice in div', () => {
     const parentDiv = document.createElement('div');
     appendVoiceContentDiv(parentDiv, 'The', 1, 'c1');
 
-    const expectedDiv = `<div><div> </div><div class="c1 chord">The</div></div>`;
+    const expectedDiv = `<div><div> </div><div class="c1">The</div></div>`;
 
     expect(parentDiv.outerHTML).toEqual(expectedDiv);
   });
@@ -32,9 +34,10 @@ describe('JSON to HTML converter', () => {
     const parentDiv = document.createElement('div');
     appendVoiceContentDiv(parentDiv, new Chord('C'), 0, 'c1');
 
-    const expectedDiv = `<div><div class="c1 chord">${svgDiagramDiv}C</div></div>`;
+    const expectedDiv = `<div><div class="c1">C</div></div>`;
 
     expect(parentDiv.outerHTML).toEqual(expectedDiv);
+    expect(mockAddChordToDivFn).toHaveBeenCalledTimes(1);
   });
 
   test('should append several chords to same parent div', () => {
@@ -43,11 +46,12 @@ describe('JSON to HTML converter', () => {
     appendVoiceContentDiv(parentDiv, new Chord('G'), 5, 'c1');
 
     const expectedDiv = `<div>` +
-      `<div class="c1 chord">${svgDiagramDiv}C</div>` +
-      `<div>     </div><div class="c1 chord">${svgDiagramDiv}G</div>` +
+      `<div class="c1">C</div>` +
+      `<div>     </div><div class="c1">G</div>` +
     `</div>`;
 
     expect(parentDiv.outerHTML).toEqual(expectedDiv);
+    expect(mockAddChordToDivFn).toHaveBeenCalledTimes(2);
   });
 
   describe('wrapped voices', () => {
@@ -91,21 +95,21 @@ describe('JSON to HTML converter', () => {
 
       const expectedChordChartHtmlList = [
         `<div class="voice" style="color: ${defaultColors[0]};">` +
-          `<div>    </div><div class="c1 chord">${svgDiagramDiv}G</div>` +
-          `<div>       </div><div class="c1 chord">${svgDiagramDiv}F</div>` +
-          `<div>       </div><div class="c1 chord">${svgDiagramDiv}Am</div>` +
-          `<div>       </div><div class="c1 chord">${svgDiagramDiv}G</div>` +
-          `<div>          </div><div class="c1 chord">${svgDiagramDiv}F</div>` +
-          `<div>      </div><div class="c1 chord">${svgDiagramDiv}C</div>` +
+          `<div>    </div><div class="c1">G</div>` +
+          `<div>       </div><div class="c1">F</div>` +
+          `<div>       </div><div class="c1">Am</div>` +
+          `<div>       </div><div class="c1">G</div>` +
+          `<div>          </div><div class="c1">F</div>` +
+          `<div>      </div><div class="c1">C</div>` +
         '</div>',
 
         `<div class="voice" style="color: ${defaultColors[1]};">` +
-          `<div>    </div><div class="c2 chord">${svgDiagramDiv}C</div>` +
-          `<div>       </div><div class="c2 chord">${svgDiagramDiv}D</div>` +
-          `<div>       </div><div class="c2 chord">${svgDiagramDiv}Cm</div>` +
-          `<div>       </div><div class="c2 chord">${svgDiagramDiv}F</div>` +
-          `<div>          </div><div class="c2 chord">${svgDiagramDiv}G</div>` +
-          `<div>      </div><div class="c2 chord">${svgDiagramDiv}B</div>` +
+          `<div>    </div><div class="c2">C</div>` +
+          `<div>       </div><div class="c2">D</div>` +
+          `<div>       </div><div class="c2">Cm</div>` +
+          `<div>       </div><div class="c2">F</div>` +
+          `<div>          </div><div class="c2">G</div>` +
+          `<div>      </div><div class="c2">B</div>` +
         '</div>',
 
         `<div class="voice" style="color: ${defaultColors[2]};">` +
@@ -129,6 +133,7 @@ describe('JSON to HTML converter', () => {
         .map((html) => html.outerHTML);
 
       expect(actualHtmlList).toEqual(expectedChordChartHtmlList);
+      expect(mockAddChordToDivFn).toHaveBeenCalledTimes(12);
     });
 
     test('should transpose a chord if transpose is provided', () => {
@@ -138,7 +143,7 @@ describe('JSON to HTML converter', () => {
 
       const expectedPhraseHtml = [
         `<div class="voice" style="color: ${defaultColors[0]};">` +
-          `<div class="c1 chord">${svgDiagramDiv}C#</div>` +
+          `<div class="c1">C#</div>` +
         '</div>'
       ];
 
@@ -146,6 +151,7 @@ describe('JSON to HTML converter', () => {
         .map((html) => html.outerHTML);
 
       expect(wrappedVoices).toEqual(expectedPhraseHtml);
+      expect(mockAddChordToDivFn).toHaveBeenCalledTimes(1);
     });
 
     test('should not try to transpose anything that is not a chord', () => {
@@ -205,8 +211,8 @@ describe('JSON to HTML converter', () => {
       '<div class="chart">' +
         '<div class="verse">' +
           `<div class="voice" style="color: ${defaultColors[0]};">` +
-            `<div class="c1 chord">${svgDiagramDiv}C</div>` +
-            `<div>   </div><div class="c1 chord">${svgDiagramDiv}G</div>` +
+            `<div class="c1">C</div>` +
+            `<div>   </div><div class="c1">G</div>` +
           '</div>' +
           `<div class="voice" style="color: ${defaultColors[1]};">` +
             '<div class="l1">Test</div>' +
@@ -214,7 +220,7 @@ describe('JSON to HTML converter', () => {
         '</div>' +
         '<div class="verse">' +
           `<div class="voice" style="color: ${defaultColors[0]};">` +
-            `<div class="c1 chord">${svgDiagramDiv}A</div>` +
+            `<div class="c1">A</div>` +
           '</div>' +
           `<div class="voice" style="color: ${defaultColors[1]};">` +
             '<div class="l1">Song</div>' +
@@ -223,6 +229,7 @@ describe('JSON to HTML converter', () => {
       '</div>';
 
     expect(createHtmlChordChart(verse).outerHTML).toEqual(expectedDiv);
+    expect(mockAddChordToDivFn).toHaveBeenCalledTimes(3);
   });
 
   test('should get default colors for first voices', () => {
