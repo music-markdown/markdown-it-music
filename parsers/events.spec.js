@@ -5,15 +5,15 @@ const Chord = require('./chord.js');
 const eventsjs = rewire('./events.js');
 
 const convertVerseToEvents = eventsjs.__get__('convertVerseToEvents');
-const EventList = eventsjs.__get__('EventList');
+const Line = eventsjs.__get__('Line');
 
 describe('Event', () => {
   test('should add voices', () => {
-    const expectedEvent = [
-      { index: 4, voice: 'c1', content: 'G' },
-      { index: 4, voice: 'c2', content: 'C' },
-      { index: 4, voice: 'l1', content: 'longest' },
-      { index: 4, voice: 'a1', content: 'crash!' },
+    const expectedLine = [
+      { index: 4, offset: 1, voice: 'c1', content: 'G' },
+      { index: 4, offset: 1, voice: 'c2', content: 'C' },
+      { index: 4, offset: 1, voice: 'l1', content: 'longest' },
+      { index: 4, offset: 1, voice: 'a1', content: 'crash!' },
     ];
 
     const nextVoices = new Map([[
@@ -31,14 +31,14 @@ describe('Event', () => {
       ]]
     ]);
 
-    const eventList = new EventList();
-    const actualEvent = eventList.createEventListFromPhrase(nextVoices, ['c1', 'c2', 'l1', 'a1']);
+    const line = new Line();
+    const actualLine = line.createLineFromPhrase(nextVoices, ['c1', 'c2', 'l1', 'a1']);
 
-    expect(actualEvent).toEqual(expectedEvent);
+    expect(actualLine).toEqual(expectedLine);
   });
 
   test('should only add voices that are in index range', () => {
-    const nextVoices = new Map([[
+    const phrase = new Map([[
       'c1', [
         { index: 4, content: 'G' },
       ]], [
@@ -53,19 +53,19 @@ describe('Event', () => {
       ]]
     ]);
 
-    const expectedEvent = [
-      { index: 0, voice: 'l1', content: 'The' },
-      { index: 0, voice: 'l2', content: 'Test' }
+    const expectedLine = [
+      { index: 0, offset: 1, voice: 'l1', content: 'The' },
+      { index: 0, offset: 1, voice: 'l2', content: 'Test' }
     ];
 
-    const eventList = new EventList();
-    const actualEvent = eventList.createEventListFromPhrase(nextVoices, ['c1', 'c2', 'l1', 'l2']);
+    const line = new Line();
+    const actualLine = line.createLineFromPhrase(phrase, ['c1', 'c2', 'l1', 'l2']);
 
-    expect(actualEvent).toEqual(expectedEvent);
+    expect(actualLine).toEqual(expectedLine);
   });
 
   test('should add next index first', () => {
-    const nextVoices = new Map([[
+    const phrase = new Map([[
       'c1', [
         { index: 0, content: 'G' },
       ]], [
@@ -80,15 +80,15 @@ describe('Event', () => {
       ]]
     ]);
 
-    const expectedEvent = [
-      { index: 0, voice: 'c1', content: 'G' },
-      { index: 0, voice: 'l1', content: 'The' }
+    const expectedLine = [
+      { index: 0, offset: 1, voice: 'c1', content: 'G' },
+      { index: 0, offset: 1, voice: 'l1', content: 'The' }
     ];
 
-    const eventList = new EventList();
-    const actualEvent = eventList.createEventListFromPhrase(nextVoices, ['c1', 'c2', 'l1', 'l2']);
+    const line = new Line();
+    const actualLine = line.createLineFromPhrase(phrase, ['c1', 'c2', 'l1', 'l2']);
 
-    expect(actualEvent).toEqual(expectedEvent);
+    expect(actualLine).toEqual(expectedLine);
   });
 
   test('should transform a verse into a list of events', () => {
@@ -123,37 +123,37 @@ describe('Event', () => {
       ])
     ];
 
-    const expectedEvents = [
+    const expectedLines = [
       [
-        [{ index: 0, voice: 'l1', content: 'All' }],
-        [{ index: 4, voice: 'l1', content: 'the' }],
-        [{ index: 8, voice: 'l1', content: 'leaves' }],
-        [{ index: 15, voice: 'l1', content: 'are' }],
+        [{ index: 0, offset: 1, voice: 'l1', content: 'All' }],
+        [{ index: 4, offset: 1, voice: 'l1', content: 'the' }],
+        [{ index: 8, offset: 1, voice: 'l1', content: 'leaves' }],
+        [{ index: 15, offset: 1, voice: 'l1', content: 'are' }],
         [
-          { index: 19, voice: 'c1', content: new Chord('A', 'm') },
-          { index: 19, voice: 'l1', content: 'brown' },
+          { index: 19, offset: 1, voice: 'c1', content: new Chord('A', 'm') },
+          { index: 19, offset: 1, voice: 'l1', content: 'brown' },
         ]
       ],
       [
-        [{ index: 0, voice: 'c1', content: new Chord('G') }],
-        [{ index: 3, voice: 'c1', content: new Chord('F') }],
-        [{ index: 6, voice: 'l1', content: 'and' }],
-        [{ index: 10, voice: 'l1', content: 'the' }],
+        [{ index: 0, offset: 1, voice: 'c1', content: new Chord('G') }],
+        [{ index: 3, offset: 1, voice: 'c1', content: new Chord('F') }],
+        [{ index: 6, offset: 1, voice: 'l1', content: 'and' }],
+        [{ index: 10, offset: 1, voice: 'l1', content: 'the' }],
         [
-          { index: 14, voice: 'c1', content: new Chord('G') },
-          { index: 14, voice: 'l1', content: 'sky' },
+          { index: 14, offset: 1, voice: 'c1', content: new Chord('G') },
+          { index: 14, offset: 1, voice: 'l1', content: 'sky' },
         ],
-        [{ index: 18, voice: 'l1', content: 'is' }],
+        [{ index: 18, offset: 1, voice: 'l1', content: 'is' }],
         [
-          { index: 21, voice: 'c1', content: new Chord('E', 'sus2') },
-          { index: 21, voice: 'l1', content: 'gray.' },
+          { index: 21, offset: 1, voice: 'c1', content: new Chord('E', 'sus2') },
+          { index: 21, offset: 1, voice: 'l1', content: 'gray.' },
         ],
-        [{ index: 27, voice: 'c1', content: new Chord('E') }]
+        [{ index: 27, offset: 1, voice: 'c1', content: new Chord('E') }]
       ]
     ];
 
-    const actualEventList = convertVerseToEvents(verse);
-    expect(actualEventList).toEqual(expectedEvents);
+    const actualLines = convertVerseToEvents(verse);
+    expect(actualLines).toEqual(expectedLines);
   });
 
   test('should split a previous event if there is overlap', () => {
@@ -173,33 +173,33 @@ describe('Event', () => {
       ])
     ];
 
-    const expectedEventList = [
+    const expectedLines = [
       [
         [
-          { index: 0, voice: 'c1', content: new Chord('A') },
-          { index: 0, voice: 'l1', content: 'longest' },
+          { index: 0, offset: 1, voice: 'c1', content: new Chord('A') },
+          { index: 0, offset: 1, voice: 'l1', content: 'longest' },
         ],
         [
-          { index: 8, voice: 'l1', content: 'is' },
+          { index: 8, offset: 1, voice: 'l1', content: 'is' },
         ],
         [
-          { index: 11, voice: 'c1', content: new Chord('C') },
-          { index: 11, voice: 'l1', content: 'supercali' }
+          { index: 11, offset: 1, voice: 'c1', content: new Chord('C') },
+          { index: 11, offset: 1, voice: 'l1', content: 'supercali' }
         ],
         [
-          { index: 20, voice: 'c1', content: new Chord('D') },
-          { index: 20, voice: 'l1', content: '-fragilistic' }
+          { index: 20, offset: 1, voice: 'c1', content: new Chord('D') },
+          { index: 20, offset: 0, voice: 'l1', content: '-fragilistic' }
         ],
         [
-          { index: 32, voice: 'c1', content: new Chord('E') },
-          { index: 32, voice: 'l1', content: '-expialidocious' }
+          { index: 32, offset: 1, voice: 'c1', content: new Chord('E') },
+          { index: 32, offset: 0, voice: 'l1', content: '-expialidocious' }
         ],
       ]
     ];
 
-    const actualEventList = convertVerseToEvents(verse);
+    const actualLines = convertVerseToEvents(verse);
 
-    expect(actualEventList).toEqual(expectedEventList);
+    expect(actualLines).toEqual(expectedLines);
   });
 
   test('should split all previous events when long events exist in different phrases', () => {
@@ -224,19 +224,52 @@ describe('Event', () => {
       ]),
     ];
 
-    const expectedEventList = [
+    const expectedLines = [
       [
-        [{ index: 0, voice: 'c1', content: new Chord('Am') }, { index: 0, voice: 'l1', content: 'Wonder' }],
-        [{ index: 6, voice: 'c1', content: new Chord('C') }, { index: 6, voice: 'l1', content: '-ful' }]
+        [
+          { index: 0, offset: 1, voice: 'c1', content: new Chord('Am') },
+          { index: 0, offset: 1, voice: 'l1', content: 'Wonder' }
+        ],
+        [
+          { index: 6, offset: 1, voice: 'c1', content: new Chord('C') },
+          { index: 6, offset: 0, voice: 'l1', content: '-ful' }
+        ]
       ],
       [
-        [{ index: 0, voice: 'c1', content: new Chord('Am') }, { index: 0, voice: 'l1', content: 'Test' }],
-        [{ index: 4, voice: 'c1', content: new Chord('C') }, { index: 4, voice: 'l1', content: '-ing' }]
+        [
+          { index: 0, offset: 1, voice: 'c1', content: new Chord('Am') },
+          { index: 0, offset: 1, voice: 'l1', content: 'Test' }
+        ],
+        [
+          { index: 4, offset: 1, voice: 'c1', content: new Chord('C') },
+          { index: 4, offset: 0, voice: 'l1', content: '-ing' }
+        ]
       ]
     ];
 
-    const actualEventList = convertVerseToEvents(verse);
+    const actualLines = convertVerseToEvents(verse);
 
-    expect(actualEventList).toEqual(expectedEventList);
+    expect(actualLines).toEqual(expectedLines);
+  });
+
+  test('should include offset when a voice is not at the start index of an event', () => {
+    const phrase = new Map([[
+      'c1', [
+        { index: 2, content: new Chord('C') }
+      ]], [
+      'l1', [
+        { index: 0, content: 'Testing' }
+      ]]
+    ]);
+
+    const line = new Line();
+    const actualLine = line.createLineFromPhrase(phrase, ['c1', 'l1']);
+
+    const expectedLine = [
+      { index: 2, voice: 'c1', content: new Chord('C'), offset: 3 },
+      { index: 0, voice: 'l1', content: 'Testing', offset: 1 }
+    ];
+
+    expect(actualLine).toEqual(expectedLine);
   });
 });

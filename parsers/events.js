@@ -7,10 +7,11 @@
  *
  * See tests for example input/output structure.
  */
-class EventList {
+class Line {
   constructor() {
+    this.spacesBetweenEvents = 1;
     this.addedCharacters = 0;
-    this.previousEventList = [];
+    this.previousLine = [];
   }
 
   /**
@@ -29,7 +30,7 @@ class EventList {
 
     let hasAddedCharacter = false;
     // Split any previous events
-    this.previousEventList.forEach((voice) => {
+    this.previousLine.forEach((voice) => {
       if (voicesAddedToEvent.indexOf(voice.voice) === -1 &&
           eventIndex < voice.index + voice.content.toString().length) {
         // Split voice from previous event, add remainder to this event.
@@ -37,7 +38,8 @@ class EventList {
         const event = {
           index: eventIndex + this.addedCharacters,
           voice: voice.voice,
-          content: `-${voice.content.substring(splitIndex)}`
+          content: `-${voice.content.substring(splitIndex)}`,
+          offset: 0
         };
         voice.content = voice.content.substring(0, splitIndex);
 
@@ -62,11 +64,12 @@ class EventList {
    *
    * @param {Map<String, Object[]>} phrase The phrase to pick events from.
    * @param {Object} longestEvent The longest (by content length) and first voice event from phrase.
+   * @param {number} startIndex The index for the start of this event.
    * @return {String[]} voiceAdded Voice names added to event list.
-   * @return {Object[]} eventList List of the first of each voice from phrase that fit within bounds of longest event.
+   * @return {Object[]} line List of the first of each voice from phrase that fit within bounds of longest event.
    */
-  addEvents(phrase, longestEvent) {
-    const eventList = [];
+  addEvents(phrase, longestEvent, startIndex) {
+    const line = [];
     const voicesAdded = [];
 
     phrase.forEach((events, voiceName) => {
@@ -79,14 +82,17 @@ class EventList {
       if (longestEvent.index <= event.index &&
           event.index < longestEvent.index + longestEvent.content.toString().length) {
         const eventToAdd = events.shift();
+
         eventToAdd.voice = voiceName;
+        eventToAdd.offset = this.spacesBetweenEvents + eventToAdd.index - startIndex;
         eventToAdd.index += this.addedCharacters;
-        eventList.push(eventToAdd);
+
+        line.push(eventToAdd);
         voicesAdded.push(voiceName);
       }
     });
 
-    return { voicesAdded, eventList };
+    return { voicesAdded, line };
   }
 
   /**
@@ -96,7 +102,7 @@ class EventList {
    * @param {String[]} voiceOrder Sort order for voices.
    * @return {Object[]} List of event lists sorted (by voiceOrder).
    */
-  createEventListFromPhrase(phrase, voiceOrder) {
+  createLineFromPhrase(phrase, voiceOrder) {
     const firstEventOfEachVoice = Array.from(phrase.values()).map((voiceArr) => voiceArr[0]);
 
     // Find the minimum index of all voices, since we want to parse events in the order they happen.
@@ -117,12 +123,12 @@ class EventList {
       return currentLongestEvent;
     }, undefined);
 
-    const { voicesAdded, eventList } = this.addEvents(phrase, longestEvent);
+    const { voicesAdded, line } = this.addEvents(phrase, longestEvent, eventIndex);
 
-    this.previousEventList = eventList.concat(this.splitPreviousEvent(voicesAdded, eventIndex))
+    this.previousLine = line.concat(this.splitPreviousEvent(voicesAdded, eventIndex))
       .sort((voice1, voice2) => voiceOrder.indexOf(voice1.voice) - voiceOrder.indexOf(voice2.voice));
 
-    return this.previousEventList;
+    return this.previousLine;
   }
 }
 
@@ -130,7 +136,7 @@ class EventList {
  * Converts a verse to list of event lists.
  *
  * @param {Object} verse The verse that contains phrases to be translated to events.
- * @return {EventList[]} List of EventList that represent a verse. Each phrase is represented by a single EventList.
+ * @return {Line[]} List of Line that represent a verse. Each phrase is represented by a single Line.
  */
 function convertVerseToEvents(verse) {
   return verse.map((phrase) => {
@@ -141,9 +147,9 @@ function convertVerseToEvents(verse) {
     const events = [];
 
     // create events for this phrase until there are no events left to process.
-    const eventList = new EventList();
+    const line = new Line();
     while (!Array.from(phraseCopy.values()).every((arr) => arr.length === 0)) {
-      events.push(eventList.createEventListFromPhrase(phraseCopy, voiceOrder));
+      events.push(line.createLineFromPhrase(phraseCopy, voiceOrder));
     }
 
     return events;

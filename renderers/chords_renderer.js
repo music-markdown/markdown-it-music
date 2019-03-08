@@ -1,28 +1,9 @@
 'use strict';
 
 const parseVerse = require('../parsers/verse.js')['parseVerse'];
-const chordDiagram = require('./chord_diagram.js');
-const { guitarChordLibrary } = require('./chord_library.js');
-const randomColor = require('randomcolor');
+const chordHover = require('./chord_hover.js');
 
-class VoiceColors {
-  constructor() {
-    this.colors = ['blue', 'black', 'red', 'green', 'purple', 'teal'];
-    this.voiceColorMap = {};
-  }
-
-  getUnusedColor() {
-    return this.colors.length > 0 ? this.colors.shift() : randomColor({ seed: 42 });
-  }
-
-  getVoiceColor(voice) {
-    if (!(voice in this.voiceColorMap)) {
-      this.voiceColorMap[voice] = this.getUnusedColor();
-    }
-
-    return this.voiceColorMap[voice];
-  }
-}
+const VoiceColors = require('./voice_colors.js');
 
 function createHtmlChordChart(verse, opts) {
   const chordChartHtml = document.createElement('div');
@@ -92,19 +73,7 @@ function appendVoiceContentDiv(parentVoice, text, whitespace, className) {
   textDiv.className = className;
 
   if (className.startsWith('c')) {
-    textDiv.className += ' chord';
-
-    if (guitarChordLibrary.has(text.toString())) {
-      const chordDiagramDiv = document.createElement('div');
-      chordDiagramDiv.className = 'diagram';
-
-      const shorthands = guitarChordLibrary.get(text.toString());
-      const svgs = shorthands.map(
-        (shorthand) => chordDiagram.renderChordDiagram(shorthand));
-      // TODO: Provide a way to scroll through several chord diagrams.
-      chordDiagramDiv.innerHTML = svgs[0];
-      textDiv.appendChild(chordDiagramDiv);
-    }
+    chordHover.addChordToDiv(textDiv, text);
   }
 
   textDiv.innerHTML += text.toString();

@@ -3,12 +3,23 @@
   white-space: pre;
 }
 
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  white-space: pre;
+}
+
 .chart {
   font-family: monospace;
 }
 
 .chord {
   cursor: help;
+}
+
+.highlight {
+  color: red;
+  font-weight: bold;
 }
 
 .diagram {
