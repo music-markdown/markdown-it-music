@@ -10,6 +10,7 @@ function MarkdownMusic(md, musicOpts) {
     highlight: function(str, lang) {
       if (md.highlightRegistry.hasOwnProperty(lang)) {
         try {
+          // If we don't start our HTML with <pre, markdown-it will automatically wrap out output in <pre></pre>.
           return `<pre style="display: none;"></pre>${md.highlightRegistry[lang](str, md.musicOpts)}`;
         } catch (error) {
           return `<pre>${str}</pre><div class="error">${error}</div>`;

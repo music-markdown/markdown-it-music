@@ -183,7 +183,7 @@ describe('Event', () => {
           { index: 8, offset: 1, voice: 'l1', content: 'is' },
         ],
         [
-          { index: 11, offset: 1, offset: 1, voice: 'c1', content: new Chord('C') },
+          { index: 11, offset: 1, voice: 'c1', content: new Chord('C') },
           { index: 11, offset: 1, voice: 'l1', content: 'supercali' }
         ],
         [
