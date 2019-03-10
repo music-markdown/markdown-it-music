@@ -35,6 +35,11 @@ function MarkdownMusic(md) {
   md.setTranspose = function(transpose) {
     md.userOpts.transpose = transpose;
   };
+
+  // Restricts max renderable width (if the renderer supports it)
+  md.setMaxWidth = function(maxWidth) {
+    md.userOpts.maxWidth = maxWidth;
+  };
 };
 
 module.exports = MarkdownMusic;
