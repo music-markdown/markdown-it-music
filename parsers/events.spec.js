@@ -10,10 +10,10 @@ const Line = eventsjs.__get__('Line');
 describe('Event', () => {
   test('should add voices', () => {
     const expectedLine = [
-      { index: 4, offset: 1, voice: 'c1', content: 'G' },
-      { index: 4, offset: 1, voice: 'c2', content: 'C' },
-      { index: 4, offset: 1, voice: 'l1', content: 'longest' },
-      { index: 4, offset: 1, voice: 'a1', content: 'crash!' },
+      { index: 4, offset: 0, voice: 'c1', content: 'G' },
+      { index: 4, offset: 0, voice: 'c2', content: 'C' },
+      { index: 4, offset: 0, voice: 'l1', content: 'longest' },
+      { index: 4, offset: 0, voice: 'a1', content: 'crash!' },
     ];
 
     const nextVoices = new Map([[
@@ -54,8 +54,8 @@ describe('Event', () => {
     ]);
 
     const expectedLine = [
-      { index: 0, offset: 1, voice: 'l1', content: 'The' },
-      { index: 0, offset: 1, voice: 'l2', content: 'Test' }
+      { index: 0, offset: 0, voice: 'l1', content: 'The' },
+      { index: 0, offset: 0, voice: 'l2', content: 'Test' }
     ];
 
     const line = new Line();
@@ -81,8 +81,8 @@ describe('Event', () => {
     ]);
 
     const expectedLine = [
-      { index: 0, offset: 1, voice: 'c1', content: 'G' },
-      { index: 0, offset: 1, voice: 'l1', content: 'The' }
+      { index: 0, offset: 0, voice: 'c1', content: 'G' },
+      { index: 0, offset: 0, voice: 'l1', content: 'The' }
     ];
 
     const line = new Line();
@@ -125,7 +125,7 @@ describe('Event', () => {
 
     const expectedLines = [
       [
-        [{ index: 0, offset: 1, voice: 'l1', content: 'All' }],
+        [{ index: 0, offset: 0, voice: 'l1', content: 'All' }],
         [{ index: 4, offset: 1, voice: 'l1', content: 'the' }],
         [{ index: 8, offset: 1, voice: 'l1', content: 'leaves' }],
         [{ index: 15, offset: 1, voice: 'l1', content: 'are' }],
@@ -135,7 +135,7 @@ describe('Event', () => {
         ]
       ],
       [
-        [{ index: 0, offset: 1, voice: 'c1', content: new Chord('G') }],
+        [{ index: 0, offset: 0, voice: 'c1', content: new Chord('G') }],
         [{ index: 3, offset: 1, voice: 'c1', content: new Chord('F') }],
         [{ index: 6, offset: 1, voice: 'l1', content: 'and' }],
         [{ index: 10, offset: 1, voice: 'l1', content: 'the' }],
@@ -176,8 +176,8 @@ describe('Event', () => {
     const expectedLines = [
       [
         [
-          { index: 0, offset: 1, voice: 'c1', content: new Chord('A') },
-          { index: 0, offset: 1, voice: 'l1', content: 'longest' },
+          { index: 0, offset: 0, voice: 'c1', content: new Chord('A') },
+          { index: 0, offset: 0, voice: 'l1', content: 'longest' },
         ],
         [
           { index: 8, offset: 1, voice: 'l1', content: 'is' },
@@ -227,8 +227,8 @@ describe('Event', () => {
     const expectedLines = [
       [
         [
-          { index: 0, offset: 1, voice: 'c1', content: new Chord('Am') },
-          { index: 0, offset: 1, voice: 'l1', content: 'Wonder' }
+          { index: 0, offset: 0, voice: 'c1', content: new Chord('Am') },
+          { index: 0, offset: 0, voice: 'l1', content: 'Wonder' }
         ],
         [
           { index: 6, offset: 1, voice: 'c1', content: new Chord('C') },
@@ -237,8 +237,8 @@ describe('Event', () => {
       ],
       [
         [
-          { index: 0, offset: 1, voice: 'c1', content: new Chord('Am') },
-          { index: 0, offset: 1, voice: 'l1', content: 'Test' }
+          { index: 0, offset: 0, voice: 'c1', content: new Chord('Am') },
+          { index: 0, offset: 0, voice: 'l1', content: 'Test' }
         ],
         [
           { index: 4, offset: 1, voice: 'c1', content: new Chord('C') },
@@ -266,8 +266,8 @@ describe('Event', () => {
     const actualLine = line.createLineFromPhrase(phrase, ['c1', 'l1']);
 
     const expectedLine = [
-      { index: 2, voice: 'c1', content: new Chord('C'), offset: 3 },
-      { index: 0, voice: 'l1', content: 'Testing', offset: 1 }
+      { index: 2, voice: 'c1', content: new Chord('C'), offset: 2 },
+      { index: 0, voice: 'l1', content: 'Testing', offset: 0 }
     ];
 
     expect(actualLine).toEqual(expectedLine);

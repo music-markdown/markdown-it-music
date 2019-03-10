@@ -40,6 +40,11 @@ function MarkdownMusic(md) {
   md.setMaxWidth = function(maxWidth) {
     md.userOpts.maxWidth = maxWidth;
   };
+
+  // Specified the desired number of columns
+  md.setColumnCount = function(columnCount) {
+    md.userOpts.columnCount = columnCount;
+  };
 };
 
 module.exports = MarkdownMusic;

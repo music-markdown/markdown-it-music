@@ -7,10 +7,17 @@
   display: flex;
   flex-wrap: wrap;
   white-space: pre;
+  break-inside: avoid;
 }
 
 .chart {
   font-family: monospace;
+  -webkit-column-gap: 4em;
+     -moz-column-gap: 4em;
+          column-gap: 4em;
+  -webkit-column-rule: 1px solid #ddd;
+     -moz-column-rule: 1px solid #ddd;
+          column-rule: 1px solid #ddd;
 }
 
 .chord {

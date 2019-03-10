@@ -9,7 +9,7 @@
  */
 class Line {
   constructor() {
-    this.spacesBetweenEvents = 1;
+    this.spacesBetweenEvents = 0;
     this.addedCharacters = 0;
     this.previousLine = [];
   }
@@ -91,6 +91,8 @@ class Line {
         voicesAdded.push(voiceName);
       }
     });
+
+    this.spacesBetweenEvents = 1;
 
     return { voicesAdded, line };
   }

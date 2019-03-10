@@ -22,10 +22,10 @@ describe('Chords Renderer from Events', () => {
   test('should create a voice div', () => {
     const expectedVoiceDiv =
       `<div style="color: ${defaultColors[0]};">` +
-        `<div class="c1"> C</div>` +
+        `<div class="c1">C</div>` +
       `</div>`;
 
-    const voice = { index: 0, offset: 1, voice: 'c1', content: 'C' };
+    const voice = { index: 0, offset: 0, voice: 'c1', content: 'C' };
 
     const chordsRenderer = new ChordsEventRenderer(['c1'], voiceColors);
     const actualVoiceDiv = chordsRenderer.createVoiceDiv(voice);
@@ -38,22 +38,22 @@ describe('Chords Renderer from Events', () => {
     const expectedLineDiv = '<div class="line">' +
       '<div class="event">' +
         `<div style="color: ${defaultColors[0]};">` +
-          `<div class="l1"> Line</div>` +
+          `<div class="l1">Line</div>` +
         `</div>` +
       '</div>' +
       '<div class="event">' +
         `<div style="color: ${defaultColors[0]};">` +
-          `<div class="l1"> Test</div>` +
+          `<div class="l1">Test</div>` +
         `</div>` +
       '</div>' +
     '</div>';
 
     const line = [
       [
-        { index: 0, offset: 1, voice: 'l1', content: 'Line' },
+        { index: 0, offset: 0, voice: 'l1', content: 'Line' },
       ],
       [
-        { index: 0, offset: 1, voice: 'l1', content: 'Test' },
+        { index: 0, offset: 0, voice: 'l1', content: 'Test' },
       ]
     ];
 
@@ -65,16 +65,16 @@ describe('Chords Renderer from Events', () => {
 
   test('should add diagram to chord div', () => {
     const line = [
-      { index: 0, offset: 1, voice: 'c1', content: 'C' },
-      { index: 0, offset: 1, voice: 'l1', content: 'Wonderful!' },
+      { index: 0, offset: 0, voice: 'c1', content: 'C' },
+      { index: 0, offset: 0, voice: 'l1', content: 'Wonderful!' },
     ];
 
     const expectedEventDiv = '<div class="event">' +
       `<div style="color: ${defaultColors[0]};">` +
-        `<div class="c1"> C</div>` +
+        `<div class="c1">C</div>` +
       `</div>` +
       `<div style="color: ${defaultColors[1]};">` +
-        `<div class="l1"> Wonderful!</div>` +
+        `<div class="l1">Wonderful!</div>` +
       `</div>` +
     '</div>';
 
@@ -88,18 +88,18 @@ describe('Chords Renderer from Events', () => {
   test('should create a chart that contains two phrases that each contain two lines of events.', () => {
     const lines = [[
       [
-        { index: 0, offset: 1, voice: 'c1', content: 'C' },
-        { index: 0, offset: 1, voice: 'l1', content: 'Wonderful' },
+        { index: 0, offset: 0, voice: 'c1', content: 'C' },
+        { index: 0, offset: 0, voice: 'l1', content: 'Wonderful' },
       ],
       [
-        { index: 0, offset: 1, voice: 'c1', content: 'G' },
-        { index: 0, offset: 1, voice: 'l1', content: 'Testing!' },
+        { index: 0, offset: 0, voice: 'c1', content: 'G' },
+        { index: 0, offset: 0, voice: 'l1', content: 'Testing!' },
       ]
     ],
     [
       [
-        { index: 0, offset: 1, voice: 'c1', content: 'A' },
-        { index: 0, offset: 1, voice: 'l1', content: 'Things' },
+        { index: 0, offset: 0, voice: 'c1', content: 'A' },
+        { index: 0, offset: 0, voice: 'l1', content: 'Things' },
       ],
       [
         { index: 10, offset: 1, voice: 'l1', content: 'IsGreat!' },
@@ -109,32 +109,32 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer(['c1', 'l1'], voiceColors);
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
-    const expectedEventDiv = '<div class="chart">' +
+    const expectedEventDiv = '<div class="chart" style="column-count: 1;">' +
       '<div class="line">' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[0]};">` +
-            `<div class="c1"> C</div>` +
+            `<div class="c1">C</div>` +
           `</div>` +
           `<div style="color: ${defaultColors[1]};">` +
-            `<div class="l1"> Wonderful</div>` +
+            `<div class="l1">Wonderful</div>` +
           `</div>` +
         '</div>' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[0]};">` +
-            `<div class="c1"> G</div>` +
+            `<div class="c1">G</div>` +
           `</div>` +
           `<div style="color: ${defaultColors[1]};">` +
-            `<div class="l1"> Testing!</div>` +
+            `<div class="l1">Testing!</div>` +
           `</div>` +
         '</div>' +
       '</div>' +
       '<div class="line">' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[0]};">` +
-            `<div class="c1"> A</div>` +
+            `<div class="c1">A</div>` +
           `</div>` +
           `<div style="color: ${defaultColors[1]};">` +
-            `<div class="l1"> Things</div>` +
+            `<div class="l1">Things</div>` +
           `</div>` +
         '</div>' +
         '<div class="event">' +
@@ -156,7 +156,7 @@ describe('Chords Renderer from Events', () => {
     const expectedLineDiv ='<div class="line">' +
       '<div class="event">' +
         `<div style="color: ${defaultColors[0]};">` +
-          `<div class="l1"> Wonder</div>` +
+          `<div class="l1">Wonder</div>` +
         `</div>` +
       '</div>' +
       '<div class="event">' +
@@ -168,7 +168,7 @@ describe('Chords Renderer from Events', () => {
 
     const line = [
       [
-        { index: 0, offset: 1, voice: 'l1', content: 'Wonder' },
+        { index: 0, offset: 0, voice: 'l1', content: 'Wonder' },
       ],
       [
         { index: 0, offset: 0, voice: 'l1', content: '-ful' },
@@ -185,18 +185,18 @@ describe('Chords Renderer from Events', () => {
     const expectedLineDiv ='<div class="line">' +
       '<div class="event">' +
         `<div style="color: ${defaultColors[0]};">` +
-          `<div class="c1">   C</div>` +
+          `<div class="c1">  C</div>` +
         `</div>` +
         `<div style="color: ${defaultColors[1]};">` +
-          `<div class="l1"> Testing!</div>` +
+          `<div class="l1">Testing!</div>` +
         `</div>` +
       '</div>' +
     '</div>';
 
     const line = [
       [
-        { index: 0, offset: 3, voice: 'c1', content: 'C' },
-        { index: 0, offset: 1, voice: 'l1', content: 'Testing!' },
+        { index: 0, offset: 2, voice: 'c1', content: 'C' },
+        { index: 0, offset: 0, voice: 'l1', content: 'Testing!' },
       ]
     ];
 
@@ -205,5 +205,30 @@ describe('Chords Renderer from Events', () => {
 
     expect(actualLineDiv.outerHTML).toEqual(expectedLineDiv);
     expect(mockAddChordToDivFn).toHaveBeenCalledTimes(1);
+  });
+
+  test('should add columns', () => {
+    const expectedChartDiv = '<div class="chart" style="column-count: 3;">' +
+      '<div class="line">' +
+        '<div class="event">' +
+          `<div style="color: ${defaultColors[0]};">` +
+            `<div class="l1">Testing!</div>` +
+          `</div>` +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    const lines = [
+      [
+        [
+          { index: 0, offset: 0, voice: 'l1', content: 'Testing!' },
+        ]
+      ]
+    ];
+
+    const chordsRenderer = new ChordsEventRenderer(['l1'], voiceColors, { columnCount: 3 });
+    const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
+
+    expect(actualChartDiv.outerHTML).toEqual(expectedChartDiv);
   });
 });
