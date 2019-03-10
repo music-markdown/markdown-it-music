@@ -1,17 +1,25 @@
 'use strict';
+const meta = require('markdown-it-meta');
 const abc = require('./renderers/abc_renderer.js');
 const chords = require('./renderers/chords_renderer_from_events.js');
 
-function MarkdownMusic(md, musicOpts) {
+function MarkdownMusic(md) {
+  md.use(meta);
   md.highlightRegistry = {};
-  md.musicOpts = musicOpts;
+  md.userOpts = {};
+
+  // Override YAML meta data with user supplied options.
+  md.core.ruler.push('mmd', ({ md }) => {
+    Object.assign(md.meta, md.userOpts);
+  });
 
   md.set({
     highlight: function(str, lang) {
       if (md.highlightRegistry.hasOwnProperty(lang)) {
+        const callback = md.highlightRegistry[lang];
         try {
           // If we don't start our HTML with <pre, markdown-it will automatically wrap out output in <pre></pre>.
-          return `<pre style="display: none;"></pre>${md.highlightRegistry[lang](str, md.musicOpts)}`;
+          return `<pre style="display: none;"></pre>${callback(str, md.meta)}`;
         } catch (error) {
           return `<pre>${str}</pre><div class="error">${error}</div>`;
         }
@@ -25,7 +33,7 @@ function MarkdownMusic(md, musicOpts) {
 
   // Renderer configuration functions
   md.setTranspose = function(transpose) {
-    md.musicOpts.transpose = transpose;
+    md.userOpts.transpose = transpose;
   };
 };
 
