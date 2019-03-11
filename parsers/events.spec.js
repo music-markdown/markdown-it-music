@@ -126,29 +126,29 @@ describe('Event', () => {
     const expectedLines = [
       [
         [{ index: 0, offset: 0, voice: 'l1', content: 'All' }],
-        [{ index: 4, offset: 0, voice: 'l1', content: 'the' }],
-        [{ index: 8, offset: 0, voice: 'l1', content: 'leaves' }],
-        [{ index: 15, offset: 0, voice: 'l1', content: 'are' }],
+        [{ index: 4, offset: 1, voice: 'l1', content: 'the' }],
+        [{ index: 8, offset: 1, voice: 'l1', content: 'leaves' }],
+        [{ index: 15, offset: 1, voice: 'l1', content: 'are' }],
         [
-          { index: 19, offset: 0, voice: 'c1', content: new Chord('A', 'm') },
-          { index: 19, offset: 0, voice: 'l1', content: 'brown' },
+          { index: 19, offset: 1, voice: 'c1', content: new Chord('A', 'm') },
+          { index: 19, offset: 1, voice: 'l1', content: 'brown' },
         ]
       ],
       [
         [{ index: 0, offset: 0, voice: 'c1', content: new Chord('G') }],
-        [{ index: 3, offset: 0, voice: 'c1', content: new Chord('F') }],
-        [{ index: 6, offset: 0, voice: 'l1', content: 'and' }],
-        [{ index: 10, offset: 0, voice: 'l1', content: 'the' }],
+        [{ index: 3, offset: 1, voice: 'c1', content: new Chord('F') }],
+        [{ index: 6, offset: 1, voice: 'l1', content: 'and' }],
+        [{ index: 10, offset: 1, voice: 'l1', content: 'the' }],
         [
-          { index: 14, offset: 0, voice: 'c1', content: new Chord('G') },
-          { index: 14, offset: 0, voice: 'l1', content: 'sky' },
+          { index: 14, offset: 1, voice: 'c1', content: new Chord('G') },
+          { index: 14, offset: 1, voice: 'l1', content: 'sky' },
         ],
-        [{ index: 18, offset: 0, voice: 'l1', content: 'is' }],
+        [{ index: 18, offset: 1, voice: 'l1', content: 'is' }],
         [
-          { index: 21, offset: 0, voice: 'c1', content: new Chord('E', 'sus2') },
-          { index: 21, offset: 0, voice: 'l1', content: 'gray.' },
+          { index: 21, offset: 1, voice: 'c1', content: new Chord('E', 'sus2') },
+          { index: 21, offset: 1, voice: 'l1', content: 'gray.' },
         ],
-        [{ index: 27, offset: 0, voice: 'c1', content: new Chord('E') }]
+        [{ index: 27, offset: 1, voice: 'c1', content: new Chord('E') }]
       ]
     ];
 
@@ -180,18 +180,18 @@ describe('Event', () => {
           { index: 0, offset: 0, voice: 'l1', content: 'longest' },
         ],
         [
-          { index: 8, offset: 0, voice: 'l1', content: 'is' },
+          { index: 8, offset: 1, voice: 'l1', content: 'is' },
         ],
         [
-          { index: 11, offset: 0, voice: 'c1', content: new Chord('C') },
-          { index: 11, offset: 0, voice: 'l1', content: 'supercali' }
+          { index: 11, offset: 1, voice: 'c1', content: new Chord('C') },
+          { index: 11, offset: 1, voice: 'l1', content: 'supercali' }
         ],
         [
-          { index: 20, offset: 0, voice: 'c1', content: new Chord('D') },
+          { index: 20, offset: 1, voice: 'c1', content: new Chord('D') },
           { index: 20, offset: 0, voice: 'l1', content: '-fragilistic' }
         ],
         [
-          { index: 32, offset: 0, voice: 'c1', content: new Chord('E') },
+          { index: 32, offset: 1, voice: 'c1', content: new Chord('E') },
           { index: 32, offset: 0, voice: 'l1', content: '-expialidocious' }
         ],
       ]
@@ -231,7 +231,7 @@ describe('Event', () => {
           { index: 0, offset: 0, voice: 'l1', content: 'Wonder' }
         ],
         [
-          { index: 6, offset: 0, voice: 'c1', content: new Chord('C') },
+          { index: 6, offset: 1, voice: 'c1', content: new Chord('C') },
           { index: 6, offset: 0, voice: 'l1', content: '-ful' }
         ]
       ],
@@ -241,7 +241,7 @@ describe('Event', () => {
           { index: 0, offset: 0, voice: 'l1', content: 'Test' }
         ],
         [
-          { index: 4, offset: 0, voice: 'c1', content: new Chord('C') },
+          { index: 4, offset: 1, voice: 'c1', content: new Chord('C') },
           { index: 4, offset: 0, voice: 'l1', content: '-ing' }
         ]
       ]
