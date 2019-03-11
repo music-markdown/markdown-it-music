@@ -41,7 +41,7 @@ function MarkdownMusic(md) {
     md.userOpts.maxWidth = maxWidth;
   };
 
-  // Specified the desired number of columns
+  // Specifies the desired number of columns
   md.setColumnCount = function(columnCount) {
     md.userOpts.columnCount = columnCount;
   };
