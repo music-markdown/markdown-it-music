@@ -11,7 +11,8 @@ class ChordsEventRenderer {
     this.voiceOrder = voiceOrder;
     this.voiceColors = new VoiceColors(colorOrder);
     this.transposeAmount = opts ? opts.transpose : undefined;
-    this.columnCount = opts ? opts.columnCount : 1;
+    this.columnCount = opts && opts.columnCount ? opts.columnCount : 1;
+    this.fontSize = opts && opts.fontSize ? opts.fontSize : 13;
   }
 
   createEventHTMLChordChart(lines) {
@@ -19,6 +20,7 @@ class ChordsEventRenderer {
     const chartDiv = document.createElement('div');
     chartDiv.className = 'chart';
     chartDiv.style.columnCount = this.columnCount;
+    chartDiv.style.fontSize = `${this.fontSize}px`;
 
     // create events div for each line list
     lines.forEach((line) => {

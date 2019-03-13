@@ -45,6 +45,11 @@ function MarkdownMusic(md) {
   md.setColumnCount = function(columnCount) {
     md.userOpts.columnCount = columnCount;
   };
+
+  // Specifies the desired font size
+  md.setFontSize = function(fontSize) {
+    md.userOpts.fontSize = fontSize;
+  };
 };
 
 module.exports = MarkdownMusic;
