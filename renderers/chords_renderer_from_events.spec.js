@@ -109,7 +109,7 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer(['c1', 'l1'], voiceColors);
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
-    const expectedEventDiv = '<div class="chart" style="column-count: 1; font-size: 13;">' +
+    const expectedEventDiv = '<div class="chart" style="column-count: 1; font-size: 13px;">' +
       '<div class="line">' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[0]};">` +
@@ -208,7 +208,7 @@ describe('Chords Renderer from Events', () => {
   });
 
   test('should add columns', () => {
-    const expectedChartDiv = '<div class="chart" style="column-count: 3;">' +
+    const expectedChartDiv = '<div class="chart" style="column-count: 3; font-size: 13px;">' +
       '<div class="line">' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[0]};">` +
@@ -233,7 +233,7 @@ describe('Chords Renderer from Events', () => {
   });
 
   test('should add font size', () => {
-    const expectedChartDiv = '<div class="chart" style="font-size: 999;">' +
+    const expectedChartDiv = '<div class="chart" style="column-count: 1; font-size: 999px;">' +
       '<div class="line">' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[0]};">` +
