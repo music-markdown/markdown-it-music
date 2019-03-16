@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "abcjs": "^5.6.4",
+    "fast-memoize": "^2.5.1",
     "markdown-it-meta": "0.0.1",
     "randomcolor": "^0.5.4",
     "svg.js": "^2.7.1"

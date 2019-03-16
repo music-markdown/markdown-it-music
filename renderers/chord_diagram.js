@@ -1,7 +1,6 @@
 'use strict';
+const memoize = require('fast-memoize');
 const SVG = require('svg.js');
-
-const cache = new Map();
 
 /** Represents the dimensions of a chord diagram. */
 class ChordBox {
@@ -206,12 +205,6 @@ function parseShorthand(shorthand) {
  */
 function renderChordDiagram(shorthand, width=100, height=100,
   frets=5, tuning=['E', 'A', 'D', 'G', 'B', 'e']) {
-  const cacheKey = (`${shorthand}, width=${width}, height=${height}, ` +
-    `frets=${frets}, tuning=${tuning.toString()}`);
-  if (cache.has(cacheKey)) {
-    return cache.get(cacheKey);
-  }
-
   const fingering = parseShorthand(shorthand);
   const strings = tuning.length;
   const div = window.document.createElement('div');
@@ -236,10 +229,9 @@ function renderChordDiagram(shorthand, width=100, height=100,
     drawBarre(draw, box, first, last, fret - fingering.offset + 1);
   }
 
-  cache.set(cacheKey, div.innerHTML);
   return div.innerHTML;
 }
 
 module.exports = {
-  renderChordDiagram,
+  renderChordDiagram: memoize(renderChordDiagram),
 };
