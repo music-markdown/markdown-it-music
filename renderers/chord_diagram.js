@@ -203,8 +203,14 @@ function parseShorthand(shorthand) {
  * @param {string[]} tuning The tuning of each string as an array.
  * @return {string} The rendered chord diagram as SVG.
  */
-function renderChordDiagram(shorthand, width=100, height=100,
-  frets=5, tuning=['E', 'A', 'D', 'G', 'B', 'e']) {
+function renderChordDiagram(shorthand, width, height, frets, tuning) {
+  // Specify defaults here so as to not confuse memoize:
+  // https://github.com/caiogondim/fast-memoize.js/issues/68
+  width = width || 100;
+  height = height || 100;
+  frets = frets || 5;
+  tuning = tuning || ['E', 'A', 'D', 'G', 'B', 'e'];
+
   const fingering = parseShorthand(shorthand);
   const strings = tuning.length;
   const div = window.document.createElement('div');
