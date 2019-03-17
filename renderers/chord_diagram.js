@@ -140,70 +140,16 @@ function drawFretOffset(draw, box, offset) {
 }
 
 /**
- * Parses the fingering shorthand and returns a fingering object.
+ * Renders a chord diagram given a voicing.
  *
- * Here's an example of a fingering shortand: "o2 m1 m2 n3,3 n4,5 b5,6,5"
- *
- * - o2:     The chord diagram should be rendered starting from the 2nd fret.
- * - m1:     The 1st string should be rendered muted (marked with an x).
- * - m2:     The 2nd string should be rendered muted.
- * - n3,3:   The 3rd string should be played on the 3rd fret.
- * - n4,5:   The 4th string should be played on the 5th fret.
- * - b5,6,5: The 5th through 6th strings should be barred on the 5th fret.
- *
- * @param {string} shorthand The fingering shorthand.
- * @return {Object} The parsed fingering.
- */
-function parseShorthand(shorthand) {
-  const fingering = {
-    offset: 1,
-    mutes: [],
-    notes: [],
-    barres: []
-  };
-
-  for (const rule of shorthand.split(/\s/)) {
-    const ruleType = rule.charAt(0);
-    const params = rule.substr(1).split(',').map((num) => parseInt(num));
-    if (ruleType == 'o') {
-      if (params.length != 1 || params.includes(NaN)) {
-        throw new Error(`Offset (o) rule takes exactly 1 integer argument`);
-      }
-      fingering.offset = params[0];
-    } else if (ruleType == 'm') {
-      if (params.length != 1 || params.includes(NaN)) {
-        throw new Error(`Mute (m) rule takes exactly 1 integer argument`);
-      }
-      fingering.mutes.push({ string: params[0] });
-    } else if (ruleType == 'n') {
-      if (params.length != 2 || params.includes(NaN)) {
-        throw new Error(`Note (n) rule takes exactly 2 integer arguments`);
-      }
-      fingering.notes.push({ string: params[0], fret: params[1] });
-    } else if (ruleType == 'b') {
-      if (params.length != 3 || params.includes(NaN)) {
-        throw new Error(`Barre (b) rule takes exactly 3 integer arguments`);
-      }
-      fingering.barres.push({ first: params[0], last: params[1], fret: params[2] });
-    } else {
-      throw new Error(`Unknown rule type: ${ruleType}`);
-    }
-  }
-
-  return fingering;
-}
-
-/**
- * Renders a chord diagram given a fingering shorthand.
- *
- * @param {string} shorthand The fingering shorthand for the chord diagram.
+ * @param {Voicing} voicing The fingering for the chord diagram.
  * @param {number} width The width of the chord diagram.
  * @param {number} height The height of the chord diagram.
  * @param {number} frets The number of frets.
  * @param {string[]} tuning The tuning of each string as an array.
  * @return {string} The rendered chord diagram as SVG.
  */
-function renderChordDiagram(shorthand, width, height, frets, tuning) {
+function renderChordDiagram(voicing, width, height, frets, tuning) {
   // Specify defaults here so as to not confuse memoize:
   // https://github.com/caiogondim/fast-memoize.js/issues/68
   width = width || 100;
@@ -211,7 +157,6 @@ function renderChordDiagram(shorthand, width, height, frets, tuning) {
   frets = frets || 5;
   tuning = tuning || ['E', 'A', 'D', 'G', 'B', 'e'];
 
-  const fingering = parseShorthand(shorthand);
   const strings = tuning.length;
   const div = window.document.createElement('div');
   const draw = new SVG(div).size(width, height);
@@ -219,20 +164,20 @@ function renderChordDiagram(shorthand, width, height, frets, tuning) {
 
   drawDiagram(draw, box, tuning);
 
-  if (fingering.offset > 1) {
-    drawFretOffset(draw, box, fingering.offset);
+  if (voicing.offset > 1) {
+    drawFretOffset(draw, box, voicing.offset);
   }
 
-  for (const { string } of fingering.mutes) {
+  for (const { string } of voicing.mutes) {
     drawMute(draw, box, string);
   }
 
-  for (const { string, fret } of fingering.notes) {
-    drawNote(draw, box, string, fret - fingering.offset + 1);
+  for (const { string, fret } of voicing.notes) {
+    drawNote(draw, box, string, fret - voicing.offset + 1);
   }
 
-  for (const { first, last, fret } of fingering.barres) {
-    drawBarre(draw, box, first, last, fret - fingering.offset + 1);
+  for (const { first, last, fret } of voicing.barres) {
+    drawBarre(draw, box, first, last, fret - voicing.offset + 1);
   }
 
   return div.innerHTML;

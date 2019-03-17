@@ -1,6 +1,6 @@
 'use strict';
 
-const Chord = require('./chord');
+const { Chord } = require('../lib/chord');
 
 const rewire = require('rewire');
 const versejs = rewire('./verse.js');

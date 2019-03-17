@@ -1,8 +1,8 @@
 'use strict';
 
 const rewire = require('rewire');
-const Chord = require('./chord.js');
-const eventsjs = rewire('./events.js');
+const { Chord } = require('../lib/chord');
+const eventsjs = rewire('./events');
 
 const convertVerseToEvents = eventsjs.__get__('convertVerseToEvents');
 const Line = eventsjs.__get__('Line');
