@@ -10,8 +10,8 @@ function addChordToDiv(voiceDiv, chord) {
     const chordDiagramDiv = document.createElement('div');
     chordDiagramDiv.className = 'diagram';
 
-    const shorthands = guitarChordLibrary.get(chord.toString());
-    const svgs = shorthands.map((shorthand) => chordDiagram.renderChordDiagram(shorthand));
+    const voicings = guitarChordLibrary.get(chord.toString());
+    const svgs = voicings.map((voicing) => chordDiagram.renderChordDiagram(voicing));
 
     // TODO: Provide a way to scroll through several chord diagrams.
     chordDiagramDiv.innerHTML = svgs[0];

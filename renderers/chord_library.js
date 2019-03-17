@@ -1,12 +1,15 @@
 'use strict';
 
+const { parseVoicing, compareVoicings } = require('../lib/voicing');
+
 const guitarChordLibrary = new Map();
 
 function addGuitarChord(name, shorthand) {
   if (!guitarChordLibrary.has(name)) {
     guitarChordLibrary.set(name, []);
   }
-  guitarChordLibrary.get(name).push(shorthand);
+  guitarChordLibrary.get(name).push(parseVoicing(shorthand));
+  guitarChordLibrary.get(name).sort(compareVoicings);
 }
 
 addGuitarChord('C', 'm1 n2,3 n3,2 n5,1');

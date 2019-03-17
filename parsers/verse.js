@@ -1,6 +1,6 @@
 'use strict';
 
-const Chord = require('./chord');
+const { parseChord } = require('../lib/chord');
 const voicePattern = /^([a-zA-Z-_]+)([0-9]*):\s(.*)/;
 
 function tokenize(instrument, data) {
@@ -11,7 +11,7 @@ function tokenize(instrument, data) {
   while (match = re.exec(data)) {
     events.push({
       index: match.index,
-      content: instrument == 'c' ? Chord.parse(match[0]) : match[0]
+      content: instrument == 'c' ? parseChord(match[0]) : match[0]
     });
   }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const Chord = require('../parsers/chord.js');
+const { Chord } = require('../lib/chord.js');
 
 const rewire = require('rewire');
 const chordsrendererjs = rewire('./chords_renderer.js');
