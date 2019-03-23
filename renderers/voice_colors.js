@@ -3,13 +3,26 @@
 const randomColor = require('randomcolor');
 
 class VoiceColors {
-  constructor(defaultColors) {
-    this.colors = defaultColors || ['blue', 'black', 'red', 'green', 'purple', 'teal'];
+  constructor(defaultColors, theme) {
+    this.colors = defaultColors ? defaultColors.slice() : ['blue', 'black', 'red', 'green', 'purple', 'teal'];
+    this.hueOrder = ['pink', 'orange', 'green', 'purple', 'blue', 'yellow'];
     this.voiceColorMap = {};
+
+    this.pallete = theme.pallete === 'dark' ? 'light' : 'dark';
+    this.currentSeed = 42;
   }
 
   getUnusedColor() {
-    return this.colors.length > 0 ? this.colors.shift() : randomColor({ seed: 42 });
+    if (this.colors.length > 0) {
+      return this.colors.shift();
+    }
+
+    let hue = '';
+    if (this.hueOrder.length > 0) {
+      hue = this.hueOrder.shift();
+    }
+
+    return randomColor({ seed: this.currentSeed++, luminosity: this.pallete, hue });
   }
 
   getVoiceColor(voice) {
