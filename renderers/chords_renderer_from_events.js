@@ -9,7 +9,7 @@ const VoiceColors = require('./voice_colors.js');
 class ChordsEventRenderer {
   constructor(voiceOrder, colorOrder, opts) {
     this.voiceOrder = voiceOrder;
-    this.voiceColors = new VoiceColors(colorOrder, opts.theme);
+    this.voiceColors = new VoiceColors(colorOrder, opts && opts.theme ? opts.theme : {});
     this.transposeAmount = opts ? opts.transpose : undefined;
     this.columnCount = opts && opts.columnCount ? opts.columnCount : 1;
     this.fontSize = opts && opts.fontSize ? opts.fontSize : 13;

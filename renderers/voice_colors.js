@@ -8,7 +8,7 @@ class VoiceColors {
     this.hueOrder = ['pink', 'orange', 'green', 'purple', 'blue', 'yellow'];
     this.voiceColorMap = {};
 
-    this.pallete = theme.pallete === 'dark' ? 'light' : 'dark';
+    this.palette = theme.palette === 'dark' ? 'light' : 'dark';
     this.currentSeed = 42;
   }
 
@@ -22,7 +22,7 @@ class VoiceColors {
       hue = this.hueOrder.shift();
     }
 
-    return randomColor({ seed: this.currentSeed++, luminosity: this.pallete, hue });
+    return randomColor({ seed: this.currentSeed++, luminosity: this.palette, hue });
   }
 
   getVoiceColor(voice) {
