@@ -54,12 +54,6 @@ function MarkdownMusic(md) {
     md.userOpts.fontSize = fontSize;
     return md;
   };
-
-  // Set the theme to use
-  md.setTheme = function(theme) {
-    md.userOpts.theme = theme;
-    return md;
-  };
 };
 
 module.exports = MarkdownMusic;
