@@ -34,31 +34,21 @@ function MarkdownMusic(md) {
   // Renderer configuration functions
   md.setTranspose = function(transpose) {
     md.userOpts.transpose = transpose;
-    return md;
   };
 
   // Restricts max renderable width (if the renderer supports it)
   md.setMaxWidth = function(maxWidth) {
     md.userOpts.maxWidth = maxWidth;
-    return md;
   };
 
   // Specifies the desired number of columns
   md.setColumnCount = function(columnCount) {
     md.userOpts.columnCount = columnCount;
-    return md;
   };
 
   // Specifies the desired font size
   md.setFontSize = function(fontSize) {
     md.userOpts.fontSize = fontSize;
-    return md;
-  };
-
-  // Set the theme to use
-  md.setTheme = function(theme) {
-    md.userOpts.theme = theme;
-    return md;
   };
 };
 
