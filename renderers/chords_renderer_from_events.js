@@ -9,7 +9,7 @@ const VoiceColors = require('./voice_colors.js');
 class ChordsEventRenderer {
   constructor(voiceOrder, colorOrder, opts) {
     this.voiceOrder = voiceOrder;
-    this.voiceColors = new VoiceColors(colorOrder);
+    this.voiceColors = new VoiceColors(colorOrder, opts && opts.theme ? opts.theme : {});
     this.transposeAmount = opts ? opts.transpose : undefined;
     this.columnCount = opts && opts.columnCount ? opts.columnCount : 1;
     this.fontSize = opts && opts.fontSize ? opts.fontSize : 13;
@@ -93,7 +93,7 @@ function render(str, opts) {
   // Get voice order from first phrase
   const voiceOrder = Array.from(verse[0].keys());
 
-  const colorOrder = ['black', 'blue', 'red', 'green', 'purple', 'teal'];
+  const colorOrder = opts.theme.colorOrder || ['black', 'blue', 'red', 'green', 'purple', 'teal'];
 
   const chordsRenderer = new ChordsEventRenderer(voiceOrder, colorOrder, opts);
   const lines = convertVerseToEvents(verse);
