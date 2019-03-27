@@ -93,11 +93,11 @@ function addChordToDiv(voiceDiv, chord) {
       createDiagramDiv(voicing, contentDiv);
     });
 
-    const tempDiv = document.createElement('div');
-    tempDiv.id = `${id}-count`;
-    tempDiv.innerHTML = `1 of ${voicings.length}`;
+    const countDiv = document.createElement('div');
+    countDiv.id = `${id}-count`;
+    countDiv.innerHTML = `1 of ${voicings.length}`;
     containerDiv.appendChild(contentScrollDiv);
-    containerDiv.appendChild(tempDiv);
+    containerDiv.appendChild(countDiv);
 
     voiceDiv.appendChild(containerDiv);
   } else {
