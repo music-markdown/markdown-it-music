@@ -66,6 +66,7 @@ function addChordToDiv(voiceDiv, chord) {
     const id = `chord${nextId++}`;
     contentDiv.id = id;
 
+    // TODO: Investigate using renderer rules to add script.
     if (!document.getElementById('chord-hover-script')) {
       const script = document.createElement('script');
       script.id = 'chord-hover-script';
