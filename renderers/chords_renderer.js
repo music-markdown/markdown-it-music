@@ -56,7 +56,7 @@ class ChordsEventRenderer {
     }
 
     event.forEach((voice) => {
-      while (voice.voice !== currentVoiceOrder[currentVoiceIndex] && currentVoiceIndex < currentVoiceOrder.length) {
+      while (currentVoiceIndex < currentVoiceOrder.length && voice.voice !== currentVoiceOrder[currentVoiceIndex]) {
         const emptyDiv = document.createElement('div');
         emptyDiv.innerHTML = ' ';
 
