@@ -40,6 +40,8 @@ function incrementId(id, direction) {
 }
 `;
 
+let nextId = 0;
+
 function createDiagramDiv(voicing, chordDiagramContainerDiv) {
   const svg = chordDiagram.renderChordDiagram(voicing);
 
@@ -61,7 +63,7 @@ function addChordToDiv(voiceDiv, chord) {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'diagram-content-container';
 
-    const id = 'chord' + Math.floor(Math.random() * 10000);
+    const id = `chord${nextId++}`;
     contentDiv.id = id;
 
     if (!document.getElementById('chord-hover-script')) {

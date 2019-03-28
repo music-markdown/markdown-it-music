@@ -2,12 +2,8 @@
 
 const rewire = require('rewire');
 
-const mockMath = Object.create(global.Math);
-mockMath.random = () => 0.5;
-
 const chordHoverJs = rewire('./chord_hover.js');
 chordHoverJs.__set__('document', document);
-chordHoverJs.__set__('Math', mockMath);
 chordHoverJs.__get__('chordDiagram').renderChordDiagram = jest.fn(() => 'svg_here');
 
 const addChordToDiv = chordHoverJs.__get__('addChordToDiv');
@@ -38,21 +34,21 @@ describe('Chord hover', () => {
         `<div class="content-scroll">` +
           `<div>` +
             `<button class="scroll" ` +
-              `onclick="slowScroll('chord5000', 'left', 100, 2); incrementId('chord5000', 'left');">` +
+              `onclick="slowScroll('chord0', 'left', 100, 2); incrementId('chord0', 'left');">` +
                 `❮` +
             `</button>` +
           `</div>` +
-          `<div class="diagram-content-container" id="chord5000">` +
+          `<div class="diagram-content-container" id="chord0">` +
             `${svgDiagramDiv}${svgDiagramDiv}${svgDiagramDiv}` +
           `</div>` +
           `<div>` +
             `<button class="scroll" ` +
-              `onclick="slowScroll('chord5000', 'right', 100, 2); incrementId('chord5000', 'right');">` +
+              `onclick="slowScroll('chord0', 'right', 100, 2); incrementId('chord0', 'right');">` +
                 `❯` +
             `</button>` +
           `</div>` +
         `</div>` +
-        `<div id="chord5000-count">1 of 3</div>` +
+        `<div id="chord0-count">1 of 3</div>` +
       `</div>` +
     `</div>`;
 
@@ -71,7 +67,7 @@ describe('Chord hover', () => {
 
   describe('buttons', () => {
     let voiceDiv;
-    const id = 'chord5000';
+    const id = 'chord0';
 
     beforeAll(() => {
       eval(slowScrollFunction);
@@ -82,6 +78,7 @@ describe('Chord hover', () => {
       if (voiceDiv) {
         document.getElementsByTagName('body')[0].removeChild(voiceDiv);
       }
+      chordHoverJs.__set__('nextId', 0);
       voiceDiv = document.createElement('div');
 
       addChordToDiv(voiceDiv, 'C');
