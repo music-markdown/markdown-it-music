@@ -1,7 +1,7 @@
 'use strict';
 const meta = require('markdown-it-meta');
 const abc = require('./renderers/abc_renderer.js');
-const chords = require('./renderers/chords_renderer_from_events.js');
+const chords = require('./renderers/chords_renderer.js');
 
 function MarkdownMusic(md) {
   md.use(meta);

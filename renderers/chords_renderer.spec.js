@@ -2,7 +2,7 @@
 
 const rewire = require('rewire');
 
-const chordsRendererFromEventsJs = rewire('./chords_renderer_from_events.js');
+const chordsRendererFromEventsJs = rewire('./chords_renderer.js');
 chordsRendererFromEventsJs.__set__('document', document);
 
 const mockAddChordToDivFn = jest.fn(() => 'svg_here');
@@ -27,7 +27,7 @@ describe('Chords Renderer from Events', () => {
 
     const voice = { index: 0, offset: 0, voice: 'c1', content: 'C' };
 
-    const chordsRenderer = new ChordsEventRenderer(['c1'], voiceColors);
+    const chordsRenderer = new ChordsEventRenderer([['c1']], voiceColors);
     const actualVoiceDiv = chordsRenderer.createVoiceDiv(voice);
 
     expect(actualVoiceDiv.outerHTML).toEqual(expectedVoiceDiv);
@@ -57,7 +57,7 @@ describe('Chords Renderer from Events', () => {
       ]
     ];
 
-    const chordsRenderer = new ChordsEventRenderer(['l1'], voiceColors);
+    const chordsRenderer = new ChordsEventRenderer([['l1']], voiceColors);
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
     expect(actualLineDiv.outerHTML).toEqual(expectedLineDiv);
@@ -78,7 +78,7 @@ describe('Chords Renderer from Events', () => {
       `</div>` +
     '</div>';
 
-    const chordsRenderer = new ChordsEventRenderer(['c1', 'l1'], voiceColors);
+    const chordsRenderer = new ChordsEventRenderer([['c1', 'l1']], voiceColors);
     const actualEventDiv = chordsRenderer.createEventDiv(line);
 
     expect(actualEventDiv.outerHTML).toEqual(expectedEventDiv);
@@ -106,7 +106,7 @@ describe('Chords Renderer from Events', () => {
       ]
     ]];
 
-    const chordsRenderer = new ChordsEventRenderer(['c1', 'l1'], voiceColors);
+    const chordsRenderer = new ChordsEventRenderer([['c1', 'l1'], ['c1', 'l1']], voiceColors);
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
     const expectedEventDiv = '<div class="chart" style="column-count: 1; font-size: 13px;">' +
@@ -175,7 +175,7 @@ describe('Chords Renderer from Events', () => {
       ]
     ];
 
-    const chordsRenderer = new ChordsEventRenderer(['l1'], voiceColors);
+    const chordsRenderer = new ChordsEventRenderer([['l1']], voiceColors);
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
     expect(actualLineDiv.outerHTML).toEqual(expectedLineDiv);
@@ -200,7 +200,7 @@ describe('Chords Renderer from Events', () => {
       ]
     ];
 
-    const chordsRenderer = new ChordsEventRenderer(['c1', 'l1'], voiceColors);
+    const chordsRenderer = new ChordsEventRenderer([['c1', 'l1']], voiceColors);
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
     expect(actualLineDiv.outerHTML).toEqual(expectedLineDiv);
@@ -226,7 +226,7 @@ describe('Chords Renderer from Events', () => {
       ]
     ];
 
-    const chordsRenderer = new ChordsEventRenderer(['l1'], voiceColors, { columnCount: 3 });
+    const chordsRenderer = new ChordsEventRenderer([['l1']], voiceColors, { columnCount: 3 });
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
     expect(actualChartDiv.outerHTML).toEqual(expectedChartDiv);
@@ -251,7 +251,48 @@ describe('Chords Renderer from Events', () => {
       ]
     ];
 
-    const chordsRenderer = new ChordsEventRenderer(['l1'], voiceColors, { fontSize: 999 });
+    const chordsRenderer = new ChordsEventRenderer([['l1']], voiceColors, { fontSize: 999 });
+    const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
+
+    expect(actualChartDiv.outerHTML).toEqual(expectedChartDiv);
+  });
+
+  test('should render all phrases that have a different set of voices than the first', () => {
+    const expectedChartDiv = '<div class="chart" style="column-count: 1; font-size: 13px;">' +
+      '<div class="line">' +
+        '<div class="event">' +
+          `<div style="color: ${defaultColors[0]};">` +
+            `<div class="l1">Testing!</div>` +
+          `</div>` +
+        '</div>' +
+      '</div>' +
+      '<div class="line">' +
+        '<div class="event">' +
+          `<div style="color: ${defaultColors[1]};">` +
+            `<div class="c1">C</div>` +
+          `</div>` +
+          `<div style="color: ${defaultColors[0]};">` +
+            `<div class="l1">Testing!</div>` +
+          `</div>` +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    const lines = [
+      [
+        [
+          { index: 0, offset: 0, voice: 'l1', content: 'Testing!' },
+        ]
+      ],
+      [
+        [
+          { index: 0, offset: 0, voice: 'c1', content: 'C' },
+          { index: 0, offset: 0, voice: 'l1', content: 'Testing!' },
+        ]
+      ]
+    ];
+
+    const chordsRenderer = new ChordsEventRenderer([['l1'], ['c1', 'l1']], voiceColors);
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
     expect(actualChartDiv.outerHTML).toEqual(expectedChartDiv);
