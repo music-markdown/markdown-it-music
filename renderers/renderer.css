@@ -29,26 +29,31 @@
   font-weight: bold;
 }
 
-.diagram {
+.diagram-content-container {
+  display: flex;
+  overflow-x: hidden;
+}
+
+.diagram-container {
   border: 1px solid #e3e3e3;
   background: white;
-  width: auto;
-  max-width: 275px;
-  height: auto;
+  color: black;
+  text-align: center;
+  width: 126px;
+  height: 120px;
   z-index: 500;
   position: absolute;
   transform: translate(-40%, -100%);
   cursor: default;
-  display: inline-block;
 }
 
-.chord .diagram {
+.chord .diagram-container {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0s linear 0.4s, opacity 0.4s linear;
 }
 
-.chord:hover .diagram {
+.chord:hover .diagram-container {
   visibility: visible;
   opacity: 1;
   transition-delay: 0.1s;
@@ -57,6 +62,30 @@
   -ms-transition: opacity 0.1s ease-in;
   -o-transition: opacity 0.1s ease-in;
   transition: opacity 0.1s ease-in;
+}
+
+.diagram {
+  width: 100px;
+  flex-shrink: 0;
+  height: 100px;
+  display: flex;
+}
+
+.scroll {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 12px;
+}
+
+.content-scroll {
+  display: flex;
+}
+
+.scroll:focus {
+  outline: none;
 }
 
 .empty {
