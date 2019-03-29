@@ -49,24 +49,19 @@ class ChordsEventRenderer {
     eventDiv.className = 'event';
 
     const currentVoiceOrder = this.voiceOrder[this.currentPhraseIndex];
-    let currentVoiceIndex = 0;
 
     if (event.length > currentVoiceOrder.length) {
       console.error('There are more voices than the voice order displays. Some data map be lost.');
     }
 
-    event.forEach((voice) => {
-      while (currentVoiceIndex < currentVoiceOrder.length && voice.voice !== currentVoiceOrder[currentVoiceIndex]) {
+    currentVoiceOrder.forEach((voice) => {
+      if (event[0] && voice === event[0].voice) {
+        eventDiv.appendChild(this.createVoiceDiv(event.shift()));
+      } else {
         const emptyDiv = document.createElement('div');
         emptyDiv.innerHTML = ' ';
-
         eventDiv.appendChild(emptyDiv);
-        currentVoiceIndex++;
       }
-
-      currentVoiceIndex++;
-
-      eventDiv.appendChild(this.createVoiceDiv(voice));
     });
 
     return eventDiv;
