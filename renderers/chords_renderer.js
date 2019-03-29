@@ -9,6 +9,7 @@ const VoiceColors = require('./voice_colors.js');
 class ChordsEventRenderer {
   constructor(voiceOrder, colorOrder, opts) {
     this.voiceOrder = voiceOrder;
+    this.currentPhraseIndex = 0;
     this.voiceColors = new VoiceColors(colorOrder);
     this.transposeAmount = opts ? opts.transpose : undefined;
     this.columnCount = opts && opts.columnCount ? opts.columnCount : 1;
@@ -26,6 +27,7 @@ class ChordsEventRenderer {
     lines.forEach((line) => {
       // create line div for each event
       chartDiv.appendChild(this.createLineDiv(line));
+      this.currentPhraseIndex++;
     });
 
     return chartDiv;
@@ -35,7 +37,6 @@ class ChordsEventRenderer {
     const lineDiv = document.createElement('div');
     lineDiv.className = 'line';
 
-    // add all voices from event to line div
     line.forEach((event) => {
       lineDiv.appendChild(this.createEventDiv(event));
     });
@@ -47,20 +48,20 @@ class ChordsEventRenderer {
     const eventDiv = document.createElement('div');
     eventDiv.className = 'event';
 
-    let currentVoiceIndex = 0;
+    const currentVoiceOrder = this.voiceOrder[this.currentPhraseIndex];
 
-    event.forEach((voice) => {
-      while (voice.voice !== this.voiceOrder[currentVoiceIndex]) {
+    if (event.length > currentVoiceOrder.length) {
+      console.error('There are more voices than the voice order displays. Some data map be lost.');
+    }
+
+    currentVoiceOrder.forEach((voice) => {
+      if (event[0] && voice === event[0].voice) {
+        eventDiv.appendChild(this.createVoiceDiv(event.shift()));
+      } else {
         const emptyDiv = document.createElement('div');
         emptyDiv.innerHTML = ' ';
-
         eventDiv.appendChild(emptyDiv);
-        currentVoiceIndex++;
       }
-
-      currentVoiceIndex++;
-
-      eventDiv.appendChild(this.createVoiceDiv(voice));
     });
 
     return eventDiv;
@@ -90,8 +91,8 @@ class ChordsEventRenderer {
 
 function render(str, opts) {
   const verse = parseVerse(str);
-  // Get voice order from first phrase
-  const voiceOrder = Array.from(verse[0].keys());
+
+  const voiceOrder = verse.map((phrase) => Array.from(phrase.keys()));
 
   const colorOrder = ['black', 'blue', 'red', 'green', 'purple', 'teal'];
 
