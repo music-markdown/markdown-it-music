@@ -191,8 +191,8 @@ describe('Event', () => {
           { index: 20, offset: 0, voice: 'l1', content: '-fragilistic' }
         ],
         [
-          { index: 32, offset: 1, voice: 'c1', content: new Chord('E') },
-          { index: 32, offset: 0, voice: 'l1', content: '-expialidocious' }
+          { index: 31, offset: 1, voice: 'c1', content: new Chord('E') },
+          { index: 31, offset: 0, voice: 'l1', content: '-expialidocious' }
         ],
       ]
     ];
@@ -271,5 +271,93 @@ describe('Event', () => {
     ];
 
     expect(actualLine).toEqual(expectedLine);
+  });
+
+  test('should not add a voice if the next event would occur before the voice', () => {
+    const verse = [new Map([[
+      'c1', [
+        { index: 19, content: new Chord('Am') }
+      ]], [
+      'v1', [
+        { index: 0, content: 'All' },
+        { index: 4, content: 'the' },
+        { index: 8, content: 'leaves' },
+        { index: 15, content: 'are' },
+        { index: 19, content: 'brown' }
+      ]], [
+      'v2', [
+        { index: 0, content: '!!!!!!!!!!!!!!!!!!!!!' }
+      ]
+    ]])];
+
+    const actualLines = convertVerseToEvents(verse);
+
+    const expectedLines = [[
+      [
+        { index: 0, voice: 'v1', content: 'All', offset: 0 },
+        { index: 0, voice: 'v2', content: '!!!!', offset: 0 },
+      ],
+      [
+        { index: 4, voice: 'v1', content: 'the', offset: 1 },
+        { index: 4, voice: 'v2', content: '-!!!!', offset: 0 },
+      ],
+      [
+        { index: 8, voice: 'v1', content: 'leaves', offset: 1 },
+        { index: 8, voice: 'v2', content: '-!!!!!!!', offset: 0 },
+      ],
+      [
+        { index: 15, voice: 'v1', content: 'are', offset: 1 },
+        { index: 15, voice: 'v2', content: '-!!!!', offset: 0 },
+      ],
+      [
+        { index: 19, voice: 'c1', content: new Chord('Am'), offset: 1 },
+        { index: 19, voice: 'v1', content: 'brown', offset: 1 },
+        { index: 19, voice: 'v2', content: '-!!', offset: 0 },
+      ]
+    ]];
+
+    expect(actualLines).toEqual(expectedLines);
+  });
+
+  test('should only split words when they are split', () => {
+    const verse = [new Map([[
+      'v1', [
+        { index: 0, content: 'All' },
+        { index: 4, content: 'the' },
+        { index: 8, content: 'leaves' },
+        { index: 15, content: 'are' },
+        { index: 19, content: 'brown' }
+      ]], [
+      'v2', [
+        { index: 0, content: '!!!!!!!!!!!!!!!!!!!!!' }
+      ]
+    ]])];
+
+    const actualLines = convertVerseToEvents(verse);
+
+    const expectedLines = [[
+      [
+        { index: 0, voice: 'v1', content: 'All', offset: 0 },
+        { index: 0, voice: 'v2', content: '!!!!', offset: 0 },
+      ],
+      [
+        { index: 4, voice: 'v1', content: 'the', offset: 1 },
+        { index: 4, voice: 'v2', content: '-!!!!', offset: 0 },
+      ],
+      [
+        { index: 8, voice: 'v1', content: 'leaves', offset: 1 },
+        { index: 8, voice: 'v2', content: '-!!!!!!!', offset: 0 },
+      ],
+      [
+        { index: 15, voice: 'v1', content: 'are', offset: 1 },
+        { index: 15, voice: 'v2', content: '-!!!!', offset: 0 },
+      ],
+      [
+        { index: 19, voice: 'v1', content: 'brown', offset: 1 },
+        { index: 19, voice: 'v2', content: '-!!', offset: 0 },
+      ]
+    ]];
+
+    expect(actualLines).toEqual(expectedLines);
   });
 });

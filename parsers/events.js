@@ -10,7 +10,6 @@
 class Line {
   constructor() {
     this.spacesBetweenEvents = 0;
-    this.addedCharacters = 0;
     this.previousLine = [];
   }
 
@@ -28,15 +27,16 @@ class Line {
   splitPreviousEvent(voicesAddedToEvent, eventIndex) {
     const voicesToAdd = [];
 
-    let hasAddedCharacter = false;
     // Split any previous events
     this.previousLine.forEach((voice) => {
       if (voicesAddedToEvent.indexOf(voice.voice) === -1 &&
-          eventIndex < voice.index + voice.content.toString().length) {
+          eventIndex < voice.index + voice.content.toString().length - 1 &&
+          voice.content.substring) {
         // Split voice from previous event, add remainder to this event.
-        const splitIndex = eventIndex - voice.index + this.addedCharacters;
+        let splitIndex = eventIndex - voice.index;
+        splitIndex += voice.content.startsWith('-') ? 1 : 0;
         const event = {
-          index: eventIndex + this.addedCharacters,
+          index: eventIndex,
           voice: voice.voice,
           content: `-${voice.content.substring(splitIndex)}`,
           offset: 0
@@ -44,12 +44,6 @@ class Line {
         voice.content = voice.content.substring(0, splitIndex);
 
         voicesToAdd.push(event);
-
-        // Update index position to account for added character.
-        if (!hasAddedCharacter) {
-          this.addedCharacters++;
-          hasAddedCharacter = true;
-        }
       }
     });
 
@@ -71,6 +65,8 @@ class Line {
   addEvents(phrase, longestEvent, startIndex) {
     const line = [];
     const voicesAdded = [];
+    const longestEventMinIndex = longestEvent.index;
+    const longestEventMaxIndex = longestEventMinIndex + longestEvent.content.toString().length;
 
     phrase.forEach((events, voiceName) => {
       if (events.length === 0) {
@@ -79,13 +75,18 @@ class Line {
 
       const event = events[0];
       // Only include an event if it falls between the longest event's start and end index.
-      if (longestEvent.index <= event.index &&
-          event.index < longestEvent.index + longestEvent.content.toString().length) {
+      if (longestEventMinIndex <= event.index &&
+          event.index < longestEventMaxIndex) {
+        // Look ahead to make sure this event falls before future events.
+        if (!Array.from(phrase.values()).every((voiceEvents) => {
+          return !voiceEvents[1] || voiceEvents[1].index > event.index;
+        })) {
+          return;
+        }
         const eventToAdd = events.shift();
 
         eventToAdd.voice = voiceName;
         eventToAdd.offset = this.spacesBetweenEvents + eventToAdd.index - startIndex;
-        eventToAdd.index += this.addedCharacters;
 
         line.push(eventToAdd);
         voicesAdded.push(voiceName);
