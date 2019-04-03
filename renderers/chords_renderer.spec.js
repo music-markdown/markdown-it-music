@@ -22,7 +22,7 @@ describe('Chords Renderer from Events', () => {
   test('should create a voice div', () => {
     const expectedVoiceDiv =
       `<div style="color: ${defaultColors[0]};">` +
-        `<div class="c1">C</div>` +
+        `<div class="c1 chord">svg_hereC</div>` +
       `</div>`;
 
     const voice = { index: 0, offset: 0, voice: 'c1', content: 'C' };
@@ -30,7 +30,7 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer([['c1']], voiceColors);
     const actualVoiceDiv = chordsRenderer.createVoiceDiv(voice);
 
-    expect(actualVoiceDiv.outerHTML).toEqual(expectedVoiceDiv);
+    expect(actualVoiceDiv).toEqual(expectedVoiceDiv);
     expect(mockAddChordToDivFn).toHaveBeenCalledTimes(1);
   });
 
@@ -60,7 +60,7 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer([['l1']], voiceColors);
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
-    expect(actualLineDiv.outerHTML).toEqual(expectedLineDiv);
+    expect(actualLineDiv).toEqual(expectedLineDiv);
   });
 
   test('should add diagram to chord div', () => {
@@ -71,7 +71,7 @@ describe('Chords Renderer from Events', () => {
 
     const expectedEventDiv = '<div class="event">' +
       `<div style="color: ${defaultColors[0]};">` +
-        `<div class="c1">C</div>` +
+        `<div class="c1 chord">svg_hereC</div>` +
       `</div>` +
       `<div style="color: ${defaultColors[1]};">` +
         `<div class="l1">Wonderful!</div>` +
@@ -81,7 +81,7 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer([['c1', 'l1']], voiceColors);
     const actualEventDiv = chordsRenderer.createEventDiv(line);
 
-    expect(actualEventDiv.outerHTML).toEqual(expectedEventDiv);
+    expect(actualEventDiv).toEqual(expectedEventDiv);
     expect(mockAddChordToDivFn).toHaveBeenCalledTimes(1);
   });
 
@@ -113,7 +113,7 @@ describe('Chords Renderer from Events', () => {
       '<div class="line">' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[0]};">` +
-            `<div class="c1">C</div>` +
+            `<div class="c1 chord">svg_hereC</div>` +
           `</div>` +
           `<div style="color: ${defaultColors[1]};">` +
             `<div class="l1">Wonderful</div>` +
@@ -121,7 +121,7 @@ describe('Chords Renderer from Events', () => {
         '</div>' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[0]};">` +
-            `<div class="c1">G</div>` +
+            `<div class="c1 chord">svg_hereG</div>` +
           `</div>` +
           `<div style="color: ${defaultColors[1]};">` +
             `<div class="l1">Testing!</div>` +
@@ -131,7 +131,7 @@ describe('Chords Renderer from Events', () => {
       '<div class="line">' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[0]};">` +
-            `<div class="c1">A</div>` +
+            `<div class="c1 chord">svg_hereA</div>` +
           `</div>` +
           `<div style="color: ${defaultColors[1]};">` +
             `<div class="l1">Things</div>` +
@@ -146,7 +146,7 @@ describe('Chords Renderer from Events', () => {
       '</div>' +
     '</div>';
 
-    expect(actualChartDiv.outerHTML).toEqual(expectedEventDiv);
+    expect(actualChartDiv).toEqual(expectedEventDiv);
     expect(mockAddChordToDivFn).toHaveBeenCalledTimes(3);
   });
 
@@ -178,14 +178,14 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer([['l1']], voiceColors);
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
-    expect(actualLineDiv.outerHTML).toEqual(expectedLineDiv);
+    expect(actualLineDiv).toEqual(expectedLineDiv);
   });
 
   test('should add space before a voice if it does not start at the start index of an event', () => {
     const expectedLineDiv ='<div class="line">' +
       '<div class="event">' +
         `<div style="color: ${defaultColors[0]};">` +
-          `<div class="c1">  C</div>` +
+          `<div class="c1 chord">svg_here  C</div>` +
         `</div>` +
         `<div style="color: ${defaultColors[1]};">` +
           `<div class="l1">Testing!</div>` +
@@ -203,7 +203,7 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer([['c1', 'l1']], voiceColors);
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
-    expect(actualLineDiv.outerHTML).toEqual(expectedLineDiv);
+    expect(actualLineDiv).toEqual(expectedLineDiv);
     expect(mockAddChordToDivFn).toHaveBeenCalledTimes(1);
   });
 
@@ -229,7 +229,7 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer([['l1']], voiceColors, { columnCount: 3 });
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
-    expect(actualChartDiv.outerHTML).toEqual(expectedChartDiv);
+    expect(actualChartDiv).toEqual(expectedChartDiv);
   });
 
   test('should add font size', () => {
@@ -254,7 +254,7 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer([['l1']], voiceColors, { fontSize: 999 });
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
-    expect(actualChartDiv.outerHTML).toEqual(expectedChartDiv);
+    expect(actualChartDiv).toEqual(expectedChartDiv);
   });
 
   test('should render all phrases that have a different set of voices than the first', () => {
@@ -269,7 +269,7 @@ describe('Chords Renderer from Events', () => {
       '<div class="line">' +
         '<div class="event">' +
           `<div style="color: ${defaultColors[1]};">` +
-            `<div class="c1">C</div>` +
+            `<div class="c1 chord">svg_hereC</div>` +
           `</div>` +
           `<div style="color: ${defaultColors[0]};">` +
             `<div class="l1">Testing!</div>` +
@@ -295,6 +295,6 @@ describe('Chords Renderer from Events', () => {
     const chordsRenderer = new ChordsEventRenderer([['l1'], ['c1', 'l1']], voiceColors);
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
-    expect(actualChartDiv.outerHTML).toEqual(expectedChartDiv);
+    expect(actualChartDiv).toEqual(expectedChartDiv);
   });
 });

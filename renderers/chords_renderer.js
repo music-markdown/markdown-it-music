@@ -17,7 +17,7 @@ class ChordsEventRenderer {
   }
 
   createEventHTMLChordChart(lines) {
-    let chartDiv = `<div class="chart" style="column-count: ${this.columnCount}; font-size: ${this.fontSize}px">`;
+    let chartDiv = `<div class="chart" style="column-count: ${this.columnCount}; font-size: ${this.fontSize}px;">`;
 
     lines.forEach((line) => {
       // create line div for each event
@@ -81,7 +81,7 @@ class ChordsEventRenderer {
 
     voiceDiv += `${' '.repeat(voice.offset)}${voice.content.toString()}</div>`;
 
-    return `<div style="color: ${this.voiceColors.getVoiceColor(voice.voice)}">` +
+    return `<div style="color: ${this.voiceColors.getVoiceColor(voice.voice)};">` +
       `${voiceDiv}` +
       `</div>`;
   }
