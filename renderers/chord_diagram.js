@@ -1,6 +1,7 @@
 'use strict';
 const memoize = require('fast-memoize');
-const SVG = require('svg.js');
+
+const SVG = require('@svgdotjs/svg.js');
 
 /** Represents the dimensions of a chord diagram. */
 class ChordBox {
@@ -66,7 +67,7 @@ class ChordBox {
  */
 function drawDiagram(draw, box, tuning) {
   // Draw Bridge
-  draw.line(box.left, box.header, box.right, box.header).stroke({ width: 2 });
+  draw.line(box.left, box.header, box.right, box.header).stroke({ color: '#000', width: 2 });
 
   // Draw Frets
   for (let i = 1; i <= box.frets; i++) {
@@ -78,7 +79,7 @@ function drawDiagram(draw, box, tuning) {
   for (let i = 0; i < box.strings; i++) {
     const x = box.string(i);
     draw.line(x, box.header, x, box.footer).stroke({ color: '#000' });
-    draw.text(tuning[i]).font({ size: box.radius * 2, family: 'Arial' })
+    draw.plain(tuning[i]).font({ size: box.radius * 2, family: 'Arial' })
       .center(x, (box.footer + box.height) / 2);
   }
 }
@@ -134,7 +135,7 @@ function drawBarre(draw, box, first, last, fret) {
  * @param {number} offset The fret offset.
  */
 function drawFretOffset(draw, box, offset) {
-  draw.text(`${offset}fr`)
+  draw.plain(`${offset}fr`)
     .font({ size: box.radius * 2, family: 'Arial' })
     .center((box.right + box.width) / 2, box.fret(1));
 }
@@ -158,8 +159,8 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
   tuning = tuning || ['E', 'A', 'D', 'G', 'B', 'e'];
 
   const strings = tuning.length;
-  const div = window.document.createElement('div');
-  const draw = new SVG(div).size(width, height);
+  const svg = window.document.createElement('svg');
+  const draw = new SVG.Container(svg).size(width, height);
   const box = new ChordBox(0, 0, width, height, frets, strings);
 
   drawDiagram(draw, box, tuning);
@@ -180,9 +181,29 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
     drawBarre(draw, box, first, last, fret - voicing.offset + 1);
   }
 
-  return div.innerHTML;
+  return draw.svg();
 }
 
+const memoized = memoize(renderChordDiagram, {
+  cache: {
+    create() {
+      const store = {};
+      return {
+        has(key) {
+          return (key in store) || localStorage.hasOwnProperty(key);
+        },
+        get(key) {
+          return store[key] ? store[key] : ( localStorage.getItem(key) || undefined );
+        },
+        set(key, value) {
+          store[key] = value;
+          localStorage.setItem(key, value);
+        }
+      };
+    }
+  }
+});
+
 module.exports = {
-  renderChordDiagram: memoize(renderChordDiagram),
+  renderChordDiagram: memoized,
 };

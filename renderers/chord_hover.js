@@ -42,29 +42,40 @@ function incrementId(id, direction) {
 
 let nextId = 0;
 
-function createDiagramDiv(voicing, chordDiagramContainerDiv) {
+function createDiagramDiv(voicing) {
   const svg = chordDiagram.renderChordDiagram(voicing);
 
-  const chordDiagramDiv = document.createElement('div');
-
-  chordDiagramDiv.className = 'diagram';
-  chordDiagramDiv.innerHTML += svg;
-
-  chordDiagramContainerDiv.appendChild(chordDiagramDiv);
+  return `<div class="diagram">${svg}</div>`;
 }
 
-function addChordToDiv(voiceDiv, chord) {
-  voiceDiv.className += ' chord';
-
+function addChordToDiv(chord) {
   if (guitarChordLibrary.has(chord.toString())) {
-    const containerDiv = document.createElement('div');
-    containerDiv.className = 'diagram-container';
-
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'diagram-content-container';
-
     const id = `chord${nextId++}`;
-    contentDiv.id = id;
+
+    let contentDiv = `<div class="diagram-content-container" id="${id}">`;
+
+    const voicings = guitarChordLibrary.get(chord.toString());
+
+    voicings.forEach((voicing) => {
+      contentDiv += createDiagramDiv(voicing);
+    });
+
+    contentDiv += '</div>';
+
+    const leftButton = `<div>` +
+      `<button class="scroll" onclick="slowScroll('${id}', 'left', 100, 2); incrementId('${id}', 'left');">❮` +
+      `</button></div>`;
+    const rightButton = `<div>` +
+      `<button class="scroll" onclick="slowScroll('${id}', 'right', 100, 2); incrementId('${id}', 'right');">❯` +
+      `</button></div>`;
+
+    const contentScrollDiv = `<div class="content-scroll">` +
+      `${leftButton}` +
+      `${contentDiv}` +
+      `${rightButton}` +
+      `</div>`;
+
+    const countDiv = `<div id="${id}-count">1 of ${voicings.length}</div>`;
 
     // TODO: Investigate using renderer rules to add script.
     if (!document.getElementById('chord-hover-script')) {
@@ -75,37 +86,12 @@ function addChordToDiv(voiceDiv, chord) {
       document.getElementsByTagName('body')[0].appendChild(script);
     }
 
-    const contentScrollDiv = document.createElement('div');
-    contentScrollDiv.className = 'content-scroll';
-
-    const leftButton = document.createElement('div');
-    leftButton.innerHTML = `<button class="scroll"
-      onclick="slowScroll('${id}', 'left', 100, 2); incrementId('${id}', 'left');">❮`;
-
-    const rightButton = document.createElement('div');
-    rightButton.innerHTML = `<button class="scroll" 
-      onclick="slowScroll('${id}', 'right', 100, 2); incrementId('${id}', 'right');">❯`;
-
-    contentScrollDiv.appendChild(leftButton);
-    contentScrollDiv.appendChild(contentDiv);
-    contentScrollDiv.appendChild(rightButton);
-
-    const voicings = guitarChordLibrary.get(chord.toString());
-
-    voicings.forEach((voicing) => {
-      createDiagramDiv(voicing, contentDiv);
-    });
-
-    const countDiv = document.createElement('div');
-    countDiv.id = `${id}-count`;
-    countDiv.innerHTML = `1 of ${voicings.length}`;
-    containerDiv.appendChild(contentScrollDiv);
-    containerDiv.appendChild(countDiv);
-
-    voiceDiv.appendChild(containerDiv);
-  } else {
-    voiceDiv.className += ' highlight';
+    return `<div class="diagram-container">` +
+      `${contentScrollDiv}` +
+      `${countDiv}` +
+      `</div>`;
   }
+  return undefined;
 }
 
 module.exports = {

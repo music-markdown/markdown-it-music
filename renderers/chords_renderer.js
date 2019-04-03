@@ -17,36 +17,29 @@ class ChordsEventRenderer {
   }
 
   createEventHTMLChordChart(lines) {
-    // create chart div
-    const chartDiv = document.createElement('div');
-    chartDiv.className = 'chart';
-    chartDiv.style.columnCount = this.columnCount;
-    chartDiv.style.fontSize = `${this.fontSize}px`;
+    let chartDiv = `<div class="chart" style="column-count: ${this.columnCount}; font-size: ${this.fontSize}px">`;
 
-    // create events div for each line list
     lines.forEach((line) => {
       // create line div for each event
-      chartDiv.appendChild(this.createLineDiv(line));
+      chartDiv += this.createLineDiv(line);
       this.currentPhraseIndex++;
     });
 
-    return chartDiv;
+    return chartDiv + '</div>';
   }
 
   createLineDiv(line) {
-    const lineDiv = document.createElement('div');
-    lineDiv.className = 'line';
+    let lineDiv = `<div class="line">`;
 
     line.forEach((event) => {
-      lineDiv.appendChild(this.createEventDiv(event));
+      lineDiv += this.createEventDiv(event);
     });
 
-    return lineDiv;
+    return lineDiv + '</div>';
   }
 
   createEventDiv(event) {
-    const eventDiv = document.createElement('div');
-    eventDiv.className = 'event';
+    let eventDiv = `<div class="event">`;
 
     const currentVoiceOrder = this.voiceOrder[this.currentPhraseIndex];
 
@@ -56,36 +49,41 @@ class ChordsEventRenderer {
 
     currentVoiceOrder.forEach((voice) => {
       if (event[0] && voice === event[0].voice) {
-        eventDiv.appendChild(this.createVoiceDiv(event.shift()));
+        eventDiv += this.createVoiceDiv(event.shift());
       } else {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.innerHTML = ' ';
-        eventDiv.appendChild(emptyDiv);
+        const emptyDiv = '<div> </div>';
+        eventDiv += emptyDiv;
       }
     });
-
-    return eventDiv;
+    return eventDiv + `</div>`;
   }
 
   createVoiceDiv(voice) {
-    const voiceStyleDiv = document.createElement('div');
-    voiceStyleDiv.style.color = this.voiceColors.getVoiceColor(voice.voice);
-
-    const voiceDiv = document.createElement('div');
-    voiceDiv.className = voice.voice;
+    let className = `class="${voice.voice}`;
+    let chordDiagram = undefined;
 
     if (voice.voice.startsWith('c')) {
       if (this.transposeAmount && typeof voice.content.transpose === 'function') {
         voice.content = voice.content.transpose(this.transposeAmount);
       }
 
-      chordHover.addChordToDiv(voiceDiv, voice.content);
+      className += ' chord';
+      chordDiagram = chordHover.addChordToDiv(voice.content);
+      if (!chordDiagram) {
+        className += ' highlight';
+      }
     }
-    voiceDiv.innerHTML += `${' '.repeat(voice.offset)}${voice.content.toString()}`;
 
-    voiceStyleDiv.appendChild(voiceDiv);
+    let voiceDiv = `<div ${className}">`;
+    if (chordDiagram) {
+      voiceDiv += chordDiagram;
+    }
 
-    return voiceStyleDiv;
+    voiceDiv += `${' '.repeat(voice.offset)}${voice.content.toString()}</div>`;
+
+    return `<div style="color: ${this.voiceColors.getVoiceColor(voice.voice)}">` +
+      `${voiceDiv}` +
+      `</div>`;
   }
 }
 
@@ -99,7 +97,7 @@ function render(str, opts) {
   const chordsRenderer = new ChordsEventRenderer(voiceOrder, colorOrder, opts);
   const lines = convertVerseToEvents(verse);
 
-  return chordsRenderer.createEventHTMLChordChart(lines).outerHTML;
+  return chordsRenderer.createEventHTMLChordChart(lines);
 }
 
 module.exports = {
