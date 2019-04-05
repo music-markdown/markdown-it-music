@@ -13,6 +13,22 @@ function MarkdownMusic(md) {
     Object.assign(md.meta, md.userOpts);
   });
 
+  md.renderer.rules.mmd_phrase = (tokens, idx) => {
+    console.log(tokens);
+    return chords.callback(tokens[idx].meta);
+  };
+
+  md.inline.ruler.before('text', 'mmd', (state) => {
+    if (state.src.startsWith('c1: ')) {
+      const openToken = new state.Token('mmd_phrase', '', 0);
+      openToken.meta = state.src;
+      state.tokens.push(openToken);
+      state.pos = state.posMax;
+      return true;
+    }
+    return false;
+  });
+
   md.set({
     highlight: function(str, lang) {
       if (md.highlightRegistry.hasOwnProperty(lang)) {
