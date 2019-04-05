@@ -17,12 +17,8 @@ function MarkdownMusic(md) {
     highlight: function(str, lang) {
       if (md.highlightRegistry.hasOwnProperty(lang)) {
         const callback = md.highlightRegistry[lang];
-        try {
-          // If we don't start our HTML with <pre, markdown-it will automatically wrap out output in <pre></pre>.
-          return `<pre style="display: none;"></pre>${callback(str, md.meta)}`;
-        } catch (error) {
-          return `<pre>${str}</pre><div class="error">${error}</div>`;
-        }
+        // If we don't start our HTML with <pre, markdown-it will automatically wrap our output in <pre></pre>.
+        return `<pre style="display: none;"></pre>${callback(str, md.meta)}`;
       }
     }
   });
