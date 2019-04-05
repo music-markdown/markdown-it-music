@@ -68,7 +68,7 @@ class ChordsEventRenderer {
       }
 
       className += ' chord';
-      chordDiagram = chordHover.addChordToDiv(voice.content);
+      chordDiagram = chordHover.addChordToDiv(voice.content.toString());
       if (!chordDiagram) {
         className += ' highlight';
       }
