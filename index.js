@@ -13,21 +13,28 @@ function MarkdownMusic(md) {
     Object.assign(md.meta, md.userOpts);
   });
 
-  md.renderer.rules.mmd_phrase = (tokens, idx) => {
-    console.log(tokens);
-    return chords.callback(tokens[idx].meta);
-  };
-
   md.inline.ruler.before('text', 'mmd', (state) => {
+    // If the paragraph starts with c1, then treat it as a phrase (we'll improve it saturday)
     if (state.src.startsWith('c1: ')) {
+      // Create a token that will be consumed by the renderer
       const openToken = new state.Token('mmd_phrase', '', 0);
+      // Pass the contents of the phrase through the token via the meta
       openToken.meta = state.src;
       state.tokens.push(openToken);
+      // Consume the contents of the paragraph by moving the state's position index
       state.pos = state.posMax;
+      // Signal that this rule consumed all the src data available
       return true;
     }
+    // Signal that this rule didn't consume anything
     return false;
   });
+
+  md.renderer.rules.mmd_phrase = (tokens, idx) => {
+    console.log(tokens);
+    // Take the phrase and pass it to our renderer
+    return chords.callback(tokens[idx].meta);
+  };
 
   md.set({
     highlight: function(str, lang) {
