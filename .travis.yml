@@ -1,11 +1,18 @@
 language: node_js
 node_js:
 - node
+
+after_success:
+- npm version patch
+- git add .
+- git commit -m 'bump patch version'
+- git push origin master
+
 deploy:
   provider: npm
   email: vince.lugli@gmail.com
   api_key: $NPM_KEY
-  tag: next
+  skip_cleanup: true
   on:
-    tags: true
     repo: music-markdown/markdown-it-music
+    branch: master
