@@ -30,9 +30,8 @@ function MarkdownMusic(md) {
     }
 
     // Parse the verse and store in token's content
-    const verse = parseVerse(getLines(state, state.line, currentLineIndex));
     const verseToken = new state.Token('mmd_verse', '', 0);
-    verseToken.content = verse;
+    verseToken.content = parseVerse(getLines(state, state.line, currentLineIndex));
     state.tokens.push(verseToken);
 
     // Consume the lines of the music markdown block
@@ -64,12 +63,6 @@ function MarkdownMusic(md) {
   // Restricts max renderable width (if the renderer supports it)
   md.setMaxWidth = function(maxWidth) {
     md.userOpts.maxWidth = maxWidth;
-    return md;
-  };
-
-  // Specifies the desired number of columns
-  md.setColumnCount = function(columnCount) {
-    md.userOpts.columnCount = columnCount;
     return md;
   };
 
