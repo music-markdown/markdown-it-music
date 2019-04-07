@@ -18,6 +18,10 @@ function tokenize(instrument, data) {
   return events;
 }
 
+function isVoiceLine(line) {
+  return line.match(voicePattern);
+}
+
 function parseVoice(voice) {
   if (!voice) {
     return;
@@ -52,5 +56,6 @@ function parseVerse(verse) {
 }
 
 module.exports = {
-  parseVerse
+  isVoiceLine,
+  parseVerse,
 };
