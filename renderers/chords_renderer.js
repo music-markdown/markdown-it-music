@@ -1,23 +1,22 @@
 'use strict';
 
-const parseVerse = require('../parsers/verse.js')['parseVerse'];
 const chordHover = require('./chord_hover.js');
 const { convertVerseToEvents } = require('../parsers/events.js');
 
 const VoiceColors = require('./voice_colors.js');
 
-class ChordsEventRenderer {
+class ChordsRenderer {
   constructor(voiceOrder, colorOrder, opts) {
     this.voiceOrder = voiceOrder;
     this.currentPhraseIndex = 0;
-    this.voiceColors = new VoiceColors(colorOrder);
+    this.voiceColors = new VoiceColors(colorOrder, voiceOrder);
+
     this.transposeAmount = opts ? opts.transpose : undefined;
-    this.columnCount = opts && opts.columnCount ? opts.columnCount : 1;
     this.fontSize = opts && opts.fontSize ? opts.fontSize : 13;
   }
 
   createEventHTMLChordChart(lines) {
-    let chartDiv = `<div class="chart" style="column-count: ${this.columnCount}; font-size: ${this.fontSize}px;">`;
+    let chartDiv = `<div class="chart" style="font-size: ${this.fontSize}px;">`;
 
     lines.forEach((line) => {
       // create line div for each event
@@ -42,6 +41,7 @@ class ChordsEventRenderer {
     let eventDiv = `<div class="event">`;
 
     const currentVoiceOrder = this.voiceOrder[this.currentPhraseIndex];
+    this.voiceColors.setVoiceColors(currentVoiceOrder);
 
     if (event.length > currentVoiceOrder.length) {
       console.error('There are more voices than the voice order displays. Some data map be lost.');
@@ -85,22 +85,15 @@ class ChordsEventRenderer {
       `${voiceDiv}` +
       `</div>`;
   }
+
+  renderVerse(verse) {
+    this.voiceOrder = verse.map((phrase) => Array.from(phrase.keys()));
+    this.currentPhraseIndex = 0;
+
+    const lines = convertVerseToEvents(verse);
+
+    return this.createEventHTMLChordChart(lines);
+  }
 }
 
-function render(str, opts) {
-  const verse = parseVerse(str);
-
-  const voiceOrder = verse.map((phrase) => Array.from(phrase.keys()));
-
-  const colorOrder = ['black', 'blue', 'red', 'green', 'purple', 'teal'];
-
-  const chordsRenderer = new ChordsEventRenderer(voiceOrder, colorOrder, opts);
-  const lines = convertVerseToEvents(verse);
-
-  return chordsRenderer.createEventHTMLChordChart(lines);
-}
-
-module.exports = {
-  'callback': render,
-  'lang': 'chords'
-};
+module.exports = ChordsRenderer;
