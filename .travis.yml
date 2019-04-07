@@ -5,6 +5,7 @@ deploy:
   provider: npm
   email: vince.lugli@gmail.com
   api_key: $NPM_KEY
+  tag: next
   on:
     tags: true
     repo: music-markdown/markdown-it-music
