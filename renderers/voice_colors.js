@@ -3,7 +3,7 @@
 const randomColor = require('randomcolor');
 
 class VoiceColors {
-  constructor(defaultColors, voiceOrder) {
+  constructor(defaultColors) {
     this.colors = defaultColors || ['blue', 'black', 'green', 'purple', 'teal'];
     this.voiceColorMap = {};
   }

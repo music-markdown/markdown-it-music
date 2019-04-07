@@ -12,12 +12,11 @@ class ChordsRenderer {
     this.voiceColors = new VoiceColors(colorOrder, voiceOrder);
 
     this.transposeAmount = opts ? opts.transpose : undefined;
-    this.columnCount = opts && opts.columnCount ? opts.columnCount : 1;
     this.fontSize = opts && opts.fontSize ? opts.fontSize : 13;
   }
 
   createEventHTMLChordChart(lines) {
-    let chartDiv = `<div class="chart" style="column-count: ${this.columnCount}; font-size: ${this.fontSize}px;">`;
+    let chartDiv = `<div class="chart" style="font-size: ${this.fontSize}px;">`;
 
     lines.forEach((line) => {
       // create line div for each event

@@ -2,51 +2,45 @@
 const meta = require('markdown-it-meta');
 const abc = require('./renderers/abc_renderer.js');
 const ChordsRenderer = require('./renderers/chords_renderer.js');
-const { parseVerse } = require('./parsers/verse');
+const { parseVerse, isVoiceLine } = require('./parsers/verse');
 
 function MarkdownMusic(md) {
   md.use(meta);
   md.highlightRegistry = {};
   md.userOpts = {};
 
-  // Override YAML meta data with user supplied options.
   md.core.ruler.push('mmd', ({ md }) => {
+    // Override YAML meta data with user supplied options.
     Object.assign(md.meta, md.userOpts);
+    // Reset the ChordsRenderer when parsing a new source.
     md.chordsRenderer = new ChordsRenderer();
   });
 
   // Override YAML meta data with user supplied options.
   md.block.ruler.after('meta', 'mmd', (state) => {
-    const voicePattern = /^([a-zA-Z-_]+)([0-9]*):\s(.*)/;
-
     let currentLineIndex = state.line;
     while (currentLineIndex < state.lineMax && (
-      state.bMarks[currentLineIndex] === state.eMarks[currentLineIndex] ||
-      getLines(state, currentLineIndex).match(voicePattern))) {
+      isBlankLine(state, currentLineIndex) || isVoiceLine(getLines(state, currentLineIndex)))) {
       currentLineIndex++;
     }
-    if (currentLineIndex != state.line) {
-      // We are processing
-      const verse = parseVerse(getLines(state, state.line, currentLineIndex));
-      // Create a token that will be consumed by the renderer
-      const verseToken = new state.Token('mmd_verse', '', 0);
-      // Pass the contents of the phrase through the token via the meta
-      verseToken.content = verse;
-      state.tokens.push(verseToken);
-      // Consume the lines of the music markdown block
-      state.line = currentLineIndex;
-      // Signal that this rule consumed all the src data available
-      return true;
+
+    if (currentLineIndex == state.line) {
+      // Signal that this rule didn't consume anything
+      return false;
     }
-    // Signal that this rule didn't consume anything
-    return false;
+
+    // Parse the verse and store in token's content
+    const verse = parseVerse(getLines(state, state.line, currentLineIndex));
+    const verseToken = new state.Token('mmd_verse', '', 0);
+    verseToken.content = verse;
+    state.tokens.push(verseToken);
+
+    // Consume the lines of the music markdown block
+    state.line = currentLineIndex;
+    return true;
   });
 
-  md.renderer.rules.mmd_verse = (tokens, idx) => {
-    console.log(tokens);
-    // Take the verse and pass it to our renderer
-    return md.chordsRenderer.renderVerse(tokens[idx].content);
-  };
+  md.renderer.rules.mmd_verse = (tokens, idx) => md.chordsRenderer.renderVerse(tokens[idx].content);
 
   md.set({
     highlight: function(str, lang) {
@@ -85,6 +79,10 @@ function MarkdownMusic(md) {
     return md;
   };
 };
+
+function isBlankLine(state, line) {
+  return state.bMarks[line] === state.eMarks[line];
+}
 
 function getLines(state, startLine, endLine) {
   return state.src.slice(state.bMarks[startLine], state.eMarks[endLine - 1 || startLine]);
