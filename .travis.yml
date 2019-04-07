@@ -1,10 +1,15 @@
 language: node_js
 node_js:
-- node
-
+  - node
+git:
+  branch: master
+before_script:
+  - git checkout master
+script:
+  - npm version patch -m "Bump version %s [skip ci]"
 before_deploy:
-- npm version patch -m "Bump version %s [skip ci]"
-
+  - git push --force https://$GITHUB_TOKEN@github.com/music-markdown/markdown-it-music.git master
+  - git push --force https://$GITHUB_TOKEN@github.com/music-markdown/markdown-it-music.git --tags
 deploy:
   provider: npm
   email: vince.lugli@gmail.com
@@ -13,6 +18,3 @@ deploy:
   on:
     repo: music-markdown/markdown-it-music
     branch: master
-
-after_deploy:
-- git push --force https://$GITHUB_TOKEN@github.com/music-markdown/markdown-it-music.git master
