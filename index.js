@@ -1,7 +1,8 @@
 'use strict';
 const meta = require('markdown-it-meta');
 const abc = require('./renderers/abc_renderer.js');
-const chords = require('./renderers/chords_renderer.js');
+const ChordsRenderer = require('./renderers/chords_renderer.js');
+const { parseVerse } = require('./parsers/verse');
 
 function MarkdownMusic(md) {
   md.use(meta);
@@ -11,18 +12,29 @@ function MarkdownMusic(md) {
   // Override YAML meta data with user supplied options.
   md.core.ruler.push('mmd', ({ md }) => {
     Object.assign(md.meta, md.userOpts);
+    md.chordsRenderer = new ChordsRenderer();
   });
 
-  md.inline.ruler.before('text', 'mmd', (state) => {
-    // If the paragraph starts with c1, then treat it as a phrase (we'll improve it saturday)
-    if (state.src.startsWith('c1: ')) {
+  // Override YAML meta data with user supplied options.
+  md.block.ruler.after('meta', 'mmd', (state) => {
+    const voicePattern = /^([a-zA-Z-_]+)([0-9]*):\s(.*)/;
+
+    let currentLineIndex = state.line;
+    while (currentLineIndex < state.lineMax && (
+      state.bMarks[currentLineIndex] === state.eMarks[currentLineIndex] ||
+      getLines(state, currentLineIndex).match(voicePattern))) {
+      currentLineIndex++;
+    }
+    if (currentLineIndex != state.line) {
+      // We are processing
+      const verse = parseVerse(getLines(state, state.line, currentLineIndex));
       // Create a token that will be consumed by the renderer
-      const openToken = new state.Token('mmd_phrase', '', 0);
+      const verseToken = new state.Token('mmd_verse', '', 0);
       // Pass the contents of the phrase through the token via the meta
-      openToken.meta = state.src;
-      state.tokens.push(openToken);
-      // Consume the contents of the paragraph by moving the state's position index
-      state.pos = state.posMax;
+      verseToken.content = verse;
+      state.tokens.push(verseToken);
+      // Consume the lines of the music markdown block
+      state.line = currentLineIndex;
       // Signal that this rule consumed all the src data available
       return true;
     }
@@ -30,10 +42,10 @@ function MarkdownMusic(md) {
     return false;
   });
 
-  md.renderer.rules.mmd_phrase = (tokens, idx) => {
+  md.renderer.rules.mmd_verse = (tokens, idx) => {
     console.log(tokens);
-    // Take the phrase and pass it to our renderer
-    return chords.callback(tokens[idx].meta);
+    // Take the verse and pass it to our renderer
+    return md.chordsRenderer.renderVerse(tokens[idx].content);
   };
 
   md.set({
@@ -48,7 +60,6 @@ function MarkdownMusic(md) {
 
   // Renderer registry
   md.highlightRegistry[abc.lang] = abc.callback;
-  md.highlightRegistry[chords.lang] = chords.callback;
 
   // Renderer configuration functions
   md.setTranspose = function(transpose) {
@@ -74,5 +85,9 @@ function MarkdownMusic(md) {
     return md;
   };
 };
+
+function getLines(state, startLine, endLine) {
+  return state.src.slice(state.bMarks[startLine], state.eMarks[endLine - 1 || startLine]);
+}
 
 module.exports = MarkdownMusic;

@@ -52,5 +52,6 @@ function parseVerse(verse) {
 }
 
 module.exports = {
-  parseVerse
+  parseVerse,
+  parsePhrase
 };

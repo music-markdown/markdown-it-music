@@ -135,6 +135,19 @@ class Line {
   }
 }
 
+function convertPhraseToEvents(phrase) {
+  const voiceOrder = Array.from(phrase.keys());
+  const events = [];
+
+  // create events for this phrase until there are no events left to process.
+  const line = new Line();
+  while (!Array.from(phrase.values()).every((arr) => arr.length === 0)) {
+    events.push(line.createLineFromPhrase(phrase, voiceOrder));
+  }
+
+  return events;
+}
+
 /**
  * Converts a verse to list of event lists.
  *
@@ -143,19 +156,7 @@ class Line {
  */
 function convertVerseToEvents(verse) {
   return verse.map((phrase) => {
-    // TODO: This is meant to deep copy the phrase map so we don't remove from the array.
-    // This is a shallow copy, and does not actually deep copy the array values.
-    const phraseCopy = new Map(phrase);
-    const voiceOrder = Array.from(phraseCopy.keys());
-    const events = [];
-
-    // create events for this phrase until there are no events left to process.
-    const line = new Line();
-    while (!Array.from(phraseCopy.values()).every((arr) => arr.length === 0)) {
-      events.push(line.createLineFromPhrase(phraseCopy, voiceOrder));
-    }
-
-    return events;
+    return convertPhraseToEvents(phrase);
   });
 }
 
