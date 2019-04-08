@@ -3,8 +3,6 @@ node_js:
   - node
 git:
   branch: master
-before_script:
-  - git checkout master
 script:
   - npm version patch -m "Bump version %s [skip ci]"
 before_deploy:
