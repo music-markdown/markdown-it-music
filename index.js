@@ -1,6 +1,6 @@
 'use strict';
 const meta = require('markdown-it-meta');
-const markdownitfence = require('markdown-it-fence')
+const markdownitfence = require('markdown-it-fence');
 const abc = require('./renderers/abc_renderer.js');
 const ChordsRenderer = require('./renderers/chords_renderer.js');
 const { parseVerse, isVoiceLine } = require('./parsers/verse');
