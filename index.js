@@ -1,5 +1,6 @@
 'use strict';
 const meta = require('markdown-it-meta');
+const markdownitfence = require('markdown-it-fence')
 const abc = require('./renderers/abc_renderer.js');
 const ChordsRenderer = require('./renderers/chords_renderer.js');
 const { parseVerse, isVoiceLine } = require('./parsers/verse');
@@ -41,16 +42,6 @@ function MarkdownMusic(md) {
 
   md.renderer.rules.mmd_verse = (tokens, idx) => md.chordsRenderer.renderVerse(tokens[idx].content);
 
-  md.set({
-    highlight: function(str, lang) {
-      if (md.highlightRegistry.hasOwnProperty(lang)) {
-        const callback = md.highlightRegistry[lang];
-        // If we don't start our HTML with <pre, markdown-it will automatically wrap our output in <pre></pre>.
-        return `<pre style="display: none;"></pre>${callback(str, md.meta)}`;
-      }
-    }
-  });
-
   // Renderer registry
   md.highlightRegistry[abc.lang] = abc.callback;
 
@@ -71,6 +62,15 @@ function MarkdownMusic(md) {
     md.userOpts.fontSize = fontSize;
     return md;
   };
+
+  return markdownitfence(md, 'MarkdownMusic', {
+    marker: ':',
+    render: (tokens, idx, _options, env, self) => {
+      const token = tokens[idx];
+      return md.highlightRegistry[token.info](token.content, md.meta);
+    },
+    validate: (name) => name in md.highlightRegistry
+  });
 };
 
 function isBlankLine(state, line) {
