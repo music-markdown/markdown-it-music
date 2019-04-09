@@ -1,7 +1,7 @@
 'use strict';
 const memoize = require('fast-memoize');
-
 const SVG = require('svg.js');
+const createMemoizeCache = require('../lib/createMemoizeCache.js');
 
 /** Represents the dimensions of a chord diagram. */
 class ChordBox {
@@ -186,21 +186,7 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
 
 const memoized = memoize(renderChordDiagram, {
   cache: {
-    create() {
-      const store = {};
-      return {
-        has(key) {
-          return (key in store) || localStorage.hasOwnProperty(key);
-        },
-        get(key) {
-          return store[key] ? store[key] : ( localStorage.getItem(key) || undefined );
-        },
-        set(key, value) {
-          store[key] = value;
-          localStorage.setItem(key, value);
-        }
-      };
-    }
+    create: createMemoizeCache
   }
 });
 
