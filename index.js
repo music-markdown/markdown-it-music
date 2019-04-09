@@ -40,7 +40,7 @@ function MarkdownMusic(md) {
     return true;
   });
 
-  md.renderer.rules.mmd_verse = (tokens, idx) => md.chordsRenderer.renderVerse(tokens[idx].content);
+  md.renderer.rules.mmd_verse = (tokens, idx) => md.chordsRenderer.renderVerse(tokens[idx].content, md.meta);
 
   // Renderer registry
   md.highlightRegistry[abc.lang] = abc.callback;

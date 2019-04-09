@@ -11,6 +11,10 @@ class ChordsRenderer {
     this.currentPhraseIndex = 0;
     this.voiceColors = new VoiceColors(colorOrder, voiceOrder);
 
+    this.setOptions(opts);
+  }
+
+  setOptions(opts) {
     this.transposeAmount = opts ? opts.transpose : undefined;
     this.fontSize = opts && opts.fontSize ? opts.fontSize : 13;
   }
@@ -86,7 +90,9 @@ class ChordsRenderer {
       `</div>`;
   }
 
-  renderVerse(verse) {
+  renderVerse(verse, opts) {
+    this.setOptions(opts);
+
     this.voiceOrder = verse.map((phrase) => Array.from(phrase.keys()));
     this.currentPhraseIndex = 0;
 
