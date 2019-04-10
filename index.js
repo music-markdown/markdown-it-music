@@ -20,7 +20,7 @@ function MarkdownMusic(md) {
   // Override YAML meta data with user supplied options.
   md.block.ruler.after('meta', 'mmd', (state) => {
     let currentLineIndex = state.line;
-    while (currentLineIndex < state.lineMax && (
+    while (currentLineIndex < state.lineMax && isNotDoubleBlankLine(state, currentLineIndex) && (
       isBlankLine(state, currentLineIndex) || isVoiceLine(getLines(state, currentLineIndex)))) {
       currentLineIndex++;
     }
@@ -75,6 +75,10 @@ function MarkdownMusic(md) {
 
 function isBlankLine(state, line) {
   return state.bMarks[line] === state.eMarks[line];
+}
+
+function isNotDoubleBlankLine(state, line) {
+  return state.bMarks[line] !== state.eMarks[line] || state.bMarks[line + 1] !== state.eMarks[line + 1];
 }
 
 function getLines(state, startLine, endLine) {
