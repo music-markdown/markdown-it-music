@@ -1,7 +1,7 @@
 'use strict';
 
 const chordDiagram = require('./chord_diagram.js');
-const { guitarChordLibrary } = require('./chord_library.js');
+const { guitarChordbook } = require('../lib/chordbook.js');
 
 const slowScrollFunction = `
 function slowScroll(id, direction, distance, step) {
@@ -49,12 +49,12 @@ function createDiagramDiv(voicing) {
 }
 
 function addChordToDiv(chord) {
-  if (guitarChordLibrary.has(chord.toString())) {
+  if (guitarChordbook.has(chord.toString())) {
     const id = `chord${nextId++}`;
 
     let contentDiv = `<div class="diagram-content-container" id="${id}">`;
 
-    const voicings = guitarChordLibrary.get(chord.toString());
+    const voicings = guitarChordbook.get(chord.toString());
 
     voicings.forEach((voicing) => {
       contentDiv += createDiagramDiv(voicing);
