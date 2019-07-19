@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-music",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Renderer for Music Markdown.",
   "main": "index.js",
   "scripts": {
