@@ -27,7 +27,7 @@ describe('Chord hover', () => {
             `</button>` +
           `</div>` +
           `<div class="diagram-content-container" id="chord0">` +
-            `${svgDiagramDiv}${svgDiagramDiv}${svgDiagramDiv}` +
+            `${svgDiagramDiv}${svgDiagramDiv}${svgDiagramDiv}${svgDiagramDiv}${svgDiagramDiv}` +
           `</div>` +
           `<div>` +
             `<button class="scroll" ` +
@@ -36,7 +36,7 @@ describe('Chord hover', () => {
             `</button>` +
           `</div>` +
         `</div>` +
-        `<div id="chord0-count">1 of 3</div>` +
+        `<div id="chord0-count">1 of 5</div>` +
       `</div>`;
 
     expect(addChordToDiv('C')).toEqual(expectedVoiceDiv);
