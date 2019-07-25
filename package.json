@@ -19,7 +19,8 @@
     "markdown-it-fence": "^0.1.3",
     "markdown-it-meta": "0.0.1",
     "randomcolor": "^0.5.4",
-    "svg.js": "^2.7.1"
+    "svg.js": "^2.7.1",
+    "vextab": "^2.0.13"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
