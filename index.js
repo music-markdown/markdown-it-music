@@ -2,12 +2,13 @@
 const meta = require('markdown-it-meta');
 const markdownitfence = require('markdown-it-fence');
 const abc = require('./renderers/abc_renderer.js');
+const vextab = require('./renderers/vextab_renderer.js');
 const ChordsRenderer = require('./renderers/chords_renderer.js');
 const { parseVerse, isVoiceLine } = require('./parsers/verse');
 
 function MarkdownMusic(md) {
   md.use(meta);
-  md.highlightRegistry = {};
+  md.rendererRegistry = {};
   md.userOpts = {};
 
   md.core.ruler.push('mmd', ({ md }) => {
@@ -42,8 +43,8 @@ function MarkdownMusic(md) {
 
   md.renderer.rules.mmd_verse = (tokens, idx) => md.chordsRenderer.renderVerse(tokens[idx].content, md.meta);
 
-  // Renderer registry
-  md.highlightRegistry[abc.lang] = abc.callback;
+  md.rendererRegistry[abc.lang] = abc.callback;
+  md.rendererRegistry[vextab.lang] = vextab.callback;
 
   // Renderer configuration functions
   md.setTranspose = function(transpose) {
@@ -67,9 +68,9 @@ function MarkdownMusic(md) {
     marker: ':',
     render: (tokens, idx, _options, env, self) => {
       const token = tokens[idx];
-      return md.highlightRegistry[token.info](token.content, md.meta);
+      return md.rendererRegistry[token.info](token.content, md.meta);
     },
-    validate: (name) => name in md.highlightRegistry
+    validate: (name) => name in md.rendererRegistry
   });
 };
 
