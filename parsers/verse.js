@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const { parseChord } = require('../lib/chord');
+const { parseChord } = require("../lib/chord");
 const voicePattern = /^([a-zA-Z-_]+)([0-9]*):\s(.*)/;
 
 function tokenize(instrument, data) {
@@ -8,10 +8,10 @@ function tokenize(instrument, data) {
   const events = [];
 
   let match;
-  while (match = re.exec(data)) {
+  while ((match = re.exec(data))) {
     events.push({
       index: match.index,
-      content: instrument == 'c' ? parseChord(match[0]) : match[0]
+      content: instrument == "c" ? parseChord(match[0]) : match[0]
     });
   }
 
@@ -39,23 +39,21 @@ function parseVoice(voice) {
 }
 
 function parsePhrase(phrase) {
-  return phrase.split(/\n/)
-    .reduce((phrase, voice) => {
-      if (voice) {
-        const match = voice.match(voicePattern);
-        const voiceName = `${match[1]}${match[2] || '1'}`;
-        phrase.set(voiceName, parseVoice(voice));
-      }
-      return phrase;
-    }, new Map());
+  return phrase.split(/\n/).reduce((phrase, voice) => {
+    if (voice) {
+      const match = voice.match(voicePattern);
+      const voiceName = `${match[1]}${match[2] || "1"}`;
+      phrase.set(voiceName, parseVoice(voice));
+    }
+    return phrase;
+  }, new Map());
 }
 
 function parseVerse(verse) {
-  return verse.split(/[\n]{2,}/)
-    .map((phrase) => parsePhrase(phrase));
+  return verse.split(/[\n]{2,}/).map(phrase => parsePhrase(phrase));
 }
 
 module.exports = {
   isVoiceLine,
-  parseVerse,
+  parseVerse
 };

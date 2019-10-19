@@ -1,5 +1,5 @@
-'use strict';
-const { VexTab, Artist, Flow } = require('vextab/releases/vextab-div');
+"use strict";
+const { VexTab, Artist, Flow } = require("vextab/releases/vextab-div");
 const MARGIN_LEFT = 6;
 const MARGIN_RIGHT = 2;
 
@@ -13,7 +13,7 @@ function renderVextab(str, opts) {
   vextab.parse(str);
 
   // Render notation to VexFlow canvas
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   const renderer = new Flow.Renderer(div, Flow.Renderer.Backends.SVG);
   artist.render(renderer);
 
@@ -21,6 +21,6 @@ function renderVextab(str, opts) {
 }
 
 module.exports = {
-  'lang': 'vextab',
-  'callback': renderVextab
+  lang: "vextab",
+  callback: renderVextab
 };

@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const chordHover = require('./chord_hover.js');
-const { convertVerseToEvents } = require('../parsers/events.js');
+const chordHover = require("./chord_hover.js");
+const { convertVerseToEvents } = require("../parsers/events.js");
 
-const VoiceColors = require('./voice_colors.js');
+const VoiceColors = require("./voice_colors.js");
 
 class ChordsRenderer {
   constructor(voiceOrder, colorOrder, opts) {
@@ -22,23 +22,23 @@ class ChordsRenderer {
   createEventHTMLChordChart(lines) {
     let chartDiv = `<div class="chart" style="font-size: ${this.fontSize}px;">`;
 
-    lines.forEach((line) => {
+    lines.forEach(line => {
       // create line div for each event
       chartDiv += this.createLineDiv(line);
       this.currentPhraseIndex++;
     });
 
-    return chartDiv + '</div>';
+    return chartDiv + "</div>";
   }
 
   createLineDiv(line) {
     let lineDiv = `<div class="line">`;
 
-    line.forEach((event) => {
+    line.forEach(event => {
       lineDiv += this.createEventDiv(event);
     });
 
-    return lineDiv + '</div>';
+    return lineDiv + "</div>";
   }
 
   createEventDiv(event) {
@@ -48,14 +48,16 @@ class ChordsRenderer {
     this.voiceColors.setVoiceColors(currentVoiceOrder);
 
     if (event.length > currentVoiceOrder.length) {
-      console.error('There are more voices than the voice order displays. Some data map be lost.');
+      console.error(
+        "There are more voices than the voice order displays. Some data may be lost."
+      );
     }
 
-    currentVoiceOrder.forEach((voice) => {
+    currentVoiceOrder.forEach(voice => {
       if (event[0] && voice === event[0].voice) {
         eventDiv += this.createVoiceDiv(event.shift());
       } else {
-        const emptyDiv = '<div> </div>';
+        const emptyDiv = "<div> </div>";
         eventDiv += emptyDiv;
       }
     });
@@ -66,15 +68,18 @@ class ChordsRenderer {
     let className = `class="${voice.voice}`;
     let chordDiagram = undefined;
 
-    if (voice.voice.startsWith('c')) {
-      if (this.transposeAmount && typeof voice.content.transpose === 'function') {
+    if (voice.voice.startsWith("c")) {
+      if (
+        this.transposeAmount &&
+        typeof voice.content.transpose === "function"
+      ) {
         voice.content = voice.content.transpose(this.transposeAmount);
       }
 
-      className += ' chord';
+      className += " chord";
       chordDiagram = chordHover.addChordToDiv(voice.content.toString());
       if (!chordDiagram) {
-        className += ' highlight';
+        className += " highlight";
       }
     }
 
@@ -83,17 +88,19 @@ class ChordsRenderer {
       voiceDiv += chordDiagram;
     }
 
-    voiceDiv += `${' '.repeat(voice.offset)}${voice.content.toString()}</div>`;
+    voiceDiv += `${" ".repeat(voice.offset)}${voice.content.toString()}</div>`;
 
-    return `<div style="color: ${this.voiceColors.getVoiceColor(voice.voice)};">` +
+    return (
+      `<div style="color: ${this.voiceColors.getVoiceColor(voice.voice)};">` +
       `${voiceDiv}` +
-      `</div>`;
+      `</div>`
+    );
   }
 
   renderVerse(verse, opts) {
     this.setOptions(opts);
 
-    this.voiceOrder = verse.map((phrase) => Array.from(phrase.keys()));
+    this.voiceOrder = verse.map(phrase => Array.from(phrase.keys()));
     this.currentPhraseIndex = 0;
 
     const lines = convertVerseToEvents(verse);

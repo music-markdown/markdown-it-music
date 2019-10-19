@@ -1,15 +1,17 @@
-'use strict';
+"use strict";
 
-const randomColor = require('randomcolor');
+const randomColor = require("randomcolor");
 
 class VoiceColors {
   constructor(defaultColors) {
-    this.colors = defaultColors || ['blue', 'black', 'green', 'purple', 'teal'];
+    this.colors = defaultColors || ["blue", "black", "green", "purple", "teal"];
     this.voiceColorMap = {};
   }
 
   getUnusedColor() {
-    return this.colors.length > 0 ? this.colors.shift() : randomColor({ seed: 42 });
+    return this.colors.length > 0
+      ? this.colors.shift()
+      : randomColor({ seed: 42 });
   }
 
   getVoiceColor(voice) {
@@ -21,7 +23,7 @@ class VoiceColors {
   }
 
   setVoiceColors(voiceOrder) {
-    voiceOrder.forEach((voice) => {
+    voiceOrder.forEach(voice => {
       if (!(voice in this.voiceColorMap)) {
         this.voiceColorMap[voice] = this.getVoiceColor(voice);
       }

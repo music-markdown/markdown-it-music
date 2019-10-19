@@ -1,19 +1,11 @@
 {
-    "extends": "google",
-    "parser": "babel-eslint",
-    "rules": {
-        "linebreak-style": 0,
-        "require-jsdoc": 0,
-        "comma-dangle": 0,
-        "max-len": [2, {
-          "code": 120,
-          "tabWidth": 2,
-          "ignoreUrls": true
-        }],
-        "indent": ["error", 2, {
-            "MemberExpression": 1
-        }],
-        "object-curly-spacing": ["error", "always"],
-        "no-debugger": 2
-    }
+    "env": {
+        "es6": true,
+        "browser": true,
+        "amd": true,
+        "node": true,
+        "jest": true
+    },
+    "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+    "parser": "babel-eslint"
 }

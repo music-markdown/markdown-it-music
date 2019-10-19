@@ -1,7 +1,7 @@
-'use strict';
-const memoize = require('fast-memoize');
+"use strict";
+const memoize = require("fast-memoize");
 
-const SVG = require('svg.js');
+const SVG = require("svg.js");
 
 /** Represents the dimensions of a chord diagram. */
 class ChordBox {
@@ -67,19 +67,23 @@ class ChordBox {
  */
 function drawDiagram(draw, box, tuning) {
   // Draw Bridge
-  draw.line(box.left, box.header, box.right, box.header).stroke({ color: '#000', width: 2 });
+  draw
+    .line(box.left, box.header, box.right, box.header)
+    .stroke({ color: "#000", width: 2 });
 
   // Draw Frets
   for (let i = 1; i <= box.frets; i++) {
     const y = box.beam(i);
-    draw.line(box.left, y, box.right, y).stroke({ color: '#999' });
+    draw.line(box.left, y, box.right, y).stroke({ color: "#999" });
   }
 
   // Draw Strings and Tuning
   for (let i = 0; i < box.strings; i++) {
     const x = box.string(i);
-    draw.line(x, box.header, x, box.footer).stroke({ color: '#000' });
-    draw.plain(tuning[i]).font({ size: box.radius * 2, family: 'Arial' })
+    draw.line(x, box.header, x, box.footer).stroke({ color: "#000" });
+    draw
+      .plain(tuning[i])
+      .font({ size: box.radius * 2, family: "Arial" })
       .center(x, (box.footer + box.height) / 2);
   }
 }
@@ -92,9 +96,10 @@ function drawDiagram(draw, box, tuning) {
  * @param {number} fret The fret index starting from 1.
  */
 function drawNote(draw, box, string, fret) {
-  draw.circle(box.radius * 2)
+  draw
+    .circle(box.radius * 2)
     .center(box.string(string - 1), box.fret(fret))
-    .fill({ color: '#000' });
+    .fill({ color: "#000" });
 }
 
 /**
@@ -107,8 +112,8 @@ function drawMute(draw, box, string) {
   const x = box.string(string - 1);
   const y = box.fret(0);
   const r = box.radius * 0.7;
-  draw.line(x-r, y-r, x+r, y+r).stroke({ color: '#000' });
-  draw.line(x-r, y+r, x+r, y-r).stroke({ color: '#000' });
+  draw.line(x - r, y - r, x + r, y + r).stroke({ color: "#000" });
+  draw.line(x - r, y + r, x + r, y - r).stroke({ color: "#000" });
 }
 
 /**
@@ -123,9 +128,11 @@ function drawBarre(draw, box, first, last, fret) {
   const r = box.radius * 0.7;
   const x = (box.string(last - 1) + box.string(first - 1)) / 2;
   const w = box.string(last - 1) - box.string(first - 1) + 2 * r;
-  draw.rect(w, 2 * r)
-    .center(x, box.fret(fret)).radius(r)
-    .fill({ color: '#000' });
+  draw
+    .rect(w, 2 * r)
+    .center(x, box.fret(fret))
+    .radius(r)
+    .fill({ color: "#000" });
 }
 
 /**
@@ -135,8 +142,9 @@ function drawBarre(draw, box, first, last, fret) {
  * @param {number} offset The fret offset.
  */
 function drawFretOffset(draw, box, offset) {
-  draw.plain(`${offset}fr`)
-    .font({ size: box.radius * 2, family: 'Arial' })
+  draw
+    .plain(`${offset}fr`)
+    .font({ size: box.radius * 2, family: "Arial" })
     .center((box.right + box.width) / 2, box.fret(1));
 }
 
@@ -156,10 +164,10 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
   width = width || 100;
   height = height || 100;
   frets = frets || 5;
-  tuning = tuning || ['E', 'A', 'D', 'G', 'B', 'e'];
+  tuning = tuning || ["E", "A", "D", "G", "B", "e"];
 
   const strings = tuning.length;
-  const div = window.document.createElement('div');
+  const div = window.document.createElement("div");
   const draw = new SVG(div).size(width, height);
   const box = new ChordBox(0, 0, width, height, frets, strings);
 
@@ -184,26 +192,6 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
   return div.innerHTML;
 }
 
-const memoized = memoize(renderChordDiagram, {
-  cache: {
-    create() {
-      const store = {};
-      return {
-        has(key) {
-          return (key in store) || localStorage.hasOwnProperty(key);
-        },
-        get(key) {
-          return store[key] ? store[key] : ( localStorage.getItem(key) || undefined );
-        },
-        set(key, value) {
-          store[key] = value;
-          localStorage.setItem(key, value);
-        }
-      };
-    }
-  }
-});
-
 module.exports = {
-  renderChordDiagram: memoized,
+  renderChordDiagram: memoize(renderChordDiagram)
 };

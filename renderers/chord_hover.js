@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const chordDiagram = require('./chord_diagram.js');
-const { guitarChordbook } = require('../lib/chordbook.js');
+const chordDiagram = require("./chord_diagram.js");
+const { guitarChordbook } = require("../lib/chordbook.js");
 
 const slowScrollFunction = `
 function slowScroll(id, direction, distance, step) {
@@ -56,20 +56,23 @@ function addChordToDiv(chord) {
 
     const voicings = guitarChordbook.get(chord.toString());
 
-    voicings.forEach((voicing) => {
+    voicings.forEach(voicing => {
       contentDiv += createDiagramDiv(voicing);
     });
 
-    contentDiv += '</div>';
+    contentDiv += "</div>";
 
-    const leftButton = `<div>` +
+    const leftButton =
+      `<div>` +
       `<button class="scroll" onclick="slowScroll('${id}', 'left', 100, 2); incrementId('${id}', 'left');">❮` +
       `</button></div>`;
-    const rightButton = `<div>` +
+    const rightButton =
+      `<div>` +
       `<button class="scroll" onclick="slowScroll('${id}', 'right', 100, 2); incrementId('${id}', 'right');">❯` +
       `</button></div>`;
 
-    const contentScrollDiv = `<div class="content-scroll">` +
+    const contentScrollDiv =
+      `<div class="content-scroll">` +
       `${leftButton}` +
       `${contentDiv}` +
       `${rightButton}` +
@@ -78,18 +81,20 @@ function addChordToDiv(chord) {
     const countDiv = `<div id="${id}-count">1 of ${voicings.length}</div>`;
 
     // TODO: Investigate using renderer rules to add script.
-    if (!document.getElementById('chord-hover-script')) {
-      const script = document.createElement('script');
-      script.id = 'chord-hover-script';
+    if (!document.getElementById("chord-hover-script")) {
+      const script = document.createElement("script");
+      script.id = "chord-hover-script";
       script.innerHTML = `${slowScrollFunction}${incrementIdFunction}`;
 
-      document.getElementsByTagName('body')[0].appendChild(script);
+      document.getElementsByTagName("body")[0].appendChild(script);
     }
 
-    return `<div class="diagram-container">` +
+    return (
+      `<div class="diagram-container">` +
       `${contentScrollDiv}` +
       `${countDiv}` +
-      `</div>`;
+      `</div>`
+    );
   }
   return undefined;
 }
