@@ -107,7 +107,10 @@ describe("Chords Renderer from Events", () => {
     ];
 
     const chordsRenderer = new ChordsRenderer(
-      [["c1", "l1"], ["c1", "l1"]],
+      [
+        ["c1", "l1"],
+        ["c1", "l1"]
+      ],
       voiceColors
     );
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);

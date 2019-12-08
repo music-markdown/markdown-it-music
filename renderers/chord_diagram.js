@@ -1,7 +1,7 @@
 "use strict";
 const memoize = require("fast-memoize");
 
-const SVG = require("svg.js");
+const { SVG } = require("@svgdotjs/svg.js");
 
 /** Represents the dimensions of a chord diagram. */
 class ChordBox {
@@ -167,8 +167,7 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
   tuning = tuning || ["E", "A", "D", "G", "B", "e"];
 
   const strings = tuning.length;
-  const div = window.document.createElement("div");
-  const draw = new SVG(div).size(width, height);
+  const draw = SVG().size(width, height);
   const box = new ChordBox(0, 0, width, height, frets, strings);
 
   drawDiagram(draw, box, tuning);
@@ -189,7 +188,7 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
     drawBarre(draw, box, first, last, fret - voicing.offset + 1);
   }
 
-  return div.innerHTML;
+  return draw.svg();
 }
 
 module.exports = {
