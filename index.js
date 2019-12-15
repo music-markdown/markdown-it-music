@@ -18,7 +18,6 @@ function MarkdownMusic(md) {
     md.chordsRenderer = new ChordsRenderer();
   });
 
-  // Override YAML meta data with user supplied options.
   md.block.ruler.after("meta", "mmd", state => {
     let currentLineIndex = state.line;
     while (
@@ -62,12 +61,6 @@ function MarkdownMusic(md) {
   // Restricts max renderable width (if the renderer supports it)
   md.setMaxWidth = function(maxWidth) {
     md.userOpts.maxWidth = maxWidth;
-    return md;
-  };
-
-  // Specifies the desired font size
-  md.setFontSize = function(fontSize) {
-    md.userOpts.fontSize = fontSize;
     return md;
   };
 
