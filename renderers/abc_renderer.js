@@ -11,12 +11,12 @@ function renderAbc(str, opts) {
     paddingbottom: 0,
     paddingright: 0,
     paddingleft: 0,
-    wrap: { minSpacing: 1.8, maxSpacing: 2.7 }
+    wrap: { minSpacing: 1.8, maxSpacing: 2.7 },
   });
   return div.outerHTML;
 }
 
 module.exports = {
   lang: "abc",
-  callback: renderAbc
+  callback: renderAbc,
 };

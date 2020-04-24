@@ -28,7 +28,7 @@ class Line {
     const voicesToAdd = [];
 
     // Split any previous events
-    this.previousLine.forEach(voice => {
+    this.previousLine.forEach((voice) => {
       if (
         voicesAddedToEvent.indexOf(voice.voice) === -1 &&
         eventIndex < voice.index + voice.content.toString().length - 1 &&
@@ -41,7 +41,7 @@ class Line {
           index: eventIndex,
           voice: voice.voice,
           content: `-${voice.content.substring(splitIndex)}`,
-          offset: 0
+          offset: 0,
         };
         voice.content = voice.content.substring(0, splitIndex);
 
@@ -84,7 +84,7 @@ class Line {
       ) {
         // Look ahead to make sure this event falls before future events.
         if (
-          !Array.from(phrase.values()).every(voiceEvents => {
+          !Array.from(phrase.values()).every((voiceEvents) => {
             return !voiceEvents[1] || voiceEvents[1].index > event.index;
           })
         ) {
@@ -115,7 +115,7 @@ class Line {
    */
   createLineFromPhrase(phrase, voiceOrder) {
     const firstEventOfEachVoice = Array.from(phrase.values()).map(
-      voiceArr => voiceArr[0]
+      (voiceArr) => voiceArr[0]
     );
 
     // Find the minimum index of all voices, since we want to parse events in the order they happen.
@@ -166,7 +166,7 @@ function convertPhraseToEvents(phrase) {
 
   // create events for this phrase until there are no events left to process.
   const line = new Line();
-  while (!Array.from(phrase.values()).every(arr => arr.length === 0)) {
+  while (!Array.from(phrase.values()).every((arr) => arr.length === 0)) {
     events.push(line.createLineFromPhrase(phrase, voiceOrder));
   }
 
@@ -180,11 +180,11 @@ function convertPhraseToEvents(phrase) {
  * @return {Line[]} List of Line that represent a verse. Each phrase is represented by a single Line.
  */
 function convertVerseToEvents(verse) {
-  return verse.map(phrase => {
+  return verse.map((phrase) => {
     return convertPhraseToEvents(phrase);
   });
 }
 
 module.exports = {
-  convertVerseToEvents
+  convertVerseToEvents,
 };

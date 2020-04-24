@@ -18,7 +18,7 @@ function MarkdownMusic(md) {
     md.chordsRenderer = new ChordsRenderer();
   });
 
-  md.block.ruler.after("meta", "mmd", state => {
+  md.block.ruler.after("meta", "mmd", (state) => {
     let currentLineIndex = state.line;
     while (
       currentLineIndex < state.lineMax &&
@@ -53,13 +53,13 @@ function MarkdownMusic(md) {
   md.rendererRegistry[vextab.lang] = vextab.callback;
 
   // Renderer configuration functions
-  md.setTranspose = function(transpose) {
+  md.setTranspose = function (transpose) {
     md.userOpts.transpose = transpose;
     return md;
   };
 
   // Restricts max renderable width (if the renderer supports it)
-  md.setMaxWidth = function(maxWidth) {
+  md.setMaxWidth = function (maxWidth) {
     md.userOpts.maxWidth = maxWidth;
     return md;
   };
@@ -70,7 +70,7 @@ function MarkdownMusic(md) {
       const token = tokens[idx];
       return md.rendererRegistry[token.info](token.content, md.meta);
     },
-    validate: name => name in md.rendererRegistry
+    validate: (name) => name in md.rendererRegistry,
   });
 }
 

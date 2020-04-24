@@ -56,7 +56,7 @@ function addChordToDiv(chord) {
 
     const voicings = guitarChordbook.get(chord.toString());
 
-    voicings.forEach(voicing => {
+    voicings.forEach((voicing) => {
       contentDiv += createDiagramDiv(voicing);
     });
 
@@ -100,5 +100,5 @@ function addChordToDiv(chord) {
 }
 
 module.exports = {
-  addChordToDiv
+  addChordToDiv,
 };

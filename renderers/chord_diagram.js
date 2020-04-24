@@ -192,5 +192,5 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
 }
 
 module.exports = {
-  renderChordDiagram: memoize(renderChordDiagram)
+  renderChordDiagram: memoize(renderChordDiagram),
 };

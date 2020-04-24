@@ -42,7 +42,7 @@ describe("Chords Renderer from Events", () => {
 
     const line = [
       [{ index: 0, offset: 0, voice: "l1", content: "Line" }],
-      [{ index: 0, offset: 0, voice: "l1", content: "Test" }]
+      [{ index: 0, offset: 0, voice: "l1", content: "Test" }],
     ];
 
     const chordsRenderer = new ChordsRenderer([["l1"]]);
@@ -54,7 +54,7 @@ describe("Chords Renderer from Events", () => {
   test("should add diagram to chord div", () => {
     const line = [
       { index: 0, offset: 0, voice: "c1", content: "C" },
-      { index: 0, offset: 0, voice: "l1", content: "Wonderful!" }
+      { index: 0, offset: 0, voice: "l1", content: "Wonderful!" },
     ];
 
     const expectedEventDiv =
@@ -75,25 +75,25 @@ describe("Chords Renderer from Events", () => {
       [
         [
           { index: 0, offset: 0, voice: "c1", content: "C" },
-          { index: 0, offset: 0, voice: "l1", content: "Wonderful" }
+          { index: 0, offset: 0, voice: "l1", content: "Wonderful" },
         ],
         [
           { index: 0, offset: 0, voice: "c1", content: "G" },
-          { index: 0, offset: 0, voice: "l1", content: "Testing!" }
-        ]
+          { index: 0, offset: 0, voice: "l1", content: "Testing!" },
+        ],
       ],
       [
         [
           { index: 0, offset: 0, voice: "c1", content: "A" },
-          { index: 0, offset: 0, voice: "l1", content: "Things" }
+          { index: 0, offset: 0, voice: "l1", content: "Things" },
         ],
-        [{ index: 10, offset: 1, voice: "l1", content: "IsGreat!" }]
-      ]
+        [{ index: 10, offset: 1, voice: "l1", content: "IsGreat!" }],
+      ],
     ];
 
     const chordsRenderer = new ChordsRenderer([
       ["c1", "l1"],
-      ["c1", "l1"]
+      ["c1", "l1"],
     ]);
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
@@ -140,7 +140,7 @@ describe("Chords Renderer from Events", () => {
 
     const line = [
       [{ index: 0, offset: 0, voice: "l1", content: "Wonder" }],
-      [{ index: 0, offset: 0, voice: "l1", content: "-ful" }]
+      [{ index: 0, offset: 0, voice: "l1", content: "-ful" }],
     ];
 
     const chordsRenderer = new ChordsRenderer([["l1"]]);
@@ -161,8 +161,8 @@ describe("Chords Renderer from Events", () => {
     const line = [
       [
         { index: 0, offset: 2, voice: "c1", content: "C" },
-        { index: 0, offset: 0, voice: "l1", content: "Testing!" }
-      ]
+        { index: 0, offset: 0, voice: "l1", content: "Testing!" },
+      ],
     ];
 
     const chordsRenderer = new ChordsRenderer([["c1", "l1"]]);
@@ -193,9 +193,9 @@ describe("Chords Renderer from Events", () => {
       [
         [
           { index: 0, offset: 0, voice: "c1", content: "C" },
-          { index: 0, offset: 0, voice: "l1", content: "Testing!" }
-        ]
-      ]
+          { index: 0, offset: 0, voice: "l1", content: "Testing!" },
+        ],
+      ],
     ];
 
     const chordsRenderer = new ChordsRenderer([["l1"], ["c1", "l1"]]);

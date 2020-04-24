@@ -22,5 +22,5 @@ function renderVextab(str, opts) {
 
 module.exports = {
   lang: "vextab",
-  callback: renderVextab
+  callback: renderVextab,
 };

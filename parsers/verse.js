@@ -11,7 +11,7 @@ function tokenize(instrument, data) {
   while ((match = re.exec(data))) {
     events.push({
       index: match.index,
-      content: instrument == "c" ? parseChord(match[0]) : match[0]
+      content: instrument == "c" ? parseChord(match[0]) : match[0],
     });
   }
 
@@ -50,10 +50,10 @@ function parsePhrase(phrase) {
 }
 
 function parseVerse(verse) {
-  return verse.split(/[\n]{2,}/).map(phrase => parsePhrase(phrase));
+  return verse.split(/[\n]{2,}/).map((phrase) => parsePhrase(phrase));
 }
 
 module.exports = {
   isVoiceLine,
-  parseVerse
+  parseVerse,
 };

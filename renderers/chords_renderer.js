@@ -18,7 +18,7 @@ class ChordsRenderer {
   createEventHTMLChordChart(lines) {
     let chartDiv = `<div class="chart">`;
 
-    lines.forEach(line => {
+    lines.forEach((line) => {
       // create line div for each event
       chartDiv += this.createLineDiv(line);
       this.currentPhraseIndex++;
@@ -30,7 +30,7 @@ class ChordsRenderer {
   createLineDiv(line) {
     let lineDiv = `<div class="line">`;
 
-    line.forEach(event => {
+    line.forEach((event) => {
       lineDiv += this.createEventDiv(event);
     });
 
@@ -48,7 +48,7 @@ class ChordsRenderer {
       );
     }
 
-    currentVoiceOrder.forEach(voice => {
+    currentVoiceOrder.forEach((voice) => {
       if (event[0] && voice === event[0].voice) {
         eventDiv += this.createVoiceDiv(event.shift());
       } else {
@@ -88,7 +88,7 @@ class ChordsRenderer {
   renderVerse(verse, opts) {
     this.setOptions(opts);
 
-    this.voiceOrder = verse.map(phrase => Array.from(phrase.keys()));
+    this.voiceOrder = verse.map((phrase) => Array.from(phrase.keys()));
     this.currentPhraseIndex = 0;
 
     const lines = convertVerseToEvents(verse);
