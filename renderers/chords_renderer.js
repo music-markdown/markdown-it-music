@@ -2,6 +2,8 @@
 
 const chordHover = require("./chord_hover.js");
 const { convertVerseToEvents } = require("../parsers/events.js");
+const { parseVoicing } = require("../lib/voicing");
+const { guitarChordbook } = require("../lib/chordbook");
 
 class ChordsRenderer {
   constructor(voiceOrder, opts) {
@@ -12,7 +14,18 @@ class ChordsRenderer {
   }
 
   setOptions(opts) {
-    this.transposeAmount = opts ? opts.transpose : undefined;
+    if (!opts) return;
+
+    this.transposeAmount = opts.transpose;
+
+    if (opts.chords) {
+      Object.entries(opts.chords).forEach(([chord, shorthands]) => {
+        if (typeof shorthands === "string") {
+          shorthands = [shorthands];
+        }
+        guitarChordbook.set(chord, shorthands.map(parseVoicing));
+      });
+    }
   }
 
   createEventHTMLChordChart(lines) {
