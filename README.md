@@ -11,7 +11,7 @@ This plugin provides a basic CLI for rendering music markdown without a browser.
 ### Installation
 
 ```shell
-$ npm i markdown-it-music
+$ npm i -g markdown-it-music
 ```
 
 ### Basic Usage
