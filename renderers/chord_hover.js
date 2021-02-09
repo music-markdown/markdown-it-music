@@ -3,43 +3,6 @@
 const chordDiagram = require("./chord_diagram.js");
 const { guitarChordbook } = require("../lib/chordbook.js");
 
-const slowScrollFunction = `
-function slowScroll(id, direction, distance, step) {
-  var element = document.getElementById(id);
-  
-  if (element) {
-    var scrollAmount = 0;
-    var slideTimer = setInterval(function() {
-      element.scrollLeft += direction === 'left' ? -step : step;
-
-      scrollAmount += step;
-      if(scrollAmount >= distance){
-          window.clearInterval(slideTimer);
-      }
-    });
-  }
-}`;
-
-const incrementIdFunction = `
-function incrementId(id, direction) {
-  var countId = id + '-count'
-  var element = document.getElementById(countId);
-
-  if (element) {
-    var values = element.innerHTML.split(' of ');
-    var currentValue = parseInt(values[0]);
-
-    if (direction === 'left' && currentValue > 1) {
-      element.innerHTML = currentValue - 1;
-      element.innerHTML += ' of ' + values[1];
-    } else if (direction === 'right' && currentValue < parseInt(values[1])) {
-      element.innerHTML = currentValue + 1;
-      element.innerHTML += ' of ' + values[1];
-    }
-  }
-}
-`;
-
 let nextId = 0;
 
 function createDiagramDiv(voicing) {
@@ -79,15 +42,6 @@ function addChordToDiv(chord) {
       `</div>`;
 
     const countDiv = `<div id="${id}-count">1 of ${voicings.length}</div>`;
-
-    // TODO: Investigate using renderer rules to add script.
-    if (!document.getElementById("chord-hover-script")) {
-      const script = document.createElement("script");
-      script.id = "chord-hover-script";
-      script.innerHTML = `${slowScrollFunction}${incrementIdFunction}`;
-
-      document.getElementsByTagName("body")[0].appendChild(script);
-    }
 
     return (
       `<div class="diagram-container">` +

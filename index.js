@@ -6,16 +6,58 @@ const vextab = require("./renderers/vextab_renderer.js");
 const ChordsRenderer = require("./renderers/chords_renderer.js");
 const { parseVerse, isVoiceLine } = require("./parsers/verse");
 
+const MUSIC_MARKDOWN_JS = `<script>
+function slowScroll(id, direction, distance, step) {
+  var element = document.getElementById(id);
+  
+  if (element) {
+    var scrollAmount = 0;
+    var slideTimer = setInterval(function() {
+      element.scrollLeft += direction === 'left' ? -step : step;
+
+      scrollAmount += step;
+      if(scrollAmount >= distance){
+          window.clearInterval(slideTimer);
+      }
+    });
+  }
+}
+
+function incrementId(id, direction) {
+  var countId = id + '-count'
+  var element = document.getElementById(countId);
+
+  if (element) {
+    var values = element.innerHTML.split(' of ');
+    var currentValue = parseInt(values[0]);
+
+    if (direction === 'left' && currentValue > 1) {
+      element.innerHTML = currentValue - 1;
+      element.innerHTML += ' of ' + values[1];
+    } else if (direction === 'right' && currentValue < parseInt(values[1])) {
+      element.innerHTML = currentValue + 1;
+      element.innerHTML += ' of ' + values[1];
+    }
+  }
+}
+</script>
+`;
+
 function MarkdownMusic(md) {
   md.use(meta);
   md.rendererRegistry = {};
-  md.userOpts = {};
+  md.userOpts = { headers: [] };
 
-  md.core.ruler.push("mmd", ({ md }) => {
+  md.core.ruler.before("normalize", "mmd", (state) => {
+    // Inject the music markdown header.
+    md.userOpts.headers.push(MUSIC_MARKDOWN_JS);
+    const scriptToken = new state.Token("mmdHeader", "", 0);
+    state.tokens.push(scriptToken);
+
     // Override YAML meta data with user supplied options.
-    Object.assign(md.meta, md.userOpts);
+    Object.assign(state.md.meta, state.md.userOpts);
     // Reset the ChordsRenderer when parsing a new source.
-    md.chordsRenderer = new ChordsRenderer();
+    state.md.chordsRenderer = new ChordsRenderer();
   });
 
   md.block.ruler.after("meta", "mmd", (state) => {
@@ -35,7 +77,7 @@ function MarkdownMusic(md) {
     }
 
     // Parse the verse and store in token's content
-    const verseToken = new state.Token("mmd_verse", "", 0);
+    const verseToken = new state.Token("mmdVerse", "", 0);
     verseToken.content = parseVerse(
       getLines(state, state.line, currentLineIndex)
     );
@@ -46,21 +88,30 @@ function MarkdownMusic(md) {
     return true;
   });
 
-  md.renderer.rules.mmd_verse = (tokens, idx) =>
+  md.renderer.rules.mmdHeader = (tokens, idx) => {
+    return md.userOpts.headers.join("");
+  };
+
+  md.renderer.rules.mmdVerse = (tokens, idx) =>
     md.chordsRenderer.renderVerse(tokens[idx].content, md.meta);
 
   md.rendererRegistry[abc.lang] = abc.callback;
   md.rendererRegistry[vextab.lang] = vextab.callback;
 
   // Renderer configuration functions
-  md.setTranspose = function (transpose) {
+  md.setTranspose = (transpose) => {
     md.userOpts.transpose = transpose;
     return md;
   };
 
   // Restricts max renderable width (if the renderer supports it)
-  md.setMaxWidth = function (maxWidth) {
+  md.setMaxWidth = (maxWidth) => {
     md.userOpts.maxWidth = maxWidth;
+    return md;
+  };
+
+  md.addHeader = (header) => {
+    md.userOpts.headers.push(header);
     return md;
   };
 
