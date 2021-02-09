@@ -88,7 +88,7 @@ function MarkdownMusic(md) {
     return true;
   });
 
-  md.renderer.rules.mmdHeader = (tokens, idx) => {
+  md.renderer.rules.mmdHeader = () => {
     return md.userOpts.headers.join("");
   };
 
