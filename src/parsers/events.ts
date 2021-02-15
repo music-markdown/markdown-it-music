@@ -1,4 +1,12 @@
-"use strict";
+import { Chord } from "../lib/chord";
+import { Phrase, Verse, Voice } from "./verse";
+
+export interface Event {
+  index: number;
+  content: string | Chord;
+  voice?: string;
+  offset?: number;
+}
 
 /**
  * Represents a list of events that occur during a phrase.
@@ -7,11 +15,9 @@
  *
  * See tests for example input/output structure.
  */
-class Line {
-  constructor() {
-    this.spacesBetweenEvents = 0;
-    this.previousLine = [];
-  }
+export class Line {
+  spacesBetweenEvents = 0;
+  previousLine: Voice = [];
 
   /**
    * Splits any events from the previous event list that overflow into the current event.
@@ -20,24 +26,25 @@ class Line {
    * index 5, this will split the previous event to { index: 0, content: 'Wonder' }
    * and return { index: 5, content: '-ful' } as part of the list of voices to add to the current event list.
    *
-   * @param {String[]} voicesAddedToEvent The voice names that have already been added to the event list.
-   * @param {number} eventIndex The start index of the current event list.
-   * @return {Object[]} The list of voice events to add to the event list.
+   * @param voicesAddedToEvent The voice names that have already been added to the event list.
+   * @param eventIndex The start index of the current event list.
+   * @return The list of voice events to add to the event list.
    */
-  splitPreviousEvent(voicesAddedToEvent, eventIndex) {
-    const voicesToAdd = [];
+  splitPreviousEvent(voicesAddedToEvent: string[], eventIndex: number): Voice {
+    const voicesToAdd: Voice = [];
 
     // Split any previous events
     this.previousLine.forEach((voice) => {
       if (
-        voicesAddedToEvent.indexOf(voice.voice) === -1 &&
+        voicesAddedToEvent.indexOf(voice.voice!) === -1 &&
         eventIndex < voice.index + voice.content.toString().length - 1 &&
+        typeof voice.content === "string" &&
         voice.content.substring
       ) {
         // Split voice from previous event, add remainder to this event.
         let splitIndex = eventIndex - voice.index;
         splitIndex += voice.content.startsWith("-") ? 1 : 0;
-        const event = {
+        const event: Event = {
           index: eventIndex,
           voice: voice.voice,
           content: `-${voice.content.substring(splitIndex)}`,
@@ -58,15 +65,15 @@ class Line {
    * To fit within the bounds, a voice event must start (voice.index) between the longest event's index and
    * the longest event's index + content length. If an voice event does not fit, that voice is skipped for this event.
    *
-   * @param {Map<String, Object[]>} phrase The phrase to pick events from.
-   * @param {Object} longestEvent The longest (by content length) and first voice event from phrase.
-   * @param {number} startIndex The index for the start of this event.
-   * @return {String[]} voiceAdded Voice names added to event list.
-   * @return {Object[]} line List of the first of each voice from phrase that fit within bounds of longest event.
+   * @param phrase The phrase to pick events from.
+   * @param longestEvent The longest (by content length) and first voice event from phrase.
+   * @param startIndex The index for the start of this event.
+   * @return voiceAdded Voice names added to event list.
+   * @return line List of the first of each voice from phrase that fit within bounds of longest event.
    */
-  addEvents(phrase, longestEvent, startIndex) {
-    const line = [];
-    const voicesAdded = [];
+  addEvents(phrase: Phrase, longestEvent: Event, startIndex: number) {
+    const line: Voice = [];
+    const voicesAdded: string[] = [];
     const longestEventMinIndex = longestEvent.index;
     const longestEventMaxIndex =
       longestEventMinIndex + longestEvent.content.toString().length;
@@ -90,7 +97,7 @@ class Line {
         ) {
           return;
         }
-        const eventToAdd = events.shift();
+        const eventToAdd = events.shift()!;
 
         eventToAdd.voice = voiceName;
         eventToAdd.offset =
@@ -109,12 +116,12 @@ class Line {
   /**
    * Creates a list of events from given phrase.
    *
-   * @param {Map<String, Object[]>} phrase Map of voice names to voice object stack.
-   * @param {String[]} voiceOrder Sort order for voices.
-   * @return {Object[]} List of event lists sorted (by voiceOrder).
+   * @param phrase Map of voice names to voice object stack.
+   * @param voiceOrder Sort order for voices.
+   * @return List of event lists sorted (by voiceOrder).
    */
-  createLineFromPhrase(phrase, voiceOrder) {
-    const firstEventOfEachVoice = Array.from(phrase.values()).map(
+  createLineFromPhrase(phrase: Phrase, voiceOrder: string[]) {
+    const firstEventOfEachVoice: Voice = Array.from(phrase.values()).map(
       (voiceArr) => voiceArr[0]
     );
 
@@ -125,23 +132,23 @@ class Line {
 
     // Find the longest event so we know the maximum length of this event.
     const longestEvent = firstEventOfEachVoice.reduce(
-      (currentLongestEvent, voice) => {
-        if (!voice || voice.index > eventIndex) {
-          return currentLongestEvent;
+      (longestEvent: Event | undefined, currentEvent) => {
+        if (!currentEvent || currentEvent.index > eventIndex) {
+          return longestEvent;
         }
 
         if (
-          !currentLongestEvent ||
-          voice.content.toString().length >
-            currentLongestEvent.content.toString().length
+          !longestEvent ||
+          currentEvent.content.toString().length >
+            longestEvent.content.toString().length
         ) {
-          return voice;
+          return currentEvent;
         }
 
-        return currentLongestEvent;
+        return longestEvent;
       },
       undefined
-    );
+    ) as Event;
 
     const { voicesAdded, line } = this.addEvents(
       phrase,
@@ -153,14 +160,14 @@ class Line {
       .concat(this.splitPreviousEvent(voicesAdded, eventIndex))
       .sort(
         (voice1, voice2) =>
-          voiceOrder.indexOf(voice1.voice) - voiceOrder.indexOf(voice2.voice)
+          voiceOrder.indexOf(voice1.voice!) - voiceOrder.indexOf(voice2.voice!)
       );
 
     return this.previousLine;
   }
 }
 
-function convertPhraseToEvents(phrase) {
+function convertPhraseToEvents(phrase: Phrase) {
   const voiceOrder = Array.from(phrase.keys());
   const events = [];
 
@@ -176,15 +183,11 @@ function convertPhraseToEvents(phrase) {
 /**
  * Converts a verse to list of event lists.
  *
- * @param {Object} verse The verse that contains phrases to be translated to events.
- * @return {Line[]} List of Line that represent a verse. Each phrase is represented by a single Line.
+ * @param verse The verse that contains phrases to be translated to events.
+ * @return List of Line that represent a verse. Each phrase is represented by a single Line.
  */
-function convertVerseToEvents(verse) {
+export function convertVerseToEvents(verse: Verse) {
   return verse.map((phrase) => {
     return convertPhraseToEvents(phrase);
   });
 }
-
-module.exports = {
-  convertVerseToEvents,
-};

@@ -1,5 +1,3 @@
-"use strict";
-
 const ANNOTATION_PATTERN = /^(\||\([^)]+\))$/;
 
 const CHORD_PATTERN = new RegExp(
@@ -95,7 +93,7 @@ const NOTE_ALIASES = new Map(
   ].flatMap((aliases) => aliases.map((alias) => [alias, aliases]))
 );
 
-function transpose(note, amount) {
+function transpose(note: string, amount: number) {
   if (note === "" || note === "N.C.") {
     return note;
   }
@@ -112,16 +110,16 @@ function transpose(note, amount) {
   return chordSequence[nextIndex];
 }
 
-function mod(n, m) {
+function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
 
-class Chord {
-  constructor(root, quality, bass) {
-    this.root = root;
-    this.quality = quality || "";
-    this.bass = bass || "";
-  }
+export class Chord {
+  constructor(
+    public root: string,
+    public quality: string = "",
+    public bass: string = ""
+  ) {}
 
   toString() {
     let result = this.root + this.quality;
@@ -131,7 +129,7 @@ class Chord {
     return result;
   }
 
-  transpose(amount) {
+  transpose(amount: number) {
     return new Chord(
       transpose(this.root, amount),
       this.quality,
@@ -140,25 +138,26 @@ class Chord {
   }
 
   aliases() {
-    const rootAliases = NOTE_ALIASES.get(this.root);
-    const bassAliases = this.bass ? NOTE_ALIASES.get(this.bass) : [""];
+    const rootAliases = NOTE_ALIASES.get(this.root) || [];
+    const bassAliases = this.bass ? NOTE_ALIASES.get(this.bass) || [] : [""];
     return rootAliases.flatMap((root) =>
       bassAliases.map((bass) => new Chord(root, this.quality, bass))
     );
   }
 }
 
-const compareNotes = (note1, note2) =>
-  NOTE_SEQUENCE.get(note1) - NOTE_SEQUENCE.get(note2);
+export function compareNotes(note1: string, note2: string): number {
+  return (NOTE_SEQUENCE.get(note1) || 0) - (NOTE_SEQUENCE.get(note2) || 0);
+}
 
-function compareQualities(quality1 = "", quality2 = "") {
+export function compareQualities(quality1 = "", quality2 = ""): number {
   if (quality1.length != quality2.length) {
     return quality1.length - quality2.length;
   }
   return quality1.localeCompare(quality2);
 }
 
-function compareChords(chord1, chord2) {
+export function compareChords(chord1: Chord, chord2: Chord): number {
   let cmp = compareNotes(chord1.root, chord2.root);
   if (cmp != 0) {
     return cmp;
@@ -170,15 +169,15 @@ function compareChords(chord1, chord2) {
   return compareNotes(chord1.bass, chord2.bass);
 }
 
-function isChord(str) {
-  return !!str.match(ANNOTATION_PATTERN) || !!str.match(CHORD_PATTERN);
+export function isAnnotation(str: string) {
+  return !!str.match(ANNOTATION_PATTERN);
 }
 
-function parseChord(str) {
-  if (str.match(ANNOTATION_PATTERN)) {
-    return str;
-  }
+export function isChord(str: string) {
+  return !!str.match(CHORD_PATTERN);
+}
 
+export function parseChord(str: string) {
   const tokens = str.match(CHORD_PATTERN);
   if (!tokens) {
     throw new Error(`${str} is not a valid chord`);
@@ -186,12 +185,3 @@ function parseChord(str) {
 
   return new Chord(tokens[1], tokens[2], tokens[3]);
 }
-
-module.exports = {
-  compareNotes,
-  compareQualities,
-  compareChords,
-  parseChord,
-  isChord,
-  Chord,
-};

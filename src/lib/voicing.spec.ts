@@ -1,6 +1,4 @@
-"use strict";
-
-const { parseVoicing, compareVoicings } = require("./voicing");
+import { parseVoicing, compareVoicings } from "./voicing";
 
 describe("Voicing", () => {
   test("parses empty shorthand", () => {

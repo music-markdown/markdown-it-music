@@ -1,12 +1,11 @@
-"use strict";
-const { VexTab, Artist, Flow } = require("vextab/releases/vextab-div");
+import { VexTab, Artist, Flow } from "vextab/releases/vextab-div";
 const MARGIN_LEFT = 6;
 const MARGIN_RIGHT = 2;
 
 // Disable the VexFlow logo
 Artist.NOLOGO = true;
 
-function renderVextab(str, opts) {
+export function callback(str: string, opts: MmdOptions): string {
   // Parse the VexTab music notation
   const artist = new Artist(MARGIN_LEFT, 0, opts.maxWidth - MARGIN_RIGHT);
   const vextab = new VexTab(artist);
@@ -20,7 +19,4 @@ function renderVextab(str, opts) {
   return div.outerHTML;
 }
 
-module.exports = {
-  lang: "vextab",
-  callback: renderVextab,
-};
+export const lang = "vextab";

@@ -1,13 +1,5 @@
-"use strict";
-
-const { Chord } = require("../lib/chord");
-
-const rewire = require("rewire");
-const versejs = rewire("./verse.js");
-
-const parseVoice = versejs.__get__("parseVoice");
-const parsePhrase = versejs.__get__("parsePhrase");
-const parseVerse = versejs.__get__("parseVerse");
+import { Chord } from "../lib/chord";
+import { parsePhrase, parseVerse, parseVoice } from "./verse";
 
 describe("Verse", () => {
   test("parses chord voice", () => {

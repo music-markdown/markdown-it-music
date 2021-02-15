@@ -1,18 +1,16 @@
-"use strict";
+import { Chord, parseChord } from "./chord";
+import { Voicing, parseVoicing, compareVoicings } from "./voicing";
 
-const { parseVoicing, compareVoicings } = require("./voicing");
-const { parseChord } = require("./chord");
+export const guitarChordbook = new Map<string, Voicing[]>();
 
-const guitarChordbook = new Map();
-
-function addGuitarChord(chord, shorthand) {
+function addGuitarChord(chord: Chord, shorthand: string) {
   chord.aliases().map((c) => {
     const name = c.toString();
     if (!guitarChordbook.has(name)) {
       guitarChordbook.set(name, []);
     }
-    guitarChordbook.get(name).push(parseVoicing(shorthand));
-    guitarChordbook.get(name).sort(compareVoicings);
+    guitarChordbook.get(name)!.push(parseVoicing(shorthand));
+    guitarChordbook.get(name)!.sort(compareVoicings);
   });
 }
 
@@ -165,7 +163,3 @@ for (let os = 1; os < 17; os++) {
     `o${os} m1 b3,5,${os} n2,${2 + os} n6,${2 + os}`
   );
 }
-
-module.exports = {
-  guitarChordbook,
-};

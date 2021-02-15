@@ -1,23 +1,23 @@
-"use strict";
-
-const chordDiagram = require("./chord_diagram.js");
-const { guitarChordbook } = require("../lib/chordbook.js");
+import { memoizedRenderChordDiagram } from "./chord_diagram";
+import { guitarChordbook } from "../lib/chordbook";
+import { Chord } from "../lib/chord";
+import { Voicing } from "../lib/voicing";
 
 let nextId = 0;
 
-function createDiagramDiv(voicing) {
-  const svg = chordDiagram.renderChordDiagram(voicing);
+function createDiagramDiv(voicing: Voicing) {
+  const svg = memoizedRenderChordDiagram(voicing);
 
   return `<div class="diagram">${svg}</div>`;
 }
 
-function addChordToDiv(chord) {
+export function addChordToDiv(chord: Chord) {
   if (guitarChordbook.has(chord.toString())) {
     const id = `chord${nextId++}`;
 
     let contentDiv = `<div class="diagram-content-container" id="${id}">`;
 
-    const voicings = guitarChordbook.get(chord.toString());
+    const voicings = guitarChordbook.get(chord.toString())!;
 
     voicings.forEach((voicing) => {
       contentDiv += createDiagramDiv(voicing);
@@ -52,7 +52,3 @@ function addChordToDiv(chord) {
   }
   return undefined;
 }
-
-module.exports = {
-  addChordToDiv,
-};

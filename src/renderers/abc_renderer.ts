@@ -1,8 +1,8 @@
-"use strict";
-const abc = require("abcjs");
+import abc from "abcjs";
+
 const MARGIN_RIGHT = 2;
 
-function renderAbc(str, opts) {
+export function callback(str: string, opts: MmdOptions): string {
   const div = document.createElement("div");
   abc.renderAbc(div, str, {
     visualTranspose: opts.transpose,
@@ -16,7 +16,4 @@ function renderAbc(str, opts) {
   return div.outerHTML;
 }
 
-module.exports = {
-  lang: "abc",
-  callback: renderAbc,
-};
+export const lang = "abc";

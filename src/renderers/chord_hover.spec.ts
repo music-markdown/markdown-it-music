@@ -1,8 +1,6 @@
-"use strict";
+import rewire from "rewire";
 
-const rewire = require("rewire");
-
-const chordHoverJs = rewire("./chord_hover.js");
+const chordHoverJs = rewire("./chord_hover.ts");
 chordHoverJs.__set__("document", document);
 chordHoverJs.__get__("chordDiagram").renderChordDiagram = jest.fn(
   () => "svg_here"

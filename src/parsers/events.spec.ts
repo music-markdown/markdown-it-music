@@ -1,15 +1,10 @@
-"use strict";
-
-const rewire = require("rewire");
-const { Chord } = require("../lib/chord");
-const eventsjs = rewire("./events");
-
-const convertVerseToEvents = eventsjs.__get__("convertVerseToEvents");
-const Line = eventsjs.__get__("Line");
+import { Chord } from "../lib/chord";
+import { convertVerseToEvents, Line } from "./events";
+import { Phrase, Verse, Voice } from "./verse";
 
 describe("Event", () => {
   test("should add voices", () => {
-    const expectedLine = [
+    const expectedLine: Voice = [
       { index: 4, offset: 0, voice: "c1", content: "G" },
       { index: 4, offset: 0, voice: "c2", content: "C" },
       { index: 4, offset: 0, voice: "l1", content: "longest" },
@@ -35,14 +30,14 @@ describe("Event", () => {
   });
 
   test("should only add voices that are in index range", () => {
-    const phrase = new Map([
+    const phrase: Phrase = new Map([
       ["c1", [{ index: 4, content: "G" }]],
       ["c2", [{ index: 4, content: "C" }]],
       ["l1", [{ index: 0, content: "The" }]],
       ["l2", [{ index: 0, content: "Test" }]],
     ]);
 
-    const expectedLine = [
+    const expectedLine: Voice = [
       { index: 0, offset: 0, voice: "l1", content: "The" },
       { index: 0, offset: 0, voice: "l2", content: "Test" },
     ];
@@ -83,7 +78,7 @@ describe("Event", () => {
   });
 
   test("should transform a verse into a list of events", () => {
-    const verse = [
+    const verse: Verse = [
       new Map([
         ["c1", [{ index: 19, content: new Chord("A", "m") }]],
         [

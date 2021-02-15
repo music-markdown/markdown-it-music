@@ -1,13 +1,11 @@
-"use strict";
-
-const MarkdownIt = require("markdown-it");
-const MarkdownItMusic = require("./index");
+import MarkdownIt from "markdown-it";
+import MarkdownMusic from "./index";
 
 describe("Markdown It Music", () => {
-  var md;
+  var md: any;
 
   beforeEach(() => {
-    md = new MarkdownIt({ html: true }).use(MarkdownItMusic);
+    md = new MarkdownIt({ html: true }).use(MarkdownMusic);
   });
 
   test("YouTube ID is parsed if present", () => {

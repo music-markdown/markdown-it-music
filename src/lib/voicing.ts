@@ -1,15 +1,13 @@
-"use strict";
-
-class Voicing {
-  constructor(offset = 1, mutes = [], notes = [], barres = []) {
-    this.offset = offset;
-    this.mutes = mutes;
-    this.notes = notes;
-    this.barres = barres;
-  }
+export class Voicing {
+  constructor(
+    public offset = 1,
+    public mutes: { string: number }[] = [],
+    public notes: { string: number; fret: number }[] = [],
+    public barres: { first: number; last: number; fret: number }[] = []
+  ) {}
 }
 
-const compareVoicings = (voicing1, voicing2) => {
+export function compareVoicings(voicing1: Voicing, voicing2: Voicing) {
   let cmp = voicing1.offset - voicing2.offset;
   if (cmp != 0) {
     return cmp;
@@ -23,7 +21,7 @@ const compareVoicings = (voicing1, voicing2) => {
     voicing1.notes.length -
     (voicing2.mutes.length + voicing2.notes.length)
   );
-};
+}
 
 /**
  * Parses the voicing string and returns a voicing object.
@@ -40,7 +38,7 @@ const compareVoicings = (voicing1, voicing2) => {
  * @param {string} str The voicing using our shorthand notation.
  * @return {Object} The parsed fingering.
  */
-function parseVoicing(str) {
+export function parseVoicing(str: string) {
   const voicing = new Voicing();
   if (!str) {
     return voicing;
@@ -83,8 +81,3 @@ function parseVoicing(str) {
 
   return voicing;
 }
-
-module.exports = {
-  parseVoicing,
-  compareVoicings,
-};

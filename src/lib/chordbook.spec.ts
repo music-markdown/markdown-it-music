@@ -1,7 +1,5 @@
-"use strict";
-
-const { parseVoicing } = require("./voicing");
-const { guitarChordbook } = require("./chordbook");
+import { parseVoicing } from "./voicing";
+import { guitarChordbook } from "./chordbook";
 
 describe("Guitar Chordbook", () => {
   test.each([

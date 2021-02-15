@@ -1,10 +1,17 @@
-"use strict";
-const memoize = require("fast-memoize");
-
-const { SVG } = require("@svgdotjs/svg.js");
+import memoize from "fast-memoize";
+import { Svg, SVG } from "@svgdotjs/svg.js";
+import { Voicing } from "../lib/voicing";
 
 /** Represents the dimensions of a chord diagram. */
 class ChordBox {
+  stringSpacing: number;
+  fretSpacing: number;
+  radius: number;
+  header: number;
+  footer: number;
+  left: number;
+  right: number;
+
   /**
    * Create a ChordBox.
    * @param {number} x Left most position for drawing.
@@ -14,14 +21,14 @@ class ChordBox {
    * @param {number} frets Number of frets in the chord diagram.
    * @param {number} strings Number of strings in the chord diagram.
    */
-  constructor(x, y, width, height, frets, strings) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.frets = frets;
-    this.strings = strings;
-
+  constructor(
+    public x: number,
+    public y: number,
+    public width: number,
+    public height: number,
+    public frets: number,
+    public strings: number
+  ) {
     this.stringSpacing = this.width / (this.strings - 1 + 3);
     this.fretSpacing = this.height / (this.frets + 2);
     this.radius = Math.min(this.stringSpacing, this.fretSpacing) * 0.35;
@@ -33,39 +40,39 @@ class ChordBox {
 
   /**
    * Gets the X coordinate for the string.
-   * @param {number} i The string index starting from 1.
-   * @return {number} The X coordinate.
+   * @param i The string index starting from 1.
+   * @return The X coordinate.
    * */
-  string(i) {
+  string(i: number): number {
     return this.left + i * this.stringSpacing;
   }
 
   /**
    * Gets the Y coordinate for the beam. The bridge is beam(0).
-   * @param {number} i The beam index starting from 0.
-   * @return {number} The Y coordinate.
+   * @param i The beam index starting from 0.
+   * @return The Y coordinate.
    * */
-  beam(i) {
+  beam(i: number): number {
     return this.header + i * this.fretSpacing;
   }
 
   /**
    * Gets the Y coordinate for the fret. Area above the bridge is fret(0).
-   * @param {number} i The fret index starting from 1.
-   * @return {number} The Y coordinate.
+   * @param i The fret index starting from 1.
+   * @return The Y coordinate.
    * */
-  fret(i) {
+  fret(i: number): number {
     return this.header + this.fretSpacing / 2 + (i - 1) * this.fretSpacing;
   }
 }
 
 /**
  * Renders the bridge, frets, strings and string tunings.
- * @param {SVG.Doc} draw The graphics context.
- * @param {ChordBox} box The ChordBox dimensions.
- * @param {string[]} tuning The tuning of the strings.
+ * @param draw The graphics context.
+ * @param box The ChordBox dimensions.
+ * @param tuning The tuning of the strings.
  */
-function drawDiagram(draw, box, tuning) {
+function drawDiagram(draw: Svg, box: ChordBox, tuning: string[]) {
   // Draw Bridge
   draw
     .line(box.left, box.header, box.right, box.header)
@@ -90,12 +97,12 @@ function drawDiagram(draw, box, tuning) {
 
 /**
  * Renders a single fingering on a given string and fret.
- * @param {SVG.Doc} draw The graphics context.
- * @param {ChordBox} box The ChordBox dimensions.
- * @param {number} string The string index starting from 1.
- * @param {number} fret The fret index starting from 1.
+ * @param draw The graphics context.
+ * @param box The ChordBox dimensions.
+ * @param string The string index starting from 1.
+ * @param fret The fret index starting from 1.
  */
-function drawNote(draw, box, string, fret) {
+function drawNote(draw: Svg, box: ChordBox, string: number, fret: number) {
   draw
     .circle(box.radius * 2)
     .center(box.string(string - 1), box.fret(fret))
@@ -108,7 +115,7 @@ function drawNote(draw, box, string, fret) {
  * @param {ChordBox} box The ChordBox dimensions.
  * @param {number} string The string index starting from 1.
  */
-function drawMute(draw, box, string) {
+function drawMute(draw: Svg, box: ChordBox, string: number) {
   const x = box.string(string - 1);
   const y = box.fret(0);
   const r = box.radius * 0.7;
@@ -118,13 +125,19 @@ function drawMute(draw, box, string) {
 
 /**
  * Renders a barre at the given fret across the strings from first to last.
- * @param {SVG.Doc} draw The graphics context.
- * @param {ChordBox} box The ChordBox dimensions.
- * @param {number} first The index of the first string starting from 1.
- * @param {number} last The index of the last string starting from 1.
- * @param {number} fret The fret index starting from 1.
+ * @param draw The graphics context.
+ * @param box The ChordBox dimensions.
+ * @param first The index of the first string starting from 1.
+ * @param last The index of the last string starting from 1.
+ * @param fret The fret index starting from 1.
  */
-function drawBarre(draw, box, first, last, fret) {
+function drawBarre(
+  draw: Svg,
+  box: ChordBox,
+  first: number,
+  last: number,
+  fret: number
+) {
   const r = box.radius * 0.7;
   const x = (box.string(last - 1) + box.string(first - 1)) / 2;
   const w = box.string(last - 1) - box.string(first - 1) + 2 * r;
@@ -137,11 +150,11 @@ function drawBarre(draw, box, first, last, fret) {
 
 /**
  * Renders the fret offset to the right of the first fret.
- * @param {SVG.Doc} draw The graphics context.
- * @param {ChordBox} box The ChordBox dimensions.
- * @param {number} offset The fret offset.
+ * @param draw The graphics context.
+ * @param box The ChordBox dimensions.
+ * @param offset The fret offset.
  */
-function drawFretOffset(draw, box, offset) {
+function drawFretOffset(draw: Svg, box: ChordBox, offset: number) {
   draw
     .plain(`${offset}fr`)
     .font({ size: box.radius * 2, family: "Arial" })
@@ -158,7 +171,13 @@ function drawFretOffset(draw, box, offset) {
  * @param {string[]} tuning The tuning of each string as an array.
  * @return {string} The rendered chord diagram as SVG.
  */
-function renderChordDiagram(voicing, width, height, frets, tuning) {
+function renderChordDiagram(
+  voicing: Voicing,
+  width?: number,
+  height?: number,
+  frets?: number,
+  tuning?: string[]
+): string {
   // Specify defaults here so as to not confuse memoize:
   // https://github.com/caiogondim/fast-memoize.js/issues/68
   width = width || 100;
@@ -191,6 +210,4 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
   return draw.svg();
 }
 
-module.exports = {
-  renderChordDiagram: memoize(renderChordDiagram),
-};
+export const memoizedRenderChordDiagram = memoize(renderChordDiagram);

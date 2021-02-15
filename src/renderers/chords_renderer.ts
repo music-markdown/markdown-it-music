@@ -1,24 +1,22 @@
-"use strict";
+import { addChordToDiv } from "./chord_hover";
+import { convertVerseToEvents, Event } from "../parsers/events";
+import { parseVoicing } from "../lib/voicing";
+import { guitarChordbook } from "../lib/chordbook";
+import { Verse, Voice } from "../parsers/verse";
+import { Chord } from "../lib/chord";
 
-const chordHover = require("./chord_hover.js");
-const { convertVerseToEvents } = require("../parsers/events.js");
-const { parseVoicing } = require("../lib/voicing");
-const { guitarChordbook } = require("../lib/chordbook");
+export default class ChordsRenderer {
+  voiceOrder: string[][] = [];
+  transposeAmount: number = 0;
+  currentPhraseIndex: number = 0;
 
-class ChordsRenderer {
-  constructor(voiceOrder, opts) {
-    this.voiceOrder = voiceOrder;
-    this.currentPhraseIndex = 0;
-
-    this.setOptions(opts);
-  }
-
-  setOptions(opts) {
+  setOptions(opts: MmdOptions) {
     if (!opts) return;
 
     this.transposeAmount = opts.transpose;
 
     if (opts.chords) {
+      const x = Object.entries(opts.chords);
       Object.entries(opts.chords).forEach(([chord, shorthands]) => {
         if (typeof shorthands === "string") {
           shorthands = [shorthands];
@@ -28,7 +26,7 @@ class ChordsRenderer {
     }
   }
 
-  createEventHTMLChordChart(lines) {
+  createEventHTMLChordChart(lines: Voice[][]) {
     let chartDiv = `<div class="chart">`;
 
     lines.forEach((line) => {
@@ -40,7 +38,7 @@ class ChordsRenderer {
     return chartDiv + "</div>";
   }
 
-  createLineDiv(line) {
+  createLineDiv(line: Voice[]) {
     let lineDiv = `<div class="line">`;
 
     line.forEach((event) => {
@@ -50,7 +48,7 @@ class ChordsRenderer {
     return lineDiv + "</div>";
   }
 
-  createEventDiv(event) {
+  createEventDiv(event: Event[]) {
     let eventDiv = `<div class="event">`;
 
     const currentVoiceOrder = this.voiceOrder[this.currentPhraseIndex];
@@ -63,7 +61,7 @@ class ChordsRenderer {
 
     currentVoiceOrder.forEach((voice) => {
       if (event[0] && voice === event[0].voice) {
-        eventDiv += this.createVoiceDiv(event.shift());
+        eventDiv += this.createVoiceDiv(event.shift()!);
       } else {
         const emptyDiv = "<div> </div>";
         eventDiv += emptyDiv;
@@ -72,20 +70,20 @@ class ChordsRenderer {
     return eventDiv + `</div>`;
   }
 
-  createVoiceDiv(voice) {
+  createVoiceDiv(voice: Event) {
     const classes = [voice.voice];
     let chordDiagram = undefined;
 
-    if (voice.voice.startsWith("c")) {
-      if (
-        this.transposeAmount &&
-        typeof voice.content.transpose === "function"
-      ) {
+    if (voice.voice!.startsWith("c")) {
+      if (this.transposeAmount && voice.content instanceof Chord) {
         voice.content = voice.content.transpose(this.transposeAmount);
       }
 
       classes.push("chord");
-      chordDiagram = chordHover.addChordToDiv(voice.content.toString());
+      chordDiagram =
+        voice.content instanceof Chord
+          ? addChordToDiv(voice.content)
+          : undefined;
       if (!chordDiagram) {
         classes.push("highlight");
       }
@@ -94,11 +92,11 @@ class ChordsRenderer {
     return (
       `<div class="${classes.join(" ")}">` +
       (chordDiagram ? chordDiagram : "") +
-      `${" ".repeat(voice.offset)}${voice.content.toString()}</div>`
+      `${" ".repeat(voice.offset!)}${voice.content.toString()}</div>`
     );
   }
 
-  renderVerse(verse, opts) {
+  renderVerse(verse: Verse, opts: MmdOptions) {
     this.setOptions(opts);
 
     this.voiceOrder = verse.map((phrase) => Array.from(phrase.keys()));
@@ -109,5 +107,3 @@ class ChordsRenderer {
     return this.createEventHTMLChordChart(lines);
   }
 }
-
-module.exports = ChordsRenderer;

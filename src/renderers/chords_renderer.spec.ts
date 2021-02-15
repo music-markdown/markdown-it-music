@@ -1,8 +1,6 @@
-"use strict";
+import rewire from "rewire";
 
-const rewire = require("rewire");
-
-const chordsRendererFromEventsJs = rewire("./chords_renderer.js");
+const chordsRendererFromEventsJs = rewire("./chords_renderer.ts");
 chordsRendererFromEventsJs.__set__("document", document);
 
 const mockAddChordToDivFn = jest.fn(() => "svg_here");
