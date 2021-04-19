@@ -10,12 +10,27 @@ This plugin provides a basic CLI for rendering music markdown without a browser.
 
 ### Installation
 
-```shell
+```console
 $ npm i -g markdown-it-music
 ```
 
 ### Basic Usage
 
-```shell
+```console
 $ musicmd [input-markdown-file] -o [output-html-file]
+```
+
+### All Options
+
+```console
+$ musicmd --help
+musicmd [markdown]
+
+Render the markdown to HTML
+
+Options:
+      --version    Show version number                                 [boolean]
+  -o, --outfile    render the output of infile to outfile
+  -t, --transpose  transpose notes and chords up or down   [number] [default: 0]
+      --help       Show help                                           [boolean]
 ```
