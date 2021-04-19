@@ -43,13 +43,14 @@ ${fs.readFileSync(`${__dirname}/../renderers/renderer.css`, {
 </style>
 `;
 
-function render(src) {
+function render(src, transpose) {
   const window = createSVGWindow();
   const document = window.document;
   registerWindow(window, document);
 
   const md = new MarkdownIt({ html: true }).use(MarkdownItMusic);
   md.addHeader(HEADER);
+  md.setTranspose(transpose);
   return md.render(src);
 }
 

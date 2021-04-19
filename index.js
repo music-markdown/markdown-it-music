@@ -57,9 +57,7 @@ function MarkdownMusic(md) {
 
   md.core.ruler.after("block", "mmd", (state) => {
     // Reset the ChordsRenderer when parsing a new source.
-    state.md.chordsRenderer = new ChordsRenderer(
-      Object.assign({}, md.meta, md.userOpts)
-    );
+    state.md.chordsRenderer = new ChordsRenderer(md.getOptions());
   });
 
   md.block.ruler.after("meta", "mmd", (state) => {
@@ -116,11 +114,15 @@ function MarkdownMusic(md) {
     return md;
   };
 
+  md.getOptions = () => {
+    return Object.assign({}, md.meta, md.userOpts);
+  };
+
   return markdownitfence(md, "MarkdownMusic", {
     marker: ":",
     render: (tokens, idx) => {
       const token = tokens[idx];
-      return md.rendererRegistry[token.info](token.content, md.meta);
+      return md.rendererRegistry[token.info](token.content, md.getOptions());
     },
     validate: (name) => name in md.rendererRegistry,
   });

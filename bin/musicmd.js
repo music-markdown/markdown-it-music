@@ -14,6 +14,13 @@ const argv = yargs
     describe: "render the output of infile to outfile",
     nargs: 1,
   })
+  .option("transpose", {
+    alias: "t",
+    describe: "transpose notes and chords up or down",
+    default: 0,
+    nargs: 1,
+    type: "number",
+  })
   .help().argv;
 
 const ifp = argv.markdown ? fs.createReadStream(argv.markdown) : process.stdin;
@@ -26,6 +33,7 @@ ifp.on("data", (chunk) => {
 });
 
 ifp.on("end", () => {
-  ofp.write(render(chunks.join("")));
+  const markdown = chunks.join("");
+  ofp.write(render(markdown, argv.transpose));
   ofp.end();
 });
