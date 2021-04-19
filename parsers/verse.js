@@ -1,7 +1,20 @@
 "use strict";
 
-const { parseChord } = require("../lib/chord");
+const { parseChord, isChord, isAnnotation } = require("../lib/chord");
 const voicePattern = /^([a-zA-Z-_]+)([0-9]*):\s(.*)/;
+
+function normalizeToken(instrument, token) {
+  if (instrument == "c") {
+    if (isChord(token)) {
+      return parseChord(token);
+    }
+    if (isAnnotation(token)) {
+      return token;
+    }
+    throw new Error(`Invalid token: ${token}`);
+  }
+  return token;
+}
 
 function tokenize(instrument, data) {
   const re = /[^\s]+/g;
@@ -11,7 +24,7 @@ function tokenize(instrument, data) {
   while ((match = re.exec(data))) {
     events.push({
       index: match.index,
-      content: instrument == "c" ? parseChord(match[0]) : match[0],
+      content: normalizeToken(instrument, match[0]),
     });
   }
 

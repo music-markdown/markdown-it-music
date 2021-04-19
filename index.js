@@ -50,14 +50,16 @@ function MarkdownMusic(md) {
 
   md.core.ruler.before("normalize", "mmd", (state) => {
     // Inject the music markdown header.
-    md.userOpts.headers.push(MUSIC_MARKDOWN_JS);
+    state.md.userOpts.headers.push(MUSIC_MARKDOWN_JS);
     const scriptToken = new state.Token("mmdHeader", "", 0);
     state.tokens.push(scriptToken);
+  });
 
-    // Override YAML meta data with user supplied options.
-    Object.assign(state.md.meta, state.md.userOpts);
+  md.core.ruler.after("block", "mmd", (state) => {
     // Reset the ChordsRenderer when parsing a new source.
-    state.md.chordsRenderer = new ChordsRenderer();
+    state.md.chordsRenderer = new ChordsRenderer(
+      Object.assign({}, md.meta, md.userOpts)
+    );
   });
 
   md.block.ruler.after("meta", "mmd", (state) => {
@@ -78,9 +80,7 @@ function MarkdownMusic(md) {
 
     // Parse the verse and store in token's content
     const verseToken = new state.Token("mmdVerse", "", 0);
-    verseToken.content = parseVerse(
-      getLines(state, state.line, currentLineIndex)
-    );
+    verseToken.meta = parseVerse(getLines(state, state.line, currentLineIndex));
     state.tokens.push(verseToken);
 
     // Consume the lines of the music markdown block
@@ -92,8 +92,9 @@ function MarkdownMusic(md) {
     return md.userOpts.headers.join("");
   };
 
-  md.renderer.rules.mmdVerse = (tokens, idx) =>
-    md.chordsRenderer.renderVerse(tokens[idx].content, md.meta);
+  md.renderer.rules.mmdVerse = (tokens, idx) => {
+    return md.chordsRenderer.renderVerse(tokens[idx].meta);
+  };
 
   md.rendererRegistry[abc.lang] = abc.callback;
   md.rendererRegistry[vextab.lang] = vextab.callback;

@@ -1,16 +1,13 @@
 "use strict";
 
-const rewire = require("rewire");
+const { parseChord } = require("../lib/chord");
+const ChordsRenderer = require("./chords_renderer");
 
-const chordsRendererFromEventsJs = rewire("./chords_renderer.js");
-chordsRendererFromEventsJs.__set__("document", document);
-
-const mockAddChordToDivFn = jest.fn(() => "svg_here");
-chordsRendererFromEventsJs.__get__(
-  "chordHover"
-).addChordToDiv = mockAddChordToDivFn;
-
-const ChordsRenderer = chordsRendererFromEventsJs.__get__("ChordsRenderer");
+const chordHover = require("./chord_hover");
+jest.mock("./chord_hover");
+const mockAddChordToDivFn = chordHover.addChordToDiv.mockReturnValue(
+  "svg_here"
+);
 
 describe("Chords Renderer from Events", () => {
   beforeEach(() => {
@@ -20,9 +17,15 @@ describe("Chords Renderer from Events", () => {
   test("should create a voice div", () => {
     const expectedVoiceDiv = `<div class="c1 chord">svg_hereC</div>`;
 
-    const voice = { index: 0, offset: 0, voice: "c1", content: "C" };
+    const voice = {
+      index: 0,
+      offset: 0,
+      voice: "c1",
+      content: parseChord("C"),
+    };
 
-    const chordsRenderer = new ChordsRenderer([["c1"]]);
+    const chordsRenderer = new ChordsRenderer();
+    chordsRenderer.voiceOrder = [["c1"]];
     const actualVoiceDiv = chordsRenderer.createVoiceDiv(voice);
 
     expect(actualVoiceDiv).toEqual(expectedVoiceDiv);
@@ -45,7 +48,8 @@ describe("Chords Renderer from Events", () => {
       [{ index: 0, offset: 0, voice: "l1", content: "Test" }],
     ];
 
-    const chordsRenderer = new ChordsRenderer([["l1"]]);
+    const chordsRenderer = new ChordsRenderer();
+    chordsRenderer.voiceOrder = [["l1"]];
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
     expect(actualLineDiv).toEqual(expectedLineDiv);
@@ -53,7 +57,7 @@ describe("Chords Renderer from Events", () => {
 
   test("should add diagram to chord div", () => {
     const line = [
-      { index: 0, offset: 0, voice: "c1", content: "C" },
+      { index: 0, offset: 0, voice: "c1", content: parseChord("C") },
       { index: 0, offset: 0, voice: "l1", content: "Wonderful!" },
     ];
 
@@ -63,7 +67,8 @@ describe("Chords Renderer from Events", () => {
       `<div class="l1">Wonderful!</div>` +
       "</div>";
 
-    const chordsRenderer = new ChordsRenderer([["c1", "l1"]]);
+    const chordsRenderer = new ChordsRenderer();
+    chordsRenderer.voiceOrder = [["c1", "l1"]];
     const actualEventDiv = chordsRenderer.createEventDiv(line);
 
     expect(actualEventDiv).toEqual(expectedEventDiv);
@@ -74,27 +79,28 @@ describe("Chords Renderer from Events", () => {
     const lines = [
       [
         [
-          { index: 0, offset: 0, voice: "c1", content: "C" },
+          { index: 0, offset: 0, voice: "c1", content: parseChord("C") },
           { index: 0, offset: 0, voice: "l1", content: "Wonderful" },
         ],
         [
-          { index: 0, offset: 0, voice: "c1", content: "G" },
+          { index: 0, offset: 0, voice: "c1", content: parseChord("G") },
           { index: 0, offset: 0, voice: "l1", content: "Testing!" },
         ],
       ],
       [
         [
-          { index: 0, offset: 0, voice: "c1", content: "A" },
+          { index: 0, offset: 0, voice: "c1", content: parseChord("A") },
           { index: 0, offset: 0, voice: "l1", content: "Things" },
         ],
         [{ index: 10, offset: 1, voice: "l1", content: "IsGreat!" }],
       ],
     ];
 
-    const chordsRenderer = new ChordsRenderer([
+    const chordsRenderer = new ChordsRenderer();
+    chordsRenderer.voiceOrder = [
       ["c1", "l1"],
       ["c1", "l1"],
-    ]);
+    ];
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
     const expectedEventDiv =
@@ -143,7 +149,8 @@ describe("Chords Renderer from Events", () => {
       [{ index: 0, offset: 0, voice: "l1", content: "-ful" }],
     ];
 
-    const chordsRenderer = new ChordsRenderer([["l1"]]);
+    const chordsRenderer = new ChordsRenderer();
+    chordsRenderer.voiceOrder = [["l1"]];
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
     expect(actualLineDiv).toEqual(expectedLineDiv);
@@ -160,12 +167,13 @@ describe("Chords Renderer from Events", () => {
 
     const line = [
       [
-        { index: 0, offset: 2, voice: "c1", content: "C" },
+        { index: 0, offset: 2, voice: "c1", content: parseChord("C") },
         { index: 0, offset: 0, voice: "l1", content: "Testing!" },
       ],
     ];
 
-    const chordsRenderer = new ChordsRenderer([["c1", "l1"]]);
+    const chordsRenderer = new ChordsRenderer();
+    chordsRenderer.voiceOrder = [["c1", "l1"]];
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
     expect(actualLineDiv).toEqual(expectedLineDiv);
@@ -192,13 +200,14 @@ describe("Chords Renderer from Events", () => {
       [[{ index: 0, offset: 0, voice: "l1", content: "Testing!" }]],
       [
         [
-          { index: 0, offset: 0, voice: "c1", content: "C" },
+          { index: 0, offset: 0, voice: "c1", content: parseChord("C") },
           { index: 0, offset: 0, voice: "l1", content: "Testing!" },
         ],
       ],
     ];
 
-    const chordsRenderer = new ChordsRenderer([["l1"], ["c1", "l1"]]);
+    const chordsRenderer = new ChordsRenderer();
+    chordsRenderer.voiceOrder = [["l1"], ["c1", "l1"]];
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
     expect(actualChartDiv).toEqual(expectedChartDiv);
