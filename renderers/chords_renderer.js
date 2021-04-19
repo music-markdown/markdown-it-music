@@ -4,10 +4,12 @@ const chordHover = require("./chord_hover.js");
 const { convertVerseToEvents } = require("../parsers/events.js");
 const { parseVoicing } = require("../lib/voicing");
 const { guitarChordbook } = require("../lib/chordbook");
+const { Chord } = require("../lib/chord.js");
 
 class ChordsRenderer {
-  constructor(voiceOrder, opts) {
-    this.voiceOrder = voiceOrder;
+  constructor(opts) {
+    this.voiceOrder = [];
+    this.transposeAmount = 0;
     this.currentPhraseIndex = 0;
 
     this.setOptions(opts);
@@ -16,7 +18,7 @@ class ChordsRenderer {
   setOptions(opts) {
     if (!opts) return;
 
-    this.transposeAmount = opts.transpose;
+    this.transposeAmount = opts.transpose || 0;
 
     if (opts.chords) {
       Object.entries(opts.chords).forEach(([chord, shorthands]) => {
@@ -77,15 +79,15 @@ class ChordsRenderer {
     let chordDiagram = undefined;
 
     if (voice.voice.startsWith("c")) {
-      if (
-        this.transposeAmount &&
-        typeof voice.content.transpose === "function"
-      ) {
+      if (voice.content instanceof Chord) {
         voice.content = voice.content.transpose(this.transposeAmount);
       }
 
       classes.push("chord");
-      chordDiagram = chordHover.addChordToDiv(voice.content.toString());
+      chordDiagram =
+        voice.content instanceof Chord
+          ? chordHover.addChordToDiv(voice.content.toString())
+          : undefined;
       if (!chordDiagram) {
         classes.push("highlight");
       }
