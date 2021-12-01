@@ -5,43 +5,7 @@ const abc = require("./renderers/abc_renderer.js");
 const vextab = require("./renderers/vextab_renderer.js");
 const ChordsRenderer = require("./renderers/chords_renderer.js");
 const { parseVerse, isVoiceLine } = require("./parsers/verse");
-
-const MUSIC_MARKDOWN_JS = `<script>
-function slowScroll(id, direction, distance, step) {
-  var element = document.getElementById(id);
-  
-  if (element) {
-    var scrollAmount = 0;
-    var slideTimer = setInterval(function() {
-      element.scrollLeft += direction === 'left' ? -step : step;
-
-      scrollAmount += step;
-      if(scrollAmount >= distance){
-          window.clearInterval(slideTimer);
-      }
-    });
-  }
-}
-
-function incrementId(id, direction) {
-  var countId = id + '-count'
-  var element = document.getElementById(countId);
-
-  if (element) {
-    var values = element.innerHTML.split(' of ');
-    var currentValue = parseInt(values[0]);
-
-    if (direction === 'left' && currentValue > 1) {
-      element.innerHTML = currentValue - 1;
-      element.innerHTML += ' of ' + values[1];
-    } else if (direction === 'right' && currentValue < parseInt(values[1])) {
-      element.innerHTML = currentValue + 1;
-      element.innerHTML += ' of ' + values[1];
-    }
-  }
-}
-</script>
-`;
+const { getHeader } = require("./header");
 
 function MarkdownMusic(md) {
   md.use(meta);
@@ -50,7 +14,9 @@ function MarkdownMusic(md) {
 
   md.core.ruler.before("normalize", "mmd", (state) => {
     // Inject the music markdown header.
-    state.md.userOpts.headers.push(MUSIC_MARKDOWN_JS);
+    const opts = md.getOptions();
+    const header = getHeader(opts);
+    state.md.userOpts.headers.push(header);
     const scriptToken = new state.Token("mmdHeader", "", 0);
     state.tokens.push(scriptToken);
   });
@@ -100,6 +66,11 @@ function MarkdownMusic(md) {
   // Renderer configuration functions
   md.setTranspose = (transpose) => {
     md.userOpts.transpose = transpose;
+    return md;
+  };
+
+  md.setTheme = (theme) => {
+    md.userOpts.theme = theme;
     return md;
   };
 

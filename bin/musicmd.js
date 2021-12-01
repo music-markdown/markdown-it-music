@@ -34,6 +34,6 @@ ifp.on("data", (chunk) => {
 
 ifp.on("end", () => {
   const markdown = chunks.join("");
-  ofp.write(render(markdown, argv.transpose));
+  ofp.write(render(markdown, argv.transpose, "light"));
   ofp.end();
 });
