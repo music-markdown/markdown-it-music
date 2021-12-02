@@ -5,9 +5,8 @@ const ChordsRenderer = require("./chords_renderer");
 
 const chordHover = require("./chord_hover");
 jest.mock("./chord_hover");
-const mockAddChordToDivFn = chordHover.addChordToDiv.mockReturnValue(
-  "svg_here"
-);
+const mockAddChordToDivFn =
+  chordHover.addChordToDiv.mockReturnValue("svg_here");
 
 describe("Chords Renderer from Events", () => {
   beforeEach(() => {
