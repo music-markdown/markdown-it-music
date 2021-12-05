@@ -1,11 +1,6 @@
-"use strict";
+import { Line, convertVerseToEvents } from "./events";
 
-const rewire = require("rewire");
-const { Chord } = require("../lib/chord");
-const eventsjs = rewire("./events");
-
-const convertVerseToEvents = eventsjs.__get__("convertVerseToEvents");
-const Line = eventsjs.__get__("Line");
+import { Chord } from "../lib/chord";
 
 describe("Event", () => {
   test("should add voices", () => {

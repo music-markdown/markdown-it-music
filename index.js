@@ -1,13 +1,13 @@
-"use strict";
-const meta = require("markdown-it-meta");
-const markdownitfence = require("markdown-it-fence");
-const abc = require("./renderers/abc_renderer.js");
-const vextab = require("./renderers/vextab_renderer.js");
-const ChordsRenderer = require("./renderers/chords_renderer.js");
-const { parseVerse, isVoiceLine } = require("./parsers/verse");
-const { getHeader } = require("./header");
+import { isVoiceLine, parseVerse } from "./parsers/verse.js";
 
-function MarkdownMusic(md) {
+import ChordsRenderer from "./renderers/chords_renderer.js";
+import { plugin as abc } from "./renderers/abc_renderer.js";
+import { getHeader } from "./header.js";
+import markdownitfence from "markdown-it-fence";
+import meta from "markdown-it-meta";
+import { plugin as vextab } from "./renderers/vextab_renderer.js";
+
+export default function MarkdownMusic(md) {
   md.use(meta);
   md.rendererRegistry = {};
   md.userOpts = { headers: [] };
@@ -116,5 +116,3 @@ function getLines(state, startLine, endLine) {
     state.eMarks[endLine - 1 || startLine]
   );
 }
-
-module.exports = MarkdownMusic;

@@ -1,6 +1,4 @@
-"use strict";
-
-const { parseChord, isChord, isAnnotation } = require("../lib/chord");
+import { isAnnotation, isChord, parseChord } from "../lib/chord.js";
 const voicePattern = /^([a-zA-Z-_]+)([0-9]*):\s(.*)/;
 
 function normalizeToken(instrument, token) {
@@ -31,11 +29,11 @@ function tokenize(instrument, data) {
   return events;
 }
 
-function isVoiceLine(line) {
+export function isVoiceLine(line) {
   return line.match(voicePattern);
 }
 
-function parseVoice(voice) {
+export function parseVoice(voice) {
   if (!voice) {
     return;
   }
@@ -51,7 +49,7 @@ function parseVoice(voice) {
   return tokenize(instrument, data);
 }
 
-function parsePhrase(phrase) {
+export function parsePhrase(phrase) {
   return phrase.split(/\n/).reduce((phrase, voice) => {
     if (voice) {
       const match = voice.match(voicePattern);
@@ -62,11 +60,6 @@ function parsePhrase(phrase) {
   }, new Map());
 }
 
-function parseVerse(verse) {
+export function parseVerse(verse) {
   return verse.split(/[\n]{2,}/).map((phrase) => parsePhrase(phrase));
 }
-
-module.exports = {
-  isVoiceLine,
-  parseVerse,
-};

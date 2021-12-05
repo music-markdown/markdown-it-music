@@ -1,5 +1,4 @@
-"use strict";
-const abc = require("abcjs");
+import abc from "abcjs";
 const MARGIN_RIGHT = 2;
 
 function renderAbc(str, opts) {
@@ -16,7 +15,7 @@ function renderAbc(str, opts) {
   return div.outerHTML;
 }
 
-module.exports = {
+export const plugin = {
   lang: "abc",
   callback: renderAbc,
 };

@@ -1,5 +1,3 @@
-"use strict";
-
 const HEADER = `<script>
   function slowScroll(id, direction, distance, step) {
     var element = document.getElementById(id);
@@ -208,7 +206,7 @@ function getThemeStyles(theme) {
   return theme;
 }
 
-function getHeader(opts = { theme: "light", fontSize: 1 }) {
+export function getHeader(opts = { theme: "light", fontSize: 1 }) {
   return (
     HEADER +
     `
@@ -222,7 +220,3 @@ ${getThemeStyles(opts.theme)}
   `
   );
 }
-
-module.exports = {
-  getHeader,
-};

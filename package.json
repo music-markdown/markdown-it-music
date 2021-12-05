@@ -4,7 +4,7 @@
   "description": "Renderer for Music Markdown.",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "lint": "eslint .",
     "posttest": "eslint .",
     "fix-lint": "eslint . --fix"
@@ -14,6 +14,7 @@
   ],
   "author": "Shad Sharma <shadanan@gmail.com>",
   "license": "ISC",
+  "type": "module",
   "bin": {
     "musicmd": "bin/musicmd.js"
   },

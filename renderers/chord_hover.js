@@ -1,17 +1,15 @@
-"use strict";
-
-const chordDiagram = require("./chord_diagram.js");
-const { guitarChordbook } = require("../lib/chordbook.js");
+import { guitarChordbook } from "../lib/chordbook.js";
+import { renderChordDiagram } from "./chord_diagram.js";
 
 let nextId = 0;
 
 function createDiagramDiv(voicing) {
-  const svg = chordDiagram.renderChordDiagram(voicing);
+  const svg = renderChordDiagram(voicing);
 
   return `<div class="diagram">${svg}</div>`;
 }
 
-function addChordToDiv(chord) {
+export function addChordToDiv(chord) {
   if (guitarChordbook.has(chord.toString())) {
     const id = `chord${nextId++}`;
 
@@ -52,7 +50,3 @@ function addChordToDiv(chord) {
   }
   return undefined;
 }
-
-module.exports = {
-  addChordToDiv,
-};

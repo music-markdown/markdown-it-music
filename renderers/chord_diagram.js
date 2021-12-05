@@ -1,7 +1,5 @@
-"use strict";
-const memoize = require("fast-memoize");
-
-const { SVG } = require("@svgdotjs/svg.js");
+import { SVG } from "@svgdotjs/svg.js";
+import memoize from "fast-memoize";
 
 /** Represents the dimensions of a chord diagram. */
 class ChordBox {
@@ -158,7 +156,7 @@ function drawFretOffset(draw, box, offset) {
  * @param {string[]} tuning The tuning of each string as an array.
  * @return {string} The rendered chord diagram as SVG.
  */
-function renderChordDiagram(voicing, width, height, frets, tuning) {
+function drawChordDiagram(voicing, width, height, frets, tuning) {
   // Specify defaults here so as to not confuse memoize:
   // https://github.com/caiogondim/fast-memoize.js/issues/68
   width = width || 100;
@@ -191,6 +189,4 @@ function renderChordDiagram(voicing, width, height, frets, tuning) {
   return draw.svg();
 }
 
-module.exports = {
-  renderChordDiagram: memoize(renderChordDiagram),
-};
+export const renderChordDiagram = memoize(drawChordDiagram);

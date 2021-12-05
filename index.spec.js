@@ -4,8 +4,8 @@
 
 "use strict";
 
-const MarkdownIt = require("markdown-it");
-const MarkdownItMusic = require("./index");
+import MarkdownIt from "markdown-it";
+import MarkdownItMusic from "./index.js";
 
 describe("Markdown It Music", () => {
   var md;

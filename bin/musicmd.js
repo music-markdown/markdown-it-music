@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
-"use strict";
+import fs from "fs";
+import { hideBin } from "yargs/helpers";
+import render from "./headless.js";
+import yargs from "yargs";
 
-const render = require("./headless");
-const fs = require("fs");
-const yargs = require("yargs");
-
-const argv = yargs
+const argv = yargs(hideBin(process.argv))
   .scriptName("musicmd")
   .command("* [markdown]", "Render the markdown to HTML")
   .option("outfile", {

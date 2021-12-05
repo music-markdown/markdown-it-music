@@ -1,21 +1,17 @@
-"use strict";
+import "jsdom-global/register.js";
 
-require("jsdom-global")();
+import MarkdownIt from "markdown-it";
+import MarkdownMusic from "../index.js";
+import { createSVGWindow } from "svgdom";
+import { registerWindow } from "@svgdotjs/svg.js";
 
-const MarkdownIt = require("markdown-it");
-const MarkdownItMusic = require("../index");
-const { createSVGWindow } = require("svgdom");
-const { registerWindow } = require("@svgdotjs/svg.js");
-
-function render(src, transpose, theme) {
+export default function render(src, transpose, theme) {
   const window = createSVGWindow();
   const document = window.document;
   registerWindow(window, document);
 
-  const md = new MarkdownIt({ html: true }).use(MarkdownItMusic);
+  const md = new MarkdownIt({ html: true }).use(MarkdownMusic);
   md.setTranspose(transpose);
   md.setTheme(theme);
   return md.render(src);
 }
-
-module.exports = render;

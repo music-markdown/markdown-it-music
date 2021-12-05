@@ -1,5 +1,5 @@
-"use strict";
-const { VexTab, Artist, Flow } = require("vextab/releases/vextab-div");
+import vextab from "vextab/releases/vextab-div.js";
+const { Artist, Flow, VexTab } = vextab;
 const MARGIN_LEFT = 6;
 const MARGIN_RIGHT = 2;
 
@@ -20,7 +20,7 @@ function renderVextab(str, opts) {
   return div.outerHTML;
 }
 
-module.exports = {
+export const plugin = {
   lang: "vextab",
   callback: renderVextab,
 };

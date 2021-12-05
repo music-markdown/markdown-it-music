@@ -1,12 +1,10 @@
-"use strict";
+import { Chord } from "../lib/chord.js";
+import { addChordToDiv } from "./chord_hover.js";
+import { convertVerseToEvents } from "../parsers/events.js";
+import { guitarChordbook } from "../lib/chordbook.js";
+import { parseVoicing } from "../lib/voicing.js";
 
-const chordHover = require("./chord_hover.js");
-const { convertVerseToEvents } = require("../parsers/events.js");
-const { parseVoicing } = require("../lib/voicing");
-const { guitarChordbook } = require("../lib/chordbook");
-const { Chord } = require("../lib/chord.js");
-
-class ChordsRenderer {
+export default class ChordsRenderer {
   constructor(opts) {
     this.voiceOrder = [];
     this.transposeAmount = 0;
@@ -86,7 +84,7 @@ class ChordsRenderer {
       classes.push("chord");
       chordDiagram =
         voice.content instanceof Chord
-          ? chordHover.addChordToDiv(voice.content.toString())
+          ? addChordToDiv(voice.content.toString())
           : undefined;
       if (!chordDiagram) {
         classes.push("highlight");
@@ -111,5 +109,3 @@ class ChordsRenderer {
     return this.createEventHTMLChordChart(lines);
   }
 }
-
-module.exports = ChordsRenderer;
