@@ -14,6 +14,7 @@ function renderVextab(str, opts) {
 
   // Render notation to VexFlow canvas
   const div = document.createElement("div");
+  div.className = "vextab";
   const renderer = new Flow.Renderer(div, Flow.Renderer.Backends.SVG);
   artist.render(renderer);
 

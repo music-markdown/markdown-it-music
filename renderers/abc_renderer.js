@@ -4,6 +4,7 @@ const MARGIN_RIGHT = 2;
 
 function renderAbc(str, opts) {
   const div = document.createElement("div");
+  div.className = "abc";
   abc.renderAbc(div, str, {
     visualTranspose: opts.transpose,
     staffwidth: opts.maxWidth - MARGIN_RIGHT,

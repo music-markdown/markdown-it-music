@@ -187,12 +187,8 @@ const DARK_THEME = `
     color: #fcdb95;
   }
 
-  svg {
+  div.abc > svg, div.vextab > svg {
     filter: invert(100%);
-  }
-
-  .diagram svg {
-    filter: invert(0%);
   }
 `;
 
