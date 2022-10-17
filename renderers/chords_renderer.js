@@ -11,6 +11,7 @@ class ChordsRenderer {
     this.voiceOrder = [];
     this.transposeAmount = 0;
     this.currentPhraseIndex = 0;
+    this.chordIndex = 0;
 
     this.setOptions(opts);
   }
@@ -93,10 +94,16 @@ class ChordsRenderer {
       }
     }
 
+    const id = `${this.chordIndex++}`;
+
     return (
       `<div class="${classes.join(" ")}">` +
-      (chordDiagram ? chordDiagram : "") +
-      `${" ".repeat(voice.offset)}${voice.content.toString()}</div>`
+      " ".repeat(voice.offset) +
+      `<span id='chord-${id}'` +
+      ` onmouseover="showPopper('chord-${id}', '${voice.content.toString()}')"` +
+      ` onmouseout="hidePopper('chord-${id}')"` +
+      `>${voice.content.toString()}</span>` +
+      `</div>`
     );
   }
 
