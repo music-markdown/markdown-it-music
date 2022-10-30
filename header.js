@@ -282,7 +282,7 @@ const DARK_THEME = `
     color: #fcdb95;
   }
 
-  div.abc > svg, div.vextab > svg {
+  div.vextab > svg {
     filter: invert(100%);
   }
 `;
