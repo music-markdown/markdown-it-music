@@ -21,6 +21,11 @@ const argv = yargs
     nargs: 1,
     type: "number",
   })
+  .option("theme", {
+    describe: "set theme",
+    default: "light",
+    nargs: 1,
+  })
   .help().argv;
 
 const ifp = argv.markdown ? fs.createReadStream(argv.markdown) : process.stdin;
@@ -34,6 +39,6 @@ ifp.on("data", (chunk) => {
 
 ifp.on("end", () => {
   const markdown = chunks.join("");
-  ofp.write(render(markdown, argv.transpose, "light"));
+  ofp.write(render(markdown, argv.transpose, argv.theme));
   ofp.end();
 });

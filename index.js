@@ -6,6 +6,7 @@ const vextab = require("./renderers/vextab_renderer.js");
 const ChordsRenderer = require("./renderers/chords_renderer.js");
 const { parseVerse, isVoiceLine } = require("./parsers/verse");
 const { getHeader } = require("./header");
+const { chordCarousel } = require("./renderers/chord_carousel.js");
 
 function MarkdownMusic(md) {
   md.use(meta);
@@ -17,13 +18,16 @@ function MarkdownMusic(md) {
     const opts = md.getOptions();
     const header = getHeader(opts);
     state.md.userOpts.headers.push(header);
-    const scriptToken = new state.Token("mmdHeader", "", 0);
-    state.tokens.push(scriptToken);
+    state.tokens.push(new state.Token("mmdHeader", "", 0));
   });
 
   md.core.ruler.after("block", "mmd", (state) => {
     // Reset the ChordsRenderer when parsing a new source.
     state.md.chordsRenderer = new ChordsRenderer(md.getOptions());
+  });
+
+  md.core.ruler.push("footer", (state) => {
+    state.tokens.push(new state.Token("mmdFooter", "", 0));
   });
 
   md.block.ruler.after("meta", "mmd", (state) => {
@@ -58,6 +62,10 @@ function MarkdownMusic(md) {
 
   md.renderer.rules.mmdVerse = (tokens, idx) => {
     return md.chordsRenderer.renderVerse(tokens[idx].meta);
+  };
+
+  md.renderer.rules.mmdFooter = () => {
+    return md.chordsRenderer.chordsUsed.map(chordCarousel).join("");
   };
 
   md.rendererRegistry[abc.lang] = abc.callback;
