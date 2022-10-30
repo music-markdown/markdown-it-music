@@ -6,24 +6,25 @@
 
 const rewire = require("rewire");
 
-const chordHoverJs = rewire("./chord_hover.js");
-chordHoverJs.__set__("document", document);
-chordHoverJs.__get__("chordDiagram").renderChordDiagram = jest.fn(
+const chordCarouselJs = rewire("./chord_carousel.js");
+chordCarouselJs.__set__("document", document);
+chordCarouselJs.__get__("chordDiagram").renderChordDiagram = jest.fn(
   () => "svg_here"
 );
 
-const addChordToDiv = chordHoverJs.__get__("addChordToDiv");
-const createDiagramDiv = chordHoverJs.__get__("createDiagramDiv");
+const chordCarousel = chordCarouselJs.__get__("chordCarousel");
+const createDiagramDiv = chordCarouselJs.__get__("createDiagramDiv");
 
 const svgDiagramDiv = '<div class="diagram">svg_here</div>';
 
-describe("Chord hover", () => {
+describe("Chord carousel", () => {
   test("should add diagram to container", () => {
     const expectedVoiceDiv = `${svgDiagramDiv}`;
 
     expect(createDiagramDiv("voicing")).toEqual(expectedVoiceDiv);
   });
-  test("should add diagram and chord class with navigation", () => {
+
+  test("should add chord carousel", () => {
     const expectedVoiceDiv =
       `<div class="diagram-container">` +
       `<div class="content-scroll">` +
@@ -46,12 +47,12 @@ describe("Chord hover", () => {
       `<div id="chord0-count">1 of 5</div>` +
       `</div>`;
 
-    expect(addChordToDiv("C")).toEqual(expectedVoiceDiv);
+    expect(chordCarousel("C")).toEqual(expectedVoiceDiv);
   });
 
   test("should highlight chord if diagram does not exist", () => {
     const expectedVoiceDiv = undefined;
 
-    expect(addChordToDiv("!!!!")).toEqual(expectedVoiceDiv);
+    expect(chordCarousel("!!!!")).toEqual(expectedVoiceDiv);
   });
 });

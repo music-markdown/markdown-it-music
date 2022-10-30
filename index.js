@@ -5,7 +5,8 @@ const abc = require("./renderers/abc_renderer.js");
 const vextab = require("./renderers/vextab_renderer.js");
 const ChordsRenderer = require("./renderers/chords_renderer.js");
 const { parseVerse, isVoiceLine } = require("./parsers/verse");
-const { getHeader, getFooter } = require("./header");
+const { getHeader } = require("./header");
+const { chordCarousel } = require("./renderers/chord_carousel.js");
 
 function MarkdownMusic(md) {
   md.use(meta);
@@ -64,7 +65,7 @@ function MarkdownMusic(md) {
   };
 
   md.renderer.rules.mmdFooter = () => {
-    return getFooter();
+    return md.chordsRenderer.chordsUsed.map(chordCarousel).join("");
   };
 
   md.rendererRegistry[abc.lang] = abc.callback;

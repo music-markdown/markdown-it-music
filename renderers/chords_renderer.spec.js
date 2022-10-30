@@ -3,10 +3,10 @@
 const { parseChord } = require("../lib/chord");
 const ChordsRenderer = require("./chords_renderer");
 
-const chordHover = require("./chord_hover");
-jest.mock("./chord_hover");
+const chordCarousel = require("./chord_carousel");
+jest.mock("./chord_carousel");
 const mockAddChordToDivFn =
-  chordHover.addChordToDiv.mockReturnValue("svg_here");
+  chordCarousel.chordCarousel.mockReturnValue("svg_here");
 
 describe("Chords Renderer from Events", () => {
   beforeEach(() => {
@@ -14,7 +14,14 @@ describe("Chords Renderer from Events", () => {
   });
 
   test("should create a voice div", () => {
-    const expectedVoiceDiv = `<div class="c1 chord">svg_hereC</div>`;
+    const expectedVoiceDiv =
+      `<div class="c1 chord">` +
+      `<span id="chord-0"` +
+      ` onmouseover="showPopper('chord-0', 'C')"` +
+      ` onmouseout="hidePopper('chord-0')">` +
+      `C` +
+      `</span>` +
+      `</div>`;
 
     const voice = {
       index: 0,
@@ -28,19 +35,30 @@ describe("Chords Renderer from Events", () => {
     const actualVoiceDiv = chordsRenderer.createVoiceDiv(voice);
 
     expect(actualVoiceDiv).toEqual(expectedVoiceDiv);
-    expect(mockAddChordToDivFn).toHaveBeenCalledTimes(1);
   });
 
   test("should create a line div", () => {
     const expectedLineDiv =
-      '<div class="line">' +
-      '<div class="event">' +
-      `<div class="l1">Line</div>` +
-      "</div>" +
-      '<div class="event">' +
-      `<div class="l1">Test</div>` +
-      "</div>" +
-      "</div>";
+      `<div class="line">` +
+      `<div class="event">` +
+      `<div class="l1">` +
+      `<span id="chord-0"` +
+      ` onmouseover="showPopper('chord-0', 'Line')"` +
+      ` onmouseout="hidePopper('chord-0')">` +
+      `Line` +
+      `</span>` +
+      `</div>` +
+      `</div>` +
+      `<div class="event">` +
+      `<div class="l1">` +
+      `<span id="chord-1"` +
+      ` onmouseover="showPopper('chord-1', 'Test')"` +
+      ` onmouseout="hidePopper('chord-1')">` +
+      `Test` +
+      `</span>` +
+      `</div>` +
+      `</div>` +
+      `</div>`;
 
     const line = [
       [{ index: 0, offset: 0, voice: "l1", content: "Line" }],

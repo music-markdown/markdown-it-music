@@ -1,6 +1,5 @@
 "use strict";
 
-const chordHover = require("./chord_hover.js");
 const { convertVerseToEvents } = require("../parsers/events.js");
 const { parseVoicing } = require("../lib/voicing");
 const { guitarChordbook } = require("../lib/chordbook");
@@ -12,6 +11,7 @@ class ChordsRenderer {
     this.transposeAmount = 0;
     this.currentPhraseIndex = 0;
     this.chordIndex = 0;
+    this.chordsUsed = [];
 
     this.setOptions(opts);
   }
@@ -75,34 +75,36 @@ class ChordsRenderer {
     return eventDiv + `</div>`;
   }
 
-  createVoiceDiv(voice) {
-    const classes = [voice.voice];
-    let chordDiagram = undefined;
-
-    if (voice.voice.startsWith("c")) {
-      if (voice.content instanceof Chord) {
-        voice.content = voice.content.transpose(this.transposeAmount);
-      }
-
-      classes.push("chord");
-      chordDiagram =
-        voice.content instanceof Chord
-          ? chordHover.addChordToDiv(voice.content.toString())
-          : undefined;
-      if (!chordDiagram) {
-        classes.push("highlight");
+  createContentSpan(voice) {
+    const content = voice.content.toString();
+    if (voice.content instanceof Chord) {
+      if (guitarChordbook.has(content)) {
+        if (!this.chordsUsed.includes(content)) {
+          this.chordsUsed.push(content);
+        }
+        const id = `${this.chordIndex++}`;
+        return (
+          `<span id="chord-${id}" class="chord"` +
+          ` onmouseover="showPopper('chord-${id}', '${content}')"` +
+          ` onmouseout="hidePopper('${content}')"` +
+          `>${content}</span>`
+        );
+      } else {
+        return `<span class="chord highlight">${content}</span>`;
       }
     }
+    return content;
+  }
 
-    const id = `${this.chordIndex++}`;
+  createVoiceDiv(voice) {
+    if (voice.content instanceof Chord) {
+      voice.content = voice.content.transpose(this.transposeAmount);
+    }
 
     return (
-      `<div class="${classes.join(" ")}">` +
+      `<div class="${voice.voice}">` +
       " ".repeat(voice.offset) +
-      `<span id='chord-${id}'` +
-      ` onmouseover="showPopper('chord-${id}', '${voice.content.toString()}')"` +
-      ` onmouseout="hidePopper('chord-${id}')"` +
-      `>${voice.content.toString()}</span>` +
+      this.createContentSpan(voice) +
       `</div>`
     );
   }
