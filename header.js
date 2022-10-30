@@ -11,7 +11,7 @@ const HEADER = `<!DOCTYPE html>
 
   function cachePopperAndTooltip(id, chord) {
     if (!(chord in tooltips)) {
-      const tooltip = document.querySelector('#carousel-' + chord);
+      const tooltip = document.querySelector('#tooltip-' + chord);
       tooltips[chord] = tooltip;
     }
 
@@ -66,32 +66,29 @@ const HEADER = `<!DOCTYPE html>
     clearTimeout(timeouts[chord]);
   }
 
-  function slowScroll(id, direction, distance, step) {
-    const element = document.getElementById(id);
+  function toggleSlide(id, direction) {
+    const countElement = document.querySelector('#' + id + "-count");
+    const values = countElement.innerHTML.split(" of ");
+    const currentValue = parseInt(values[0]);
+
+    if (direction === -1 && currentValue > 1) {
+      countElement.innerHTML = currentValue + direction;
+      countElement.innerHTML += " of " + values[1];
+    } else if (direction === 1 && currentValue < parseInt(values[1])) {
+      countElement.innerHTML = currentValue + direction;
+      countElement.innerHTML += " of " + values[1];
+    }
+
+    const slideElement = document.getElementById(id);
     let scrollAmount = 0;
     let slideTimer = setInterval(function () {
-      element.scrollLeft += direction === "left" ? -step : step;
-
-      scrollAmount += step;
-      if (scrollAmount >= distance) {
+      const step = direction * 2;
+      slideElement.scrollLeft += step;
+      scrollAmount += 2;
+      if (scrollAmount >= 100) {
         window.clearInterval(slideTimer);
       }
     });
-  }
-
-  function incrementId(id, direction) {
-    const countId = id + "-count";
-    const element = document.getElementById(countId);
-    const values = element.innerHTML.split(" of ");
-    const currentValue = parseInt(values[0]);
-
-    if (direction === "left" && currentValue > 1) {
-      element.innerHTML = currentValue - 1;
-      element.innerHTML += " of " + values[1];
-    } else if (direction === "right" && currentValue < parseInt(values[1])) {
-      element.innerHTML = currentValue + 1;
-      element.innerHTML += " of " + values[1];
-    }
   }
 </script>
 
@@ -113,31 +110,46 @@ const HEADER = `<!DOCTYPE html>
   }
 
   .chord {
-    cursor: help;
+    cursor: pointer;
   }
 
   .highlight {
-    color: red;
     font-weight: bold;
   }
 
-  .diagram-content-container {
-    display: flex;
-    overflow-x: hidden;
+  .tooltip {
+    font-weight: bold;
+    padding: 2px;
+    font-size: 13px;
+    border-radius: 4px;
+    display: none;
   }
 
-  .carousel {
+  .tooltip[data-show] {
+    display: block;
+  }
+
+  .chord-carousel {
     text-align: center;
     width: 126px;
     height: 120px;
     cursor: default;
   }
 
+  .carousel {
+    display: flex;
+  }
+
+  .diagrams {
+    display: flex;
+    overflow-x: hidden;
+  }
+
   .diagram {
     width: 100px;
-    flex-shrink: 0;
     height: 100px;
     display: flex;
+    transition: all 0.5s;
   }
 
   .scroll {
@@ -151,26 +163,6 @@ const HEADER = `<!DOCTYPE html>
 
   .scroll:focus {
     outline: none;
-  }
-
-  .content-scroll {
-    display: flex;
-  }
-
-  .empty {
-    height: 200px;
-  }
-
-  .tooltip {
-    font-weight: bold;
-    padding: 2px;
-    font-size: 13px;
-    border-radius: 4px;
-    display: none;
-  }
-
-  .tooltip[data-show] {
-    display: block;
   }
 
   .arrow, .arrow::before {

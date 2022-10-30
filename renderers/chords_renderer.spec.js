@@ -3,22 +3,13 @@
 const { parseChord } = require("../lib/chord");
 const ChordsRenderer = require("./chords_renderer");
 
-const chordCarousel = require("./chord_carousel");
-jest.mock("./chord_carousel");
-const mockAddChordToDivFn =
-  chordCarousel.chordCarousel.mockReturnValue("svg_here");
-
 describe("Chords Renderer from Events", () => {
-  beforeEach(() => {
-    mockAddChordToDivFn.mockClear();
-  });
-
   test("should create a voice div", () => {
     const expectedVoiceDiv =
-      `<div class="c1 chord">` +
-      `<span id="chord-0"` +
+      `<div class="c1">` +
+      `<span id="chord-0" class="chord"` +
       ` onmouseover="showPopper('chord-0', 'C')"` +
-      ` onmouseout="hidePopper('chord-0')">` +
+      ` onmouseout="hidePopper('C')">` +
       `C` +
       `</span>` +
       `</div>`;
@@ -41,22 +32,10 @@ describe("Chords Renderer from Events", () => {
     const expectedLineDiv =
       `<div class="line">` +
       `<div class="event">` +
-      `<div class="l1">` +
-      `<span id="chord-0"` +
-      ` onmouseover="showPopper('chord-0', 'Line')"` +
-      ` onmouseout="hidePopper('chord-0')">` +
-      `Line` +
-      `</span>` +
-      `</div>` +
+      `<div class="l1">Line</div>` +
       `</div>` +
       `<div class="event">` +
-      `<div class="l1">` +
-      `<span id="chord-1"` +
-      ` onmouseover="showPopper('chord-1', 'Test')"` +
-      ` onmouseout="hidePopper('chord-1')">` +
-      `Test` +
-      `</span>` +
-      `</div>` +
+      `<div class="l1">Test</div>` +
       `</div>` +
       `</div>`;
 
@@ -79,17 +58,22 @@ describe("Chords Renderer from Events", () => {
     ];
 
     const expectedEventDiv =
-      '<div class="event">' +
-      `<div class="c1 chord">svg_hereC</div>` +
+      `<div class="event">` +
+      `<div class="c1">` +
+      `<span id="chord-0" class="chord"` +
+      ` onmouseover="showPopper('chord-0', 'C')"` +
+      ` onmouseout="hidePopper('C')">` +
+      `C` +
+      `</span>` +
+      `</div>` +
       `<div class="l1">Wonderful!</div>` +
-      "</div>";
+      `</div>`;
 
     const chordsRenderer = new ChordsRenderer();
     chordsRenderer.voiceOrder = [["c1", "l1"]];
     const actualEventDiv = chordsRenderer.createEventDiv(line);
 
     expect(actualEventDiv).toEqual(expectedEventDiv);
-    expect(mockAddChordToDivFn).toHaveBeenCalledTimes(1);
   });
 
   test("should create a chart that contains two phrases that each contain two lines of events.", () => {
@@ -121,31 +105,48 @@ describe("Chords Renderer from Events", () => {
     const actualChartDiv = chordsRenderer.createEventHTMLChordChart(lines);
 
     const expectedEventDiv =
-      '<div class="chart">' +
-      '<div class="line">' +
-      '<div class="event">' +
-      `<div class="c1 chord">svg_hereC</div>` +
+      `<div class="chart">` +
+      `<div class="line">` +
+      `<div class="event">` +
+      `<div class="c1">` +
+      `<span id="chord-0" class="chord"` +
+      ` onmouseover="showPopper('chord-0', 'C')"` +
+      ` onmouseout="hidePopper('C')">` +
+      `C` +
+      `</span>` +
+      `</div>` +
       `<div class="l1">Wonderful</div>` +
-      "</div>" +
-      '<div class="event">' +
-      `<div class="c1 chord">svg_hereG</div>` +
+      `</div>` +
+      `<div class="event">` +
+      `<div class="c1">` +
+      `<span id="chord-1" class="chord"` +
+      ` onmouseover="showPopper('chord-1', 'G')"` +
+      ` onmouseout="hidePopper('G')">` +
+      `G` +
+      `</span>` +
+      `</div>` +
       `<div class="l1">Testing!</div>` +
-      "</div>" +
-      "</div>" +
-      '<div class="line">' +
-      '<div class="event">' +
-      `<div class="c1 chord">svg_hereA</div>` +
+      `</div>` +
+      `</div>` +
+      `<div class="line">` +
+      `<div class="event">` +
+      `<div class="c1">` +
+      `<span id="chord-2" class="chord"` +
+      ` onmouseover="showPopper('chord-2', 'A')"` +
+      ` onmouseout="hidePopper('A')">` +
+      `A` +
+      `</span>` +
+      `</div>` +
       `<div class="l1">Things</div>` +
-      "</div>" +
-      '<div class="event">' +
+      `</div>` +
+      `<div class="event">` +
       `<div> </div>` +
       `<div class="l1"> IsGreat!</div>` +
-      "</div>" +
-      "</div>" +
-      "</div>";
+      `</div>` +
+      `</div>` +
+      `</div>`;
 
     expect(actualChartDiv).toEqual(expectedEventDiv);
-    expect(mockAddChordToDivFn).toHaveBeenCalledTimes(3);
   });
 
   test("should not add a space to a split event", () => {
@@ -175,12 +176,18 @@ describe("Chords Renderer from Events", () => {
 
   test("should add space before a voice if it does not start at the start index of an event", () => {
     const expectedLineDiv =
-      '<div class="line">' +
-      '<div class="event">' +
-      `<div class="c1 chord">svg_here  C</div>` +
+      `<div class="line">` +
+      `<div class="event">` +
+      `<div class="c1">  ` +
+      `<span id="chord-0" class="chord"` +
+      ` onmouseover="showPopper('chord-0', 'C')"` +
+      ` onmouseout="hidePopper('C')">` +
+      `C` +
+      `</span>` +
+      `</div>` +
       `<div class="l1">Testing!</div>` +
-      "</div>" +
-      "</div>";
+      `</div>` +
+      `</div>`;
 
     const line = [
       [
@@ -194,24 +201,29 @@ describe("Chords Renderer from Events", () => {
     const actualLineDiv = chordsRenderer.createLineDiv(line);
 
     expect(actualLineDiv).toEqual(expectedLineDiv);
-    expect(mockAddChordToDivFn).toHaveBeenCalledTimes(1);
   });
 
   test("should render all phrases that have a different set of voices than the first", () => {
     const expectedChartDiv =
-      '<div class="chart">' +
-      '<div class="line">' +
-      '<div class="event">' +
+      `<div class="chart">` +
+      `<div class="line">` +
+      `<div class="event">` +
       `<div class="l1">Testing!</div>` +
-      "</div>" +
-      "</div>" +
-      '<div class="line">' +
-      '<div class="event">' +
-      `<div class="c1 chord">svg_hereC</div>` +
+      `</div>` +
+      `</div>` +
+      `<div class="line">` +
+      `<div class="event">` +
+      `<div class="c1">` +
+      `<span id="chord-0" class="chord"` +
+      ` onmouseover="showPopper('chord-0', 'C')"` +
+      ` onmouseout="hidePopper('C')">` +
+      `C` +
+      `</span>` +
+      `</div>` +
       `<div class="l1">Testing!</div>` +
-      "</div>" +
-      "</div>" +
-      "</div>";
+      `</div>` +
+      `</div>` +
+      `</div>`;
 
     const lines = [
       [[{ index: 0, offset: 0, voice: "l1", content: "Testing!" }]],
