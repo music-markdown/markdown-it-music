@@ -9,9 +9,10 @@ function diagramDiv(voicing) {
 }
 
 function chordCarousel(chord) {
-  const id = `chord-${chord}`;
+  const attrValue = chord.toAttributeValue();
+  const id = `chord-${attrValue}`;
 
-  const voicings = guitarChordbook.get(chord);
+  const voicings = guitarChordbook.get(chord.toString());
 
   const carousel =
     `<div class="carousel">` +
@@ -23,9 +24,9 @@ function chordCarousel(chord) {
     `</div>`;
 
   return (
-    `<div id="tooltip-${chord}" class="tooltip"` +
-    ` onmouseover="cancelHidePopper('${chord}')"` +
-    ` onmouseout="hidePopper('${chord}')">` +
+    `<div id="tooltip-${attrValue}" class="tooltip"` +
+    ` onmouseover="cancelHidePopper('${attrValue}')"` +
+    ` onmouseout="hidePopper('${attrValue}')">` +
     `<div class="chord-carousel">` +
     carousel +
     `<div id="${id}-count">1 of ${voicings.length}</div>` +

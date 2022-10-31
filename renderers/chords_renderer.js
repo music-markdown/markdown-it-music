@@ -80,13 +80,14 @@ class ChordsRenderer {
     if (voice.content instanceof Chord) {
       if (guitarChordbook.has(content)) {
         if (!this.chordsUsed.includes(content)) {
-          this.chordsUsed.push(content);
+          this.chordsUsed.push(voice.content);
         }
         const id = `${this.chordIndex++}`;
+        const attrValue = voice.content.toAttributeValue();
         return (
           `<span id="chord-${id}" class="chord"` +
-          ` onmouseover="showPopper('chord-${id}', '${content}')"` +
-          ` onmouseout="hidePopper('${content}')"` +
+          ` onmouseover="showPopper('chord-${id}', '${attrValue}')"` +
+          ` onmouseout="hidePopper('${attrValue}')"` +
           `>${content}</span>`
         );
       } else {
