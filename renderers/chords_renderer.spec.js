@@ -8,8 +8,8 @@ describe("Chords Renderer from Events", () => {
     const expectedVoiceDiv =
       `<div class="c1">` +
       `<span id="chord-0" class="chord"` +
-      ` onmouseover="showPopper('chord-0', 'C')"` +
-      ` onmouseout="hidePopper('C')">` +
+      ` onmouseover="showPopper('chord-0', 'c')"` +
+      ` onmouseout="hidePopper('c')">` +
       `C` +
       `</span>` +
       `</div>`;
@@ -61,8 +61,8 @@ describe("Chords Renderer from Events", () => {
       `<div class="event">` +
       `<div class="c1">` +
       `<span id="chord-0" class="chord"` +
-      ` onmouseover="showPopper('chord-0', 'C')"` +
-      ` onmouseout="hidePopper('C')">` +
+      ` onmouseover="showPopper('chord-0', 'c')"` +
+      ` onmouseout="hidePopper('c')">` +
       `C` +
       `</span>` +
       `</div>` +
@@ -110,8 +110,8 @@ describe("Chords Renderer from Events", () => {
       `<div class="event">` +
       `<div class="c1">` +
       `<span id="chord-0" class="chord"` +
-      ` onmouseover="showPopper('chord-0', 'C')"` +
-      ` onmouseout="hidePopper('C')">` +
+      ` onmouseover="showPopper('chord-0', 'c')"` +
+      ` onmouseout="hidePopper('c')">` +
       `C` +
       `</span>` +
       `</div>` +
@@ -120,8 +120,8 @@ describe("Chords Renderer from Events", () => {
       `<div class="event">` +
       `<div class="c1">` +
       `<span id="chord-1" class="chord"` +
-      ` onmouseover="showPopper('chord-1', 'G')"` +
-      ` onmouseout="hidePopper('G')">` +
+      ` onmouseover="showPopper('chord-1', 'g')"` +
+      ` onmouseout="hidePopper('g')">` +
       `G` +
       `</span>` +
       `</div>` +
@@ -132,8 +132,8 @@ describe("Chords Renderer from Events", () => {
       `<div class="event">` +
       `<div class="c1">` +
       `<span id="chord-2" class="chord"` +
-      ` onmouseover="showPopper('chord-2', 'A')"` +
-      ` onmouseout="hidePopper('A')">` +
+      ` onmouseover="showPopper('chord-2', 'a')"` +
+      ` onmouseout="hidePopper('a')">` +
       `A` +
       `</span>` +
       `</div>` +
@@ -180,8 +180,8 @@ describe("Chords Renderer from Events", () => {
       `<div class="event">` +
       `<div class="c1">  ` +
       `<span id="chord-0" class="chord"` +
-      ` onmouseover="showPopper('chord-0', 'C')"` +
-      ` onmouseout="hidePopper('C')">` +
+      ` onmouseover="showPopper('chord-0', 'c')"` +
+      ` onmouseout="hidePopper('c')">` +
       `C` +
       `</span>` +
       `</div>` +
@@ -215,8 +215,8 @@ describe("Chords Renderer from Events", () => {
       `<div class="event">` +
       `<div class="c1">` +
       `<span id="chord-0" class="chord"` +
-      ` onmouseover="showPopper('chord-0', 'C')"` +
-      ` onmouseout="hidePopper('C')">` +
+      ` onmouseover="showPopper('chord-0', 'c')"` +
+      ` onmouseout="hidePopper('c')">` +
       `C` +
       `</span>` +
       `</div>` +
