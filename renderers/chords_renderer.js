@@ -3,7 +3,7 @@
 const { convertVerseToEvents } = require("../parsers/events.js");
 const { parseVoicing } = require("../lib/voicing");
 const { guitarChordbook } = require("../lib/chordbook");
-const { Chord } = require("../lib/chord.js");
+const { Chord, compareChords } = require("../lib/chord.js");
 
 class ChordsRenderer {
   constructor(opts) {
@@ -29,6 +29,15 @@ class ChordsRenderer {
         guitarChordbook.set(chord, shorthands.map(parseVoicing));
       });
     }
+  }
+
+  isChordUsed(chord) {
+    for (let i = 0; i < this.chordsUsed.length; i++) {
+      if (compareChords(this.chordsUsed[i], chord) === 0) {
+        return true;
+      }
+    }
+    return false;
   }
 
   createEventHTMLChordChart(lines) {
@@ -79,15 +88,15 @@ class ChordsRenderer {
     const content = voice.content.toString();
     if (voice.content instanceof Chord) {
       if (guitarChordbook.has(content)) {
-        if (!this.chordsUsed.includes(content)) {
+        if (!this.isChordUsed(voice.content)) {
           this.chordsUsed.push(voice.content);
         }
         const id = `${this.chordIndex++}`;
         const attrValue = voice.content.toAttributeValue();
         return (
           `<span id="chord-${id}" class="chord"` +
-          ` onmouseover="showPopper('chord-${id}', '${attrValue}')"` +
-          ` onmouseout="hidePopper('${attrValue}')"` +
+          ` onmouseover="showTooltip('chord-${id}', '${attrValue}')"` +
+          ` onmouseout="hideTooltip('${attrValue}')"` +
           `>${content}</span>`
         );
       } else {
