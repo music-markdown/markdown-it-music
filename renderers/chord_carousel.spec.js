@@ -10,7 +10,7 @@ const { parseChord } = require("../lib/chord");
 const chordCarouselJs = rewire("./chord_carousel.js");
 chordCarouselJs.__set__("document", document);
 chordCarouselJs.__get__("chordDiagram").renderChordDiagram = jest.fn(
-  () => "SVG"
+  () => "SVG",
 );
 
 const chordCarousel = chordCarouselJs.__get__("chordCarousel");

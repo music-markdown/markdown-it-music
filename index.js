@@ -121,7 +121,7 @@ function isNotDoubleBlankLine(state, line) {
 function getLines(state, startLine, endLine) {
   return state.src.slice(
     state.bMarks[startLine],
-    state.eMarks[endLine - 1 || startLine]
+    state.eMarks[endLine - 1 || startLine],
   );
 }
 
