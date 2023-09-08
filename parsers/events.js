@@ -115,7 +115,7 @@ class Line {
    */
   createLineFromPhrase(phrase, voiceOrder) {
     const firstEventOfEachVoice = Array.from(phrase.values()).map(
-      (voiceArr) => voiceArr[0]
+      (voiceArr) => voiceArr[0],
     );
 
     // Find the minimum index of all voices, since we want to parse events in the order they happen.
@@ -140,20 +140,20 @@ class Line {
 
         return currentLongestEvent;
       },
-      undefined
+      undefined,
     );
 
     const { voicesAdded, line } = this.addEvents(
       phrase,
       longestEvent,
-      eventIndex
+      eventIndex,
     );
 
     this.previousLine = line
       .concat(this.splitPreviousEvent(voicesAdded, eventIndex))
       .sort(
         (voice1, voice2) =>
-          voiceOrder.indexOf(voice1.voice) - voiceOrder.indexOf(voice2.voice)
+          voiceOrder.indexOf(voice1.voice) - voiceOrder.indexOf(voice2.voice),
       );
 
     return this.previousLine;

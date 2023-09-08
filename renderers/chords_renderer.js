@@ -69,7 +69,7 @@ class ChordsRenderer {
 
     if (event.length > currentVoiceOrder.length) {
       console.error(
-        "There are more voices than the voice order displays. Some data may be lost."
+        "There are more voices than the voice order displays. Some data may be lost.",
       );
     }
 
