@@ -1,11 +1,9 @@
-"use strict";
+import { convertVerseToEvents } from "../parsers/events.js";
+import { parseVoicing } from "../lib/voicing.js";
+import { guitarChordbook } from "../lib/chordbook.js";
+import { Chord, compareChords } from "../lib/chord.js";
 
-const { convertVerseToEvents } = require("../parsers/events.js");
-const { parseVoicing } = require("../lib/voicing");
-const { guitarChordbook } = require("../lib/chordbook");
-const { Chord, compareChords } = require("../lib/chord.js");
-
-class ChordsRenderer {
+export class ChordsRenderer {
   constructor(opts) {
     this.voiceOrder = [];
     this.transposeAmount = 0;
@@ -130,5 +128,3 @@ class ChordsRenderer {
     return this.createEventHTMLChordChart(lines);
   }
 }
-
-module.exports = ChordsRenderer;

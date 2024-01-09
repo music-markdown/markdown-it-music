@@ -1,14 +1,14 @@
 #!/usr/bin/env node
+import { createReadStream, createWriteStream } from "fs";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+import { render } from "./headless.js";
 
-"use strict";
-
-const render = require("./headless");
-const fs = require("fs");
-const yargs = require("yargs");
-
-const argv = yargs
-  .scriptName("musicmd")
-  .command("* [markdown]", "Render the markdown to HTML")
+const argv = yargs(hideBin(process.argv))
+  .command({
+    command: "* [markdown]",
+    describe: "Render the markdown to HTML",
+  })
   .option("outfile", {
     alias: "o",
     describe: "render the output of infile to outfile",
@@ -26,10 +26,11 @@ const argv = yargs
     default: "light",
     nargs: 1,
   })
-  .help().argv;
+  .help()
+  .parse();
 
-const ifp = argv.markdown ? fs.createReadStream(argv.markdown) : process.stdin;
-const ofp = argv.outfile ? fs.createWriteStream(argv.outfile) : process.stdout;
+const ifp = argv.markdown ? createReadStream(argv.markdown) : process.stdin;
+const ofp = argv.outfile ? createWriteStream(argv.outfile) : process.stdout;
 
 const chunks = [];
 

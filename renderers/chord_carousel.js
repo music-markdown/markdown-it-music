@@ -1,14 +1,7 @@
-"use strict";
+import { renderChordDiagramMemoized } from "./chord_diagram.js";
+import { guitarChordbook } from "../lib/chordbook.js";
 
-const chordDiagram = require("./chord_diagram.js");
-const { guitarChordbook } = require("../lib/chordbook.js");
-
-function diagramDiv(voicing) {
-  const svg = chordDiagram.renderChordDiagram(voicing);
-  return `<div class="diagram">${svg}</div>`;
-}
-
-function chordCarousel(chord) {
+export function chordCarousel(chord, renderer = renderChordDiagramMemoized) {
   const attrValue = chord.toAttributeValue();
   const id = `chord-${attrValue}`;
 
@@ -18,7 +11,9 @@ function chordCarousel(chord) {
     `<div class="carousel">` +
     `<div><button class="scroll" onclick="toggleSlide('${id}', -1);">❮</button></div>` +
     `<div id="${id}" class="diagrams">` +
-    voicings.map(diagramDiv).join("") +
+    voicings
+      .map((voicing) => `<div class="diagram">${renderer(voicing)}</div>`)
+      .join("") +
     `</div>` +
     `<div><button class="scroll" onclick="toggleSlide('${id}', 1);">❯</button></div>` +
     `</div>`;
@@ -35,7 +30,3 @@ function chordCarousel(chord) {
     `</div>`
   );
 }
-
-module.exports = {
-  chordCarousel,
-};

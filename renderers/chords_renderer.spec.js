@@ -1,7 +1,5 @@
-"use strict";
-
-const { parseChord } = require("../lib/chord");
-const ChordsRenderer = require("./chords_renderer");
+import { parseChord } from "../lib/chord.js";
+import { ChordsRenderer } from "./chords_renderer.js";
 
 describe("Chords Renderer from Events", () => {
   test("should create a voice div", () => {
