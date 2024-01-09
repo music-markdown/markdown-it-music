@@ -1,11 +1,11 @@
-"use strict";
-const abc = require("abcjs");
+import * as abc from "abcjs";
+
 const MARGIN_RIGHT = 2;
 
 function renderAbc(str, opts) {
   const div = document.createElement("div");
   div.className = "abc";
-  abc.renderAbc(div, str, {
+  abc.default.renderAbc(div, str, {
     visualTranspose: opts.transpose,
     staffwidth: opts.maxWidth - MARGIN_RIGHT,
     paddingtop: 0,
@@ -17,7 +17,5 @@ function renderAbc(str, opts) {
   return div.outerHTML;
 }
 
-module.exports = {
-  lang: "abc",
-  callback: renderAbc,
-};
+export const lang = "abc";
+export const callback = renderAbc;

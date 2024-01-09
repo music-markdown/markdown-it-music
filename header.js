@@ -1,5 +1,3 @@
-"use strict";
-
 const HEADER = `<!DOCTYPE html>
 <script>
   // https://cdn.jsdelivr.net/npm/@floating-ui/core@1.2.6
@@ -280,7 +278,7 @@ function getThemeStyles(theme) {
   return theme;
 }
 
-function getHeader(opts = { theme: "light", fontSize: 1 }) {
+export function getHeader(opts = { theme: "light", fontSize: 1 }) {
   return (
     HEADER +
     `
@@ -294,7 +292,3 @@ ${getThemeStyles(opts.theme)}
 `
   );
 }
-
-module.exports = {
-  getHeader,
-};

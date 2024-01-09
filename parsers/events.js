@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Represents a list of events that occur during a phrase.
  *
@@ -7,7 +5,7 @@
  *
  * See tests for example input/output structure.
  */
-class Line {
+export class Line {
   constructor() {
     this.spacesBetweenEvents = 0;
     this.previousLine = [];
@@ -179,12 +177,8 @@ function convertPhraseToEvents(phrase) {
  * @param {Object} verse The verse that contains phrases to be translated to events.
  * @return {Line[]} List of Line that represent a verse. Each phrase is represented by a single Line.
  */
-function convertVerseToEvents(verse) {
+export function convertVerseToEvents(verse) {
   return verse.map((phrase) => {
     return convertPhraseToEvents(phrase);
   });
 }
-
-module.exports = {
-  convertVerseToEvents,
-};
