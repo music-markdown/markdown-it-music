@@ -5,7 +5,18 @@ on:
     branches: [master]
 
 jobs:
+  version:
+    name: Ensure package.json version is bumped
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Ensure version is bumped
+        uses: del-systems/check-if-version-bumped@v1
+
   build:
+    name: Build and run tests
+    needs: version
     runs-on: ubuntu-latest
 
     steps:
