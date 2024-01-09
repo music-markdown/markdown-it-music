@@ -16,7 +16,6 @@ jobs:
 
   build:
     name: Build and run tests
-    needs: version
     runs-on: ubuntu-latest
 
     steps:
