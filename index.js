@@ -5,7 +5,6 @@ import { isVoiceLine, parseVerse } from "./parsers/verse.js";
 import * as abc from "./renderers/abc_renderer.js";
 import { chordCarousel } from "./renderers/chord_carousel.js";
 import { ChordsRenderer } from "./renderers/chords_renderer.js";
-import * as vextab from "./renderers/vextab_renderer.js";
 
 export default function MarkdownMusic(md) {
   md.use(meta);
@@ -70,7 +69,6 @@ export default function MarkdownMusic(md) {
   };
 
   md.rendererRegistry[abc.lang] = abc.callback;
-  md.rendererRegistry[vextab.lang] = vextab.callback;
 
   // Renderer configuration functions
   md.setTranspose = (transpose) => {
