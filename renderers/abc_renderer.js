@@ -1,11 +1,11 @@
-import * as abc from "abcjs";
+import abc from "abcjs";
 
 const MARGIN_RIGHT = 2;
 
 function renderAbc(str, opts) {
   const div = document.createElement("div");
   div.className = "abc";
-  abc.default.renderAbc(div, str, {
+  abc.renderAbc(div, str, {
     visualTranspose: opts.transpose,
     staffwidth: opts.maxWidth - MARGIN_RIGHT,
     paddingtop: 0,
