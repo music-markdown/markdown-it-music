@@ -1,6 +1,6 @@
-import * as vt from "vextab/releases/vextab-div.js";
+import vt from "vextab/releases/vextab-div.js";
 
-const { VexTab, Artist, Flow } = vt.default;
+const { VexTab, Artist, Flow } = vt;
 
 const MARGIN_LEFT = 6;
 const MARGIN_RIGHT = 2;
